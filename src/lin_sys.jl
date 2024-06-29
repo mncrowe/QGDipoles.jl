@@ -157,9 +157,9 @@ function OrthogSpace(v)
 		j = 1
 		while length(iₑ) > N - i
 			if j > length(iₑ)
-				throw("The v must be linerly independent.")
+				@error "The v must be linerly independent."
 			end
-			if dot(v[:, i],B[:, iₑ[j]]) > ϵ
+			if dot(v[:, i], B[:, iₑ[j]]) > ϵ
 				B[:, iₑ[j]] = v[:, i]
 				iₑ = setdiff(iₑ, iₑ[j])
 			end
