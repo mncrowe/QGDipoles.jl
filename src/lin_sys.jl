@@ -5,9 +5,7 @@
 function BuildLinSys(M, λ, μ; tol=1e-6)
 
 	N = length(μ)
-
-	A = zeros(N*M, N*M)
-	B₀ = zeros(N*M, N*M)
+	A, B₀ = zeros(N*M, N*M), zeros(N*M, N*M)
 
 	for j in 0:M-1
 		for k in 0:M-1
@@ -18,9 +16,7 @@ function BuildLinSys(M, λ, μ; tol=1e-6)
 		end
 	end
 
-	B = zeros(N*M, N*M, N)
-	c = zeros(N*M, N+1)
-	d = zeros(N*M, N)
+	B, c, d = zeros(N*M, N*M, N), zeros(N*M, N+1), zeros(N*M, N)
 	c₀ = vcat(ones(N), zeros((M-1)*N))
 	
 	for n in 1:N
@@ -63,26 +59,30 @@ function IncludePassiveLayers(K, a, ActiveLayers)
 	
 	i = BitArray{1}(ActiveLayers)
 
-	K₁[i] .= K
+	K₁[:, i] .= K
 	a₁[:, i] .= a
 	
 	return K₁, a₁
 
 end
 
-function SolveInhomEVP(A, B, c, d; K₀=0, a₀=0, tol=1e-6)
+function SolveInhomEVP(A, B, c, d; K₀=Nothing, a₀=Nothing, tol=1e-6)
 
 	e, V, iₑ = OrthogSpace(d)
 
 	N = size(d)[2]
 	M = Int(size(d)[1]/N)
 	
-	if a₀ == 0
+	if a₀ == Nothing
 		a₀ = vcat(-10*ones(N, 1), zeros(N*(M-1), 1))
+	else
+		a₀ = reshape(permutedims(a₀), N*M, 1)
 	end
 
-	if K₀ == 0
+	if K₀ == Nothing
 		K₀ = 5*ones(N, 1)
+	else
+		K₀ = reshape(K₀, N, 1)
 	end
 
 	x₀ = V \ a₀

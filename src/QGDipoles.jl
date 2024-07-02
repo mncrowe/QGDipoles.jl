@@ -7,8 +7,8 @@ using SpecialFunctions
 using QuadGK
 using NLsolve
 
-export ZernikeR
-include("zernike.jl")
+export ZernikeR, GridStruct, CreateGrid, Calc_ψq, ΔNCalc
+include("create_modon.jl")
 
 export A_func, B_func, JJ_int
 include("JJ_integ.jl")
