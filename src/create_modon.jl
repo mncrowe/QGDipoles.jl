@@ -79,7 +79,7 @@ function Calc_ψq(a, U, ℓ, R, β, grid, x₀=[0, 0])
 
 	F = -U/ℓ * F .* sin.(θ)
 	Fh = rfft(F, [1, 2])
-	Fh[1, 1] = 0
+	Fh[1, 1, :] .= 0
 
 	ΔN_i = stack(inv, eachslice(ΔNCalc(grid.Krsq, R, β, U), dims=(3,4)))
 	ΔN_0 = ΔNCalc(grid.Krsq, R, 0)
