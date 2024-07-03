@@ -1,8 +1,34 @@
-# Calculates the A and B matrix terms using double Bessel integrals
+"""
+This file contains the numerical integration functions required to calculate the terms A_{k,j} and
+B_{k,j} required to build the matrices A and B. These terms are given by:
 
-# Evaluates the matrix function A(ξ, λ, μ) = K(ξ) [K(ξ) + D(μ)]⁻¹ ξ⁻¹
+A_{k,j} = int_0^inf K(ξ) [K(ξ) + D(μ)]⁻¹ ξ⁻¹ J_{2j+2}(ξ) J_{2k+2}(ξ) dξ,
 
-function A_func(ξ, λ, μ)
+B_{k,j} = int_0^inf [K(ξ) + D(μ)]⁻¹ ξ⁻¹ J_{2j+2}(ξ) J_{2k+2}(ξ) dξ,
+
+where J_n(ξ) denotes the Bessel function of order n, K(ξ) is given by
+
+K(ξ) = [ξ²+λ[1]²,  -λ[1]²  ,   0   , ...            ... 0;
+	 -λ[2]² , ξ²+2λ[2]², -λ[2]², ...            ... 0;
+	  ...   ,    ...   ,  ...  , ...   ... ,   ...   ;
+	    0   ,     0    ,   0   , ... -λ[N]², ξ²+λ[N]²]
+
+and D(μ) = diag(μ[1], μ[2], ... μ[N]).
+"""
+
+
+"""
+Function: A_func
+
+Evaluates the matrix function A(ξ, λ, μ) = K(ξ) [K(ξ) + D(μ)]⁻¹ ξ⁻¹
+
+Arguments:
+ - ξ: point in [0, ∞), Number
+ - λ: ratio of vortex radius to Rossby radius in each layer, Number or Vector
+ - μ: nondimensional (y) vorticity gradient in each layer, Number or Vector
+"""
+
+function A_func(ξ::Number, λ::Union{Vector,Number}, μ::Union{Vector,Number})
 	
 	N = length(μ)
 	
@@ -23,9 +49,18 @@ function A_func(ξ, λ, μ)
 
 end
 
-# Evaluates the matrix function B(ξ, λ, μ) = [K(ξ) + D(μ)]⁻¹ ξ⁻¹
+"""
+Function: B_func
 
-function B_func(ξ, λ, μ)
+Evaluates the matrix function B(ξ, λ, μ) = [K(ξ) + D(μ)]⁻¹ ξ⁻¹
+
+Arguments:
+ - ξ: point in [0, ∞), Number
+ - λ: ratio of vortex radius to Rossby radius in each layer, Number or Vector
+ - μ: nondimensional (y) vorticity gradient in each layer, Number or Vector
+"""
+
+function B_func(ξ::Number, λ::Union{Vector,Number}, μ::Union{Vector,Number})
 	
 	N = length(μ)
 
@@ -46,13 +81,21 @@ function B_func(ξ, λ, μ)
 
 end
 
-# Evalulates the integral I = int_0^inf F(x) J_{2j+2}(x) J_{2k+2}(x) dx
+"""
+Function: JJ_int
 
-function JJ_int(F, j, k, tol=1e-6)
+Evaluates the integral I = int_0^inf F(ξ) J_{2j+2}(ξ) J_{2k+2}(ξ) dξ
+
+Arguments:
+ - F: function to integrate, typically A_func or B_func, Function
+ - j: first Bessel function index, Integer
+ - k: second Bessel function index, Integer
+ - tol: error tolerance for QuadGK, Number (default: 1e-6)
+"""
+
+function JJ_int(F::Function, j::Int, k::Int, tol::Number=1e-6)
 	
-	#N = size(F(0))[1]	# dimension of image of F
-	d = 1e3			# domain splitting parameter
-	D = 100			# domain limit for exponential contribution
+	d, D = 1e3, 100		# splitting parameter and domain limit for exp term
 	atol = 1e-4*tol		# absolute error tolerance for quadgk
 	
 	J(n, x) = besselj(n, x)

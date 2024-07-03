@@ -1,15 +1,66 @@
-# This file contains functions for creating the modon solution for a given grid and parameters
+"""
+This file contains the functions to calculate the streamfunction and vorticity
+fields in each layer given a set of coefficients. These are determined by first
+calculating:
 
-# Define the Zernike radial function R_n using the Jacobi polynomial
+F = -U/ℓ sin θ sum_{j=0}^{M-1} a_j R_j(r/ℓ),
 
-function ZernikeR(n,x)
+where (U, ℓ) denotes the vortex speed and radius, a_j is the j^th column of the
+coefficient matrix `a`, M is the number of coefficients calculated and (r, θ)
+are plane polar coordinates about the vortex center. The function R_j denotes
+the Zernike radial function of order j. The streamfunction and vorticity can be
+calculated from F using:
+
+Δ_N(β) ψ = F,
+
+and
+
+q = Δ_N(0) ψ,
+
+where
+
+Δ_N(β) = [∇²-R[1]⁻²-β[1]/U,      R[1]⁻²     ,   0   , ...             ...        0;
+	       R[2]⁻²     , ∇²-R[1]⁻²-β[1]/U, R[2]⁻², ...             ...        0;
+	        ...       ,        ...      ,  ...  , ...   ... ,     ...         ;
+	         0        ,         0       ,   0   , ... R[N]⁻², ∇²-R[N]⁻²-β[N]/U]
+
+We calculate ψ and q in Fourier space where ∇² = -(k² + l²) using the FFTW package.
+Since ψ and q are real, we use the `rfft` and `irfft` functions and create wavenumber
+grids which are consistent with this choice.
+
+This package contains a function for creating the grid (`CreateGrid`) however these
+functions are designed to be consistent with the `TwoDGrid` from FourierFlows.jl and
+GeophysicalFlows.jl so will also work with this grid.
+"""
+
+
+"""
+Function: ZernikeR
+
+Define the Zernike radial function using the jacobi function from SpecialFunctions
+
+Arguments:
+ - n: order, Integer
+ - x: evaluation point, Number or Array
+"""
+
+function ZernikeR(n::Int, x::Union{Number,Array})
 	
 	y = @. (-1)^n * x * jacobi(2*x^2 - 1, n, 0, 1) * (x <= 1)
 
 	return y
 end
 
-# grid structure for grid
+"""
+Structure: GridStruct
+
+Stores the grid variables in physical and Fourier space
+
+Arguments:
+ - x, y: x and y points in physical space, Ranges
+ - kr, l: x and y points in Fourier space, Arrays
+ - Krsq: kr²+l² in Fourier space, Array
+"""
 
 struct GridStruct
 	x
@@ -19,9 +70,17 @@ struct GridStruct
 	Krsq::Array{Float64}
 end
 
-# define a grid consisting of a physical space grid and a Fourier grid for the FFTW real transform
+"""
+Function: CreateGrid
 
-function CreateGrid(Nx, Ny, Lx, Ly)
+Define the numerical grid as a `GridStruct`
+
+Arguments:
+ - Nx, Ny: number of gridpoints in x and y directions, Integers
+ - Lx, Ly: x and y domains, either vectors of endpoints or lengths, Numbers or Vectors
+"""
+
+function CreateGrid(Nx::Int, Ny::Int, Lx::Union{Number,Vector}, Ly::Union{Number,Vector})
 
 	if length(Lx) == 2
 	
@@ -57,9 +116,20 @@ function CreateGrid(Nx, Ny, Lx, Ly)
 
 end
 
-# function for calculating ψ and q in each layer using coefficients and vortex parameters
+"""
+Function: Calc_ψq
 
-function Calc_ψq(a, U, ℓ, R, β, grid, x₀=[0, 0])
+Calculate ψ and q in each layer using coefficients and vortex parameters
+
+Arguments:
+ - a: M x N array of coefficients, Array
+ - (U, ℓ): vortex speed and radius, Numbers
+ - (R, β): Rossby radii and (y) PV gradients in each layer, Numbers or Vectors
+ - grid: grid structure containing x, y, and Krsq
+ - x₀: position of vortex center, vector (default: [0, 0])
+"""
+
+function Calc_ψq(a::Array, U::Number, ℓ::Number, R::Union{Number,Vector}, β::Union{Number,Vector}, grid, x₀::Vector=[0, 0])
 	
 	M, N = size(a)
 	Nx, Ny = length(grid.x), length(grid.y)
@@ -103,9 +173,19 @@ function Calc_ψq(a, U, ℓ, R, β, grid, x₀=[0, 0])
 
 end
 
-# defines the ΔN matrix used to invert for ψ and q
 
-function ΔNCalc(K², R, β, U=1)
+"""
+Function: ΔNCalc
+
+Defines the Δ_N(β) matrix used to invert for ψ and q
+
+Arguments:
+ - K²: value of k²+l² in Fourier space, Array
+ - (R, β): Rossby radii and (y) PV gradients in each layer, Numbers or Vectors
+ - U: vortex speed, Number (default: 1)
+"""
+
+function ΔNCalc(K²::Array, R::Union{Number,Vector}, β::Union{Number,Vector}, U::Number=1)
 	
 	N = length(R)
 	Nk, Nl = size(K²)

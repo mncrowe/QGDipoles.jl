@@ -8,6 +8,7 @@ U, ℓ = 1, 1			# vortex speed and radius
 R = [1, 1, 1]			# Rossby radius in each layer
 β = [0, 0, 1]			# background PV gradient in each layer
 ActiveLayers = [0, 1, 0]	# 1 => layer contains vortex region
+x₀ = [5, 5]			# location of vortex center
 
 M = 8				# number of coefficients in Zernike expansion
 tol = 1e-8			# maximum error in solution evaluation
@@ -15,7 +16,7 @@ tol = 1e-8			# maximum error in solution evaluation
 # Set grid parameters
 
 Nx, Ny = 512, 512
-Lx, Ly = 10, 10
+Lx, Ly = [0, 10], [0, 10]
 
 # Build and solve linear system for coefficients
 
@@ -31,6 +32,6 @@ K, a = IncludePassiveLayers(K, a, ActiveLayers)
 # Create grid and calculate streamfunctions and vorticities
 
 grid = CreateGrid(Nx, Ny, Lx, Ly)
-ψ, q = Calc_ψq(a, U, ℓ, R, β, grid)
+ψ, q = Calc_ψq(a, U, ℓ, R, β, grid, x₀)
 
 Nothing

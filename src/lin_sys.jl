@@ -1,8 +1,47 @@
-# Contains functions for building linear eigenvalue system
+"""
+This file contains the numerical integration functions required to build the inhomogeneous eigenvalue
+problem:
 
-# Calculates the terms A, B, c, d in the linear system
+    [A - sum_{n=1}^N (K²[n] B[n])] a = c₀ + sum_{n=1}^N (K²[n] c[n]),  d[j]ᵀa = 0, j ∈ {1, .., N}
 
-function BuildLinSys(M, λ, μ; tol=1e-6)
+A and B₀ are given by the terms A_{j,k}, B_{j,k} in `JJ_int.jl` and B[n] contains only the rows of B₀
+corresponding to the coefficients in the n^th layer. The eigenvalues are denoted by K²[n] and the
+eigenvector by `a`. The vectors c₀, c[n] and d[n] are given by:
+
+(c[n])_i = 1/4 δ_{i, n},
+
+c₀ = sum_{n=1}^N (μ[n] c[n]),
+
+and
+
+(d[n])_i = (-1)^(i/2) * δ_{mod(i, N), n}.
+
+This system is solved with nonlinear root finding using the NLSolve package. The method works by
+projecting `a` onto the subspace perpendicular to the d[n] vectors. A vector x is defined as
+x = [K²; a'] where a' denotes the projection of a. Since a' has N less degrees of freedom than
+a, and K² is of length N, the vector x is of length M*N where M is the number of coefficients in
+each layer and N is the number of layers. Defining
+
+F(x) = [A - sum_{n=1}^N (K²[n] B[n])] a - c₀ - sum_{n=1}^N (K²[n] c[n]),
+
+allows us to solve the inhomogeneous problem by finding roots of F(x) = 0 using some initial guess
+x₀ = [K²₀; a₀']. Changing the initial guess may be required to identify the required solutions.
+"""
+
+
+"""
+Function: BuildLinSys
+
+Builds the terms in the inhomogeneous eigenvalue problem; A, B, c, d
+
+Arguments:
+ - M: number of coefficient to solve for, Integer
+ - λ: ratio of vortex radius to Rossby radius in each layer, Number or Vector
+ - μ: nondimensional (y) vorticity gradient in each layer, Number or Vector
+ - tol: error tolerance for QuadGK via `JJ_int`, Number (default: 1e-6)
+"""
+
+function BuildLinSys(M::Int, λ::Union{Vector,Number}, μ::Union{Vector,Number}; tol::Number=1e-6)
 
 	N = length(μ)
 	A, B₀ = zeros(N*M, N*M), zeros(N*M, N*M)
@@ -33,7 +72,17 @@ function BuildLinSys(M, λ, μ; tol=1e-6)
 
 end
 
-function ApplyPassiveLayers(A, B, c, d, ActiveLayers)
+"""
+Function: ApplyPassiveLayers
+
+Removes rows and columns corresponding to passive layers from the system
+
+Arguments:
+ - A, B, c, d: inhomogeneous eigenvalue problem terms, Arrays
+ - ActiveLayers: vector of 1s or 0s where 1 denotes an active layer, Vector
+"""
+
+function ApplyPassiveLayers(A::Array, B::Array, c::Array, d::Array, ActiveLayers::Vector)
 
 	M = Int(size(d)[1]/size(d)[2])			# problem size
 
@@ -51,7 +100,17 @@ function ApplyPassiveLayers(A, B, c, d, ActiveLayers)
 	
 end
 
-function IncludePassiveLayers(K, a, ActiveLayers)
+"""
+Function: IncludePassiveLayers
+
+Includes columns corresponding to passive layers in the eigenvalue and coefficient arrays
+
+Arguments:
+ - K, a: eigenvalue and coefficient arrays describing system solution, Arrays
+ - ActiveLayers: vector of 1s or 0s where 1 denotes an active layer, Vector
+"""
+
+function IncludePassiveLayers(K::Array, a::Array, ActiveLayers::Vector)
 	
 	M, N = size(a)[1], length(ActiveLayers)
 
@@ -66,7 +125,18 @@ function IncludePassiveLayers(K, a, ActiveLayers)
 
 end
 
-function SolveInhomEVP(A, B, c, d; K₀=Nothing, a₀=Nothing, tol=1e-6)
+"""
+Function: SolveInhomEVP
+
+Solves the inhomogeneous eigenvalue problem using nonlinear root finding
+
+Arguments:
+ - A, B, c, d: inhomogeneous eigenvalue problem terms, Arrays
+ - K₀, a₀: initial guesses for K and a, Arrays or Nothings
+ - tol: error tolerance for NLSolve, Number
+"""
+
+function SolveInhomEVP(A::Array, B::Array, c::Array, d::Array; K₀=Nothing, a₀=Nothing, tol::Number=1e-6)
 
 	e, V, iₑ = OrthogSpace(d)
 
@@ -106,7 +176,19 @@ function SolveInhomEVP(A, B, c, d; K₀=Nothing, a₀=Nothing, tol=1e-6)
 
 end
 
-function InhomEVP_F!(F, J, x, A, B, c, e)
+"""
+Function: InhomEVP_F!
+
+Calculates the function F and it's derivatives, J, at a given point x
+
+Arguments:
+ - F, J: values of F and it's derivatives, updated by function
+ - x: evaluation point, Array
+ - A, B, c: inhomogeneous eigenvalue problem terms, Arrays
+ - e: basis spanning the space perpendicular to the d[n], Array
+"""
+
+function InhomEVP_F!(F, J, x::Array, A::Array, B::Array, c::Array, e::Array)
 
 	N, j = size(e)
 
@@ -137,7 +219,14 @@ function InhomEVP_F!(F, J, x, A, B, c, e)
 
 end
 
-# extends v to an orthonormal basis
+"""
+Function: OrthogSpace
+
+Extends the input to an orthonormal basis over R^n using the Gram-Schmidt method
+
+Arguments:
+ - v: array with vectors as columns, Array
+"""
 
 function OrthogSpace(v)
 	
