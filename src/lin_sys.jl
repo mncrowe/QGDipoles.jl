@@ -2,11 +2,12 @@
 This file contains the numerical integration functions required to build the inhomogeneous eigenvalue
 problem:
 
-    [A - sum_{n=1}^N (K²[n] B[n])] a = c₀ + sum_{n=1}^N (K²[n] c[n]),  d[j]ᵀa = 0, j ∈ {1, .., N}
+    [A - sum_{n=1}^N (Kᵐ[n] B[n])] a = c₀ + sum_{n=1}^N (Kᵐ[n] c[n]),  d[j]ᵀa = 0, j ∈ {1, .., N}
 
 A and B₀ are given by the terms A_{j,k}, B_{j,k} in `JJ_int.jl` and B[n] contains only the rows of B₀
-corresponding to the coefficients in the n^th layer. The eigenvalues are denoted by K²[n] and the
-eigenvector by `a`. The vectors c₀, c[n] and d[n] are given by:
+corresponding to the coefficients in the n^th layer. The eigenvalues are denoted by Kᵐ[n] and the
+eigenvector by `a`. The exponent m is determined by the problem type; the layered QG model has m = 2
+while the SQG problem has m = 1. The vectors c₀, c[n] and d[n] are given by:
 
 (c[n])_i = 1/4 δ_{i, n},
 
@@ -18,14 +19,14 @@ and
 
 This system is solved with nonlinear root finding using the NLSolve package. The method works by
 projecting `a` onto the subspace perpendicular to the d[n] vectors. A vector x is defined as
-x = [K²; a'] where a' denotes the projection of a. Since a' has N less degrees of freedom than
+x = [Kᵐ; a'] where a' denotes the projection of a. Since a' has N less degrees of freedom than
 a, and K² is of length N, the vector x is of length M*N where M is the number of coefficients in
 each layer and N is the number of layers. Defining
 
-F(x) = [A - sum_{n=1}^N (K²[n] B[n])] a - c₀ - sum_{n=1}^N (K²[n] c[n]),
+F(x) = [A - sum_{n=1}^N (Kᵐ[n] B[n])] a - c₀ - sum_{n=1}^N (Kᵐ[n] c[n]),
 
 allows us to solve the inhomogeneous problem by finding roots of F(x) = 0 using some initial guess
-x₀ = [K²₀; a₀']. Changing the initial guess may be required to identify the required solutions.
+x₀ = [Kᵐ₀; a₀']. Changing the initial guess may be required to identify the required solutions.
 """
 
 
@@ -140,12 +141,14 @@ Solves the inhomogeneous eigenvalue problem using nonlinear root finding
 
 Arguments:
  - A, B, c, d: inhomogeneous eigenvalue problem terms, Arrays
- - K₀, a₀: initial guesses for K and a, Arrays or Nothings
- - tol: error tolerance for NLSolve, Number
- - method: 1 - eigensolve (1-layer only), 2 - root finding, 0 - select automatically
+ - K₀, a₀: initial guesses for K and a, Arrays or Nothings (default: Nothing)
+ - tol: error tolerance for NLSolve, Number (default: 1e-6)
+ - method: 1 - eigensolve (1-layer only), 2 - root finding, 0 - select automatically (default: 0)
+ - m: exponent of K in eignevalue problem (default: 2)
 """
 
-function SolveInhomEVP(A::Array, B::Array, c::Array, d::Array; K₀=Nothing, a₀=Nothing, tol::Number=1e-6, method::Int=0)
+function SolveInhomEVP(A::Array, B::Array, c::Array, d::Array; K₀=Nothing, a₀=Nothing,
+		tol::Number=1e-6, method::Int=0, m::Int=2)
 	
 	N = size(d)[2]
 	M = Int(size(d)[1]/N)
@@ -175,10 +178,10 @@ function SolveInhomEVP(A::Array, B::Array, c::Array, d::Array; K₀=Nothing, a�
 		D₄ = [-D₁ -D₂; I(M) O]
 
 		λ = eigvals(D₃, D₄)
-		i = argmin((λ .- K₀.^2).^2)
+		i = argmin((λ .- K₀.^m).^2)
 
-		K = sqrt.([λ[i]])
-		a = reshape((A - K.^2 .* B) \ (c₀ + K.^2 .* c₁), M, 1)
+		K = reshape([λ[i]], 1, 1).^(1/m)
+		a = reshape((A - K.^m .* B) \ (c₀ + K.^m .* c₁), M, 1)
 
 	end
 
@@ -199,19 +202,19 @@ function SolveInhomEVP(A::Array, B::Array, c::Array, d::Array; K₀=Nothing, a�
 		end
 
 		x₀ = V \ a₀
-		x₀ = vcat(K₀.^2, x₀[iₑ])
+		x₀ = vcat(K₀.^m, x₀[iₑ])
 
 		fj! = (F, J, x) -> InhomEVP_F!(F, J, x, A, B, c, e)
 
 		x = nlsolve(only_fj!(fj!), x₀, ftol=tol).zero
 
-		K = sqrt.(complex(reshape(x[1:N], 1, N)))
+		K = (complex(reshape(x[1:N], 1, N))).^(1/m)
 		a = permutedims(reshape(e * x[N+1:N*M], N, M))
 
 	end
 
 	if imag(K) != zeros(1, N)
-		@warn "Solution contains passive layers."
+		@warn "Solution has complex K, generally corresponding passive layers."
 	end
 
 	K = real(K)

@@ -5,11 +5,13 @@ calculating:
 
 F = -U/ℓ sin θ sum_{j=0}^{M-1} a_j R_j(r/ℓ),
 
-where (U, ℓ) denotes the vortex speed and radius, a_j is the j^th column of the
+where (U, ℓ) denotes the vortex speed and radius, a_j is the j^th row of the
 coefficient matrix `a`, M is the number of coefficients calculated and (r, θ)
 are plane polar coordinates about the vortex center. The function R_j denotes
-the Zernike radial function of order j. The streamfunction and vorticity can be
-calculated from F using:
+the Zernike radial function of order j.
+
+In the layered QG case, the streamfunction and vorticity can be calculated from
+F using:
 
 Δ_N(β) ψ = F,
 
@@ -24,9 +26,14 @@ where
 	        ...       ,        ...      ,  ...  , ...   ... ,     ...         ;
 	         0        ,         0       ,   0   , ... R[N]⁻², ∇²-R[N]⁻²-β[N]/U]
 
-We calculate ψ and q in Fourier space where ∇² = -(k² + l²) using the FFTW package.
-Since ψ and q are real, we use the `rfft` and `irfft` functions and create wavenumber
-grids which are consistent with this choice.
+In the SQG case, the streamfunction and buoyancy can be calculated from F using:
+
+
+
+
+We calculate ψ, q and b in Fourier space where ∇² = -(k² + l²) using the FFTW package.
+Since ψ, q and b are real, we use the `rfft` and `irfft` functions and create
+wavenumber grids which are consistent with this choice.
 
 This package contains a function for creating the grid (`CreateGrid`) however these
 functions are designed to be consistent with the `TwoDGrid` from FourierFlows.jl and
@@ -126,7 +133,7 @@ end
 """
 Function: Calc_ψq
 
-Calculate ψ and q in each layer using coefficients and vortex parameters
+Calculate ψ and q in a layered QG model using coefficients and vortex parameters
 
 Arguments:
  - a: M x N array of coefficients, Array
@@ -185,6 +192,21 @@ function Calc_ψq(a::Array, U::Number, ℓ::Number, R::Union{Number,Vector}, β:
 	
 	return ψ, q
 
+end
+
+"""
+Function: Calc_ψb
+
+Calculate SQG fields ψ and b using coefficients and vortex parameters
+
+Arguments:
+ - 
+"""
+
+function Calc_ψb()
+	
+	return Nothing
+	
 end
 
 """

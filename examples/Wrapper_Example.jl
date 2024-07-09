@@ -1,4 +1,5 @@
 # This example demonstates how to use the wrapper function `CreateModon`
+# This script is currently set up to match `2_Layer_Modon.jl`
 
 using QGDipoles
 
