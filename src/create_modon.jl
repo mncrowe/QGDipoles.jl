@@ -65,9 +65,9 @@ Arguments:
 struct GridStruct
 	x
 	y
-	kr::Array{Float64}
-	l::Array{Float64}
-	Krsq::Array{Float64}
+	kr::Union{Array{Float64},CuArray{Float64}}
+	l::Union{Array{Float64},CuArray{Float64}}
+	Krsq::Union{Array{Float64},CuArray{Float64}}
 end
 
 """
@@ -78,9 +78,10 @@ Define the numerical grid as a `GridStruct`
 Arguments:
  - Nx, Ny: number of gridpoints in x and y directions, Integers
  - Lx, Ly: x and y domains, either vectors of endpoints or lengths, Numbers or Vectors
+ - cuda: true; use CUDA CuArray for fields
 """
 
-function CreateGrid(Nx::Int, Ny::Int, Lx::Union{Number,Vector}, Ly::Union{Number,Vector})
+function CreateGrid(Nx::Int, Ny::Int, Lx::Union{Number,Vector}, Ly::Union{Number,Vector}; cuda::Bool=false)
 
 	if length(Lx) == 2
 	
@@ -112,6 +113,12 @@ function CreateGrid(Nx::Int, Ny::Int, Lx::Union{Number,Vector}, Ly::Union{Number
 
 	Krsq = @. kr^2 + l^2
 
+	if cuda
+
+		kr, l, Krsq = CuArray(kr), CuArray(l), CuArray(Krsq)
+
+	end
+
 	return GridStruct(x, y, kr, l, Krsq)
 
 end
@@ -138,8 +145,6 @@ function Calc_ψq(a::Array, U::Number, ℓ::Number, R::Union{Number,Vector}, β:
 	r, θ = @. sqrt((x-x₀[1])^2 + (y-x₀[2])^2), @. atan(y-x₀[2], x-x₀[1])
 
 	F = zeros(Nx, Ny, N)
-	ψh = Array{ComplexF64}(zeros(Int(Nx/2+1), Ny, N))
-	qh = Array{ComplexF64}(zeros(Int(Nx/2+1), Ny, N))
 
 	for j in 1:M
 		for i in 1:N
@@ -153,6 +158,15 @@ function Calc_ψq(a::Array, U::Number, ℓ::Number, R::Union{Number,Vector}, β:
 
 	ΔN_i = stack(inv, eachslice(ΔNCalc(grid.Krsq, R, β, U), dims=(3,4)))
 	ΔN_0 = ΔNCalc(grid.Krsq, R, 0)
+
+	if grid.Krsq isa CuArray
+		Fh = CuArray(Fh)
+		ψh = CuArray{ComplexF64}(zeros(Int(Nx/2+1), Ny, N))
+		qh = CuArray{ComplexF64}(zeros(Int(Nx/2+1), Ny, N))
+	else
+		ψh = Array{ComplexF64}(zeros(Int(Nx/2+1), Ny, N))
+		qh = Array{ComplexF64}(zeros(Int(Nx/2+1), Ny, N))
+	end
 
 	for n in 1:N
 		for j in 1:N
