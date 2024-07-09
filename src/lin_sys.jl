@@ -79,10 +79,14 @@ Removes rows and columns corresponding to passive layers from the system
 
 Arguments:
  - A, B, c, d: inhomogeneous eigenvalue problem terms, Arrays
- - ActiveLayers: vector of 1s or 0s where 1 denotes an active layer, Vector
+ - ActiveLayers: vector of 1s or 0s where 1 denotes an active layer, Number or Vector
 """
 
-function ApplyPassiveLayers(A::Array, B::Array, c::Array, d::Array, ActiveLayers::Vector)
+function ApplyPassiveLayers(A::Array, B::Array, c::Array, d::Array, ActiveLayers::Union{Number,Vector})
+	
+	if ActiveLayers isa Number
+		ActiveLayers = [ActiveLayers]
+	end
 
 	M = Int(size(d)[1]/size(d)[2])			# problem size
 
@@ -107,11 +111,15 @@ Includes columns corresponding to passive layers in the eigenvalue and coefficie
 
 Arguments:
  - K, a: eigenvalue and coefficient arrays describing system solution, Arrays
- - ActiveLayers: vector of 1s or 0s where 1 denotes an active layer, Vector
+ - ActiveLayers: vector of 1s or 0s where 1 denotes an active layer, Number or Vector
 """
 
-function IncludePassiveLayers(K::Array, a::Array, ActiveLayers::Vector)
+function IncludePassiveLayers(K::Array, a::Array, ActiveLayers::Union{Number,Vector})
 	
+	if ActiveLayers isa Number
+		ActiveLayers = [ActiveLayers]
+	end
+
 	M, N = size(a)[1], length(ActiveLayers)
 
 	K₁, a₁ = zeros(1, N), zeros(M, N)

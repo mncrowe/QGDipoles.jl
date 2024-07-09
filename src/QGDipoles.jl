@@ -26,7 +26,7 @@ include("lin_sys.jl")
 
 # export and define functions to create the modon solution
 
-export ZernikeR, GridStruct, CreateGrid, Calc_ψq, ΔNCalc
+export ZernikeR, GridStruct, CreateGrid, Calc_ψq, ΔNCalc, CreateModon
 include("create_modon.jl")
 
 end

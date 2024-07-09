@@ -187,7 +187,6 @@ function Calc_ψq(a::Array, U::Number, ℓ::Number, R::Union{Number,Vector}, β:
 
 end
 
-
 """
 Function: ΔNCalc
 
@@ -224,5 +223,40 @@ function ΔNCalc(K²::Union{CuArray,Array}, R::Union{Number,Vector}, β::Union{N
 	end
 
 	return ΔN
+
+end
+
+"""
+Function: CreateModon
+
+High level wrapper function for calculating ψ and q using given vortex and background parameters
+
+Arguments:
+ - grid: grid structure containing x, y, and Krsq
+ - M: number of coefficient to solve for, Integer (default: 8)
+ - (U, ℓ): vortex speed and radius, Numbers (default: (1, 1))
+ - (R, β): Rossby radii and (y) PV gradients in each layer, Numbers or Vectors, (default: (1, 0))
+ - ActiveLayers: vector of 1s or 0s where 1 denotes an active layer, Number or Vector, (default: 1)
+ - x₀: position of vortex center, vector (default: [0, 0])
+ - K₀, a₀: initial guesses for K and a, Arrays or Nothings (default: Nothing)
+ - tol: error tolerance for QuadGK and NLSolve, Number (default: 1e-6)
+
+Note: provide values of K₀ and a₀ for active layers ONLY.
+"""
+
+function CreateModon(grid, M::Int=8, U::Number=1, ℓ::Number=1, R::Union{Number,Vector}=1, β::Union{Number,Vector}=0,
+	ActiveLayers::Union{Number,Vector}=1, x₀::Vector=[0, 0]; K₀=Nothing, a₀=Nothing, tol=1e-6)
+
+	λ, μ = ℓ ./ R, β .* (ℓ^2/U)
+
+	A, B, c, d = BuildLinSys(M, λ, μ; tol)
+	A, B, c, d = ApplyPassiveLayers(A, B, c, d, ActiveLayers)
+
+	K, a = SolveInhomEVP(A, B, c, d; K₀, a₀, tol)
+	K, a = IncludePassiveLayers(K, a, ActiveLayers)
+
+	ψ, q = Calc_ψq(a, U, ℓ, R, β, grid, x₀)
+
+	return ψ, q, K, a
 
 end
