@@ -12,6 +12,7 @@ x₀ = [5, 5]			# location of vortex center
 
 M = 8				# number of coefficients in Zernike expansion
 tol = 1e-8			# maximum error in solution evaluation
+cuda = false			# use CuArrays for grid
 
 # Set grid parameters
 
@@ -31,7 +32,7 @@ K, a = IncludePassiveLayers(K, a, ActiveLayers)
 
 # Create grid and calculate streamfunctions and vorticities
 
-grid = CreateGrid(Nx, Ny, Lx, Ly)
+grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 ψ, q = Calc_ψq(a, U, ℓ, R, β, grid, x₀)
 
 Nothing

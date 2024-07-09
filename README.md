@@ -41,6 +41,7 @@ This package requires the following dependencies:
 * NLsolve (v4.5.1)
 * QuadGK (v2.9.4)
 * SpecialFunctions (v2.4.0)
+* CUDA (v5.4.3)
 
 The specified versions are confirmed to work. Earlier versions may also work.
 

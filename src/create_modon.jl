@@ -215,10 +215,19 @@ function ΔNCalc(K²::Union{CuArray,Array}, R::Union{Number,Vector}, β::Union{N
 		ΔN = -reshape(K² .+ (1/R^2 + βU⁻¹ + ϵ), 1, 1, Nk, Nl)
 
 	else
+		if K² isa CuArray
+			
+			ΔN = CuArray(zeros(N, N, Nk, Nl))
+			K2 = reshape(K² .+ ϵ, 1, 1, Nk, Nl)
+			[ΔN[i, i, :, :] = -K2 for i in range(1,N)]
+			ΔN .+= CuArray(-diagm([R[1]^-2; 2*R[2:end-1].^-2; R[end]^-2] + βU⁻¹) +
+				diagm(1 => R[1:end-1].^-2, -1 => R[2:end].^-2))
 
-		ΔN = -diagm([R[1]^-2; 2*R[2:end-1].^-2; R[end]^-2]) - diagm(βU⁻¹) +
-			diagm(1 => R[1:end-1].^-2, -1 => R[2:end].^-2) .-
-			I(N) .* reshape(K² .+ ϵ, 1, 1, Nk, Nl)
+		else
+			ΔN = -diagm([R[1]^-2; 2*R[2:end-1].^-2; R[end]^-2]) - diagm(βU⁻¹) +
+				diagm(1 => R[1:end-1].^-2, -1 => R[2:end].^-2) .-
+				I(N) .* reshape(K² .+ ϵ, 1, 1, Nk, Nl)
+		end
 
 	end
 
@@ -236,7 +245,7 @@ Arguments:
  - M: number of coefficient to solve for, Integer (default: 8)
  - (U, ℓ): vortex speed and radius, Numbers (default: (1, 1))
  - (R, β): Rossby radii and (y) PV gradients in each layer, Numbers or Vectors, (default: (1, 0))
- - ActiveLayers: vector of 1s or 0s where 1 denotes an active layer, Number or Vector, (default: 1)
+ - ActiveLayers: vector of 1s or 0s where 1 denotes an active layer, Number or Vector, (default: [1,..,1])
  - x₀: position of vortex center, vector (default: [0, 0])
  - K₀, a₀: initial guesses for K and a, Arrays or Nothings (default: Nothing)
  - tol: error tolerance for QuadGK and NLSolve, Number (default: 1e-6)
@@ -246,7 +255,9 @@ Note: provide values of K₀ and a₀ for active layers ONLY.
 
 function CreateModon(grid, M::Int=8, U::Number=1, ℓ::Number=1, R::Union{Number,Vector}=1, β::Union{Number,Vector}=0,
 	ActiveLayers::Union{Number,Vector}=1, x₀::Vector=[0, 0]; K₀=Nothing, a₀=Nothing, tol=1e-6)
-
+	
+	if length(ActiveLayers) < length(R); ActiveLayers = ones(length(R)); end
+	
 	λ, μ = ℓ ./ R, β .* (ℓ^2/U)
 
 	A, B, c, d = BuildLinSys(M, λ, μ; tol)
