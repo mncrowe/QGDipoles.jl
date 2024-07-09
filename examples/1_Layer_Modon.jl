@@ -11,6 +11,7 @@ R = 1		# Rossby radius in each layer
 M = 8		# number of coefficients in Zernike expansion
 tol = 1e-8	# maximum error in solution evaluation
 cuda = false	# use CuArrays for grid
+method = 0	# 1; eigensolve, 2; root finding, 0; defaults to 1
 
 # Set grid parameters
 
@@ -23,7 +24,7 @@ Lx, Ly = 10, 10
 μ = β * ℓ^2/U
 
 A, B, c, d = BuildLinSys(M, λ, μ; tol)
-K, a = SolveInhomEVP(A, B, c, d; K₀ = [4], tol)
+K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol, method)
 
 # Create grid and calculate streamfunctions and vorticities
 

@@ -1,6 +1,8 @@
 """
 This file contains the numerical integration functions required to calculate the terms A_{k,j} and
-B_{k,j} required to build the matrices A and B. These terms are given by:
+B_{k,j} required to build the matrices A and B.
+
+For the layered QG model, these terms are given by:
 
 A_{k,j} = int_0^inf K(ξ) [K(ξ) + D(μ)]⁻¹ ξ⁻¹ J_{2j+2}(ξ) J_{2k+2}(ξ) dξ,
 
@@ -14,6 +16,11 @@ K(ξ) = [ξ²+λ[1]²,  -λ[1]²  ,   0   , ...            ... 0;
 	    0   ,     0    ,   0   , ... -λ[N]², ξ²+λ[N]²]
 
 and D(μ) = diag(μ[1], μ[2], ... μ[N]).
+
+For the SQG model, these are given by:
+
+
+
 """
 
 

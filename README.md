@@ -4,11 +4,11 @@
 
 ## About
 
-This package solves for steady, propagating dipolar solutions in a layered quasi-geostrophic model. It is designed to work with GeophysicalFlows.jl and FourierFlows.jl.
+This package solves for steady, propagating dipolar solutions in a layered quasi-geostrophic model or a surface quasi-geostrophic model. It is designed to work with GeophysicalFlows.jl and FourierFlows.jl.
 
 ## Installation
 
-To install use the Julia package manager
+To install use the Julia package manager:
 
 ```julia
 julia> ]
@@ -16,7 +16,7 @@ julia> ]
 (v1.10) pgk> instantiate
 ```
 
-This package is not compatible with earlier versions due to the `eachslice` function.
+This package is not compatible with versions of Julia earlier than 1.10 due to the `eachslice` function.
 
 ## Examples
 

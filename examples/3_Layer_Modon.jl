@@ -27,7 +27,7 @@ Lx, Ly = [0, 10], [0, 10]
 A, B, c, d = BuildLinSys(M, λ, μ; tol)
 A, B, c, d = ApplyPassiveLayers(A, B, c, d, ActiveLayers)
 
-K, a = SolveInhomEVP(A, B, c, d; K₀ = [4], tol)
+K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol)
 K, a = IncludePassiveLayers(K, a, ActiveLayers)
 
 # Create grid and calculate streamfunctions and vorticities

@@ -142,37 +142,74 @@ Arguments:
  - A, B, c, d: inhomogeneous eigenvalue problem terms, Arrays
  - K₀, a₀: initial guesses for K and a, Arrays or Nothings
  - tol: error tolerance for NLSolve, Number
+ - method: 1 - eigensolve (1-layer only), 2 - root finding, 0 - select automatically
 """
 
-function SolveInhomEVP(A::Array, B::Array, c::Array, d::Array; K₀=Nothing, a₀=Nothing, tol::Number=1e-6)
-
-	e, V, iₑ = OrthogSpace(d)
-
+function SolveInhomEVP(A::Array, B::Array, c::Array, d::Array; K₀=Nothing, a₀=Nothing, tol::Number=1e-6, method::Int=0)
+	
 	N = size(d)[2]
 	M = Int(size(d)[1]/N)
-	
-	if a₀ == Nothing
-		a₀ = vcat(-10*ones(N, 1), zeros(N*(M-1), 1))
-	else
-		a₀ = reshape(permutedims(a₀), N*M, 1)
+
+	if method == 0
+		if N == 1; method = 1; else; method = 2; end
 	end
 
-	if K₀ == Nothing
-		K₀ = 5*ones(N, 1)
-	else
-		K₀ = reshape(K₀, N, 1)
+	if method == 1
+		
+		if K₀ == Nothing
+			K₀ = [4]
+		end
+		
+		if N > 1
+			@error "The eigensolve method (method = 1) requires N = 1"
+		end
+
+		B, O = reshape(B, M, M), zeros(M, M)
+		dᵀ, c₀, c₁ = permutedims(d), c[:, 1], c[:, 2]
+		
+		D₀ = (dᵀ * (A \ c₀)) .* A
+		D₁ = (dᵀ * (A \ c₁)) .* A - (dᵀ * (A \ c₀)) .* B + (c₀ * dᵀ) * (A \ B)
+		D₂ = -(dᵀ * (A \ c₁)) .* B + (c₁ * dᵀ) * (A \ B)
+		
+		D₃ = [D₀ O; O I(M)]
+		D₄ = [-D₁ -D₂; I(M) O]
+
+		λ = eigvals(D₃, D₄)
+		i = argmin((λ .- K₀.^2).^2)
+
+		K = sqrt.([λ[i]])
+		a = reshape((A - K.^2 .* B) \ (c₀ + K.^2 .* c₁), M, 1)
+
 	end
 
-	x₀ = V \ a₀
-	x₀ = vcat(K₀.^2, x₀[iₑ])
-
-	fj! = (F, J, x) -> InhomEVP_F!(F, J, x, A, B, c, e)
-
-	x = nlsolve(only_fj!(fj!), x₀, ftol=tol).zero
-
-	K = sqrt.(complex(reshape(x[1:N], 1, N)))
-	a = permutedims(reshape(e * x[N+1:N*M], N, M))
+	if method == 2
 	
+		e, V, iₑ = OrthogSpace(d)
+	
+		if a₀ == Nothing
+			a₀ = vcat(-10*ones(N, 1), zeros(N*(M-1), 1))
+		else
+			a₀ = reshape(permutedims(a₀), N*M, 1)
+		end
+
+		if K₀ == Nothing
+			K₀ = 5*ones(N, 1)
+		else
+			K₀ = reshape(K₀, N, 1)
+		end
+
+		x₀ = V \ a₀
+		x₀ = vcat(K₀.^2, x₀[iₑ])
+
+		fj! = (F, J, x) -> InhomEVP_F!(F, J, x, A, B, c, e)
+
+		x = nlsolve(only_fj!(fj!), x₀, ftol=tol).zero
+
+		K = sqrt.(complex(reshape(x[1:N], 1, N)))
+		a = permutedims(reshape(e * x[N+1:N*M], N, M))
+
+	end
+
 	if imag(K) != zeros(1, N)
 		@warn "Solution contains passive layers."
 	end
