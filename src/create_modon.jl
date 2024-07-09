@@ -185,7 +185,7 @@ Arguments:
  - U: vortex speed, Number (default: 1)
 """
 
-function ΔNCalc(K²::Array, R::Union{Number,Vector}, β::Union{Number,Vector}, U::Number=1)
+function ΔNCalc(K²::Union{CuArray,Array}, R::Union{Number,Vector}, β::Union{Number,Vector}, U::Number=1)
 	
 	N = length(R)
 	Nk, Nl = size(K²)

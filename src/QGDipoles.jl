@@ -12,6 +12,7 @@ using LinearAlgebra
 using SpecialFunctions
 using QuadGK
 using NLsolve
+using CUDA
 
 # export and define functions to calculate the numerical integrals required to build matrices
 
