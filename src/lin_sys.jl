@@ -1,13 +1,30 @@
 """
 This file contains the numerical integration functions required to build the inhomogeneous eigenvalue
-problem:
+problem. This problem is of size MN x MN where M is the number of coefficients in each layer and N is
+the number of layers. The problem is:
 
     [A - sum_{n=1}^N (Kᵐ[n] B[n])] a = c₀ + sum_{n=1}^N (Kᵐ[n] c[n]),  d[j]ᵀa = 0, j ∈ {1, .., N}
 
-A and B₀ are given by the terms A_{j,k}, B_{j,k} in `JJ_int.jl` and B[n] contains only the rows of B₀
-corresponding to the coefficients in the n^th layer. The eigenvalues are denoted by Kᵐ[n] and the
-eigenvector by `a`. The exponent m is determined by the problem type; the layered QG model has m = 2
-while the SQG problem has m = 1. The vectors c₀, c[n] and d[n] are given by:
+where eigenvalues are denoted by Kᵐ[n] and the eigenvector by `a`. The exponent m is determined by the
+problem type; the layered QG model has m = 2 while the SQG problem has m = 1.
+
+This system is solved using two approaches. For N = 1 (inc. SQG problem), the system may be
+converted into a generalised eigenvalue problem of size 2M x 2M and solved directly. For N > 1,
+we instead use a nonlinear root finding approach with the NLSolve package. The method works by
+projecting `a` onto the subspace perpendicular to the d[n] vectors. A vector x is defined as
+x = [Kᵐ; a'] where a' denotes the projection of a. Since a' has N less degrees of freedom than
+a, and K² is of length N, the vector x is of length M*N. Defining
+
+F(x) = [A - sum_{n=1}^N (Kᵐ[n] B[n])] a - c₀ - sum_{n=1}^N (Kᵐ[n] c[n]),
+
+allows us to solve the inhomogeneous problem by finding roots of F(x) = 0 using some initial guess
+x₀ = [Kᵐ₀; a₀']. Changing the initial guess may be required to identify the required solutions.
+
+------------------------------------------------------------------------------------------------------
+
+For the layered QG problem, A and B₀ are given by the terms A_{j,k}, B_{j,k} in `JJ_int.jl` and B[n]
+contains only the rows of B₀ corresponding to the coefficients in the n^th layer.  The vectors c₀, 
+c[n] and d[n] are given by:
 
 (c[n])_i = 1/4 δ_{i, n},
 
@@ -15,18 +32,27 @@ c₀ = sum_{n=1}^N (μ[n] c[n]),
 
 and
 
-(d[n])_i = (-1)^(i/2) * δ_{mod(i, N), n}.
+(d[n])_i = (-1)^(i/n) * δ_{mod(i, N), n}.
 
-This system is solved with nonlinear root finding using the NLSolve package. The method works by
-projecting `a` onto the subspace perpendicular to the d[n] vectors. A vector x is defined as
-x = [Kᵐ; a'] where a' denotes the projection of a. Since a' has N less degrees of freedom than
-a, and K² is of length N, the vector x is of length M*N where M is the number of coefficients in
-each layer and N is the number of layers. Defining
+------------------------------------------------------------------------------------------------------
 
-F(x) = [A - sum_{n=1}^N (Kᵐ[n] B[n])] a - c₀ - sum_{n=1}^N (Kᵐ[n] c[n]),
+For the SQG problem, A_{j,k} = δ_{j,k} / (4*j), B is determined using `JJ_int` as a double Bessel
+integral of F(ξ) = [D(ξ) ξ]⁻¹ where:
 
-allows us to solve the inhomogeneous problem by finding roots of F(x) = 0 using some initial guess
-x₀ = [Kᵐ₀; a₀']. Changing the initial guess may be required to identify the required solutions.
+D(ξ) = sqrt(ξ^2 + μ) * tanh(sqrt(ξ^2 + μ) / λ[1]) + λ[2], 	for λ[1] > 0
+       sqrt(ξ^2 + μ) + λ[2],					for λ[1] = 0
+
+c_i = 1/4 δ_{i, 1},
+
+c₀ = 0,
+
+and
+
+d_i = (-1)^i.
+
+Note that for λ = [0, 0] and μ = 0, B can be calculated analytically as:
+
+B_{j+1, k+1} = 4*(-1)^(j-k+1)/((2j-2k-1)*(2j-2k+1)*(2j+2k+3)*(2j+2k+5))/π.
 """
 
 
@@ -40,33 +66,45 @@ Arguments:
  - λ: ratio of vortex radius to Rossby radius in each layer, Number or Vector
  - μ: nondimensional (y) vorticity gradient in each layer, Number or Vector
  - tol: error tolerance for QuadGK via `JJ_int`, Number (default: 1e-6)
+ - sqg: 0; creates layered QG system, 1; creates SQG system (default: 0)
 """
 
-function BuildLinSys(M::Int, λ::Union{Vector,Number}, μ::Union{Vector,Number}; tol::Number=1e-6)
+function BuildLinSys(M::Int, λ::Union{Vector,Number}, μ::Union{Vector,Number}; tol::Number=1e-6, sqg::Int=0)
 
-	N = length(μ)
-	A, B₀ = zeros(N*M, N*M), zeros(N*M, N*M)
+	if sqg == 0
 
-	for j in 0:M-1
-		for k in 0:M-1
+		N = length(μ)
+		A, B₀ = zeros(N*M, N*M), zeros(N*M, N*M)
 
-			A[j*N.+(1:N), k*N.+(1:N)] .= JJ_int(x -> A_func(x, λ, μ), j, k, tol)[1]
-			B₀[j*N.+(1:N), k*N.+(1:N)] .= JJ_int(x -> B_func(x, λ, μ), j, k, tol)[1]
+		[[A[j*N.+(1:N), k*N.+(1:N)] .= JJ_int(x -> A_func(x, λ, μ), j, k, tol)[1] for j = 0:M-1] for k = 0:M-1]
+		[[B₀[j*N.+(1:N), k*N.+(1:N)] .= JJ_int(x -> B_func(x, λ, μ), j, k, tol)[1] for j = 0:M-1] for k = 0:M-1]
 
+		B, c, d = zeros(N*M, N*M, N), zeros(N*M, N+1), zeros(N*M, N)
+		c₀ = vcat(ones(N), zeros((M-1)*N))
+	
+		for n in 1:N	
+			K = kron(I(M), diagm((1:N).==n))
+			B[:, :, n] = K * B₀
+			c[:, 1] = c[:, 1] + μ[n] * (K * c₀) / 4
+			c[:, n+1] = (K * c₀) / 4
+			d[:, n] = kron((-1).^(0:M-1), (1:N).==n)
 		end
+
 	end
 
-	B, c, d = zeros(N*M, N*M, N), zeros(N*M, N+1), zeros(N*M, N)
-	c₀ = vcat(ones(N), zeros((M-1)*N))
-	
-	for n in 1:N
+	if sqg == 1
+
+		A, B = diagm(1 ./(1:M)/4), zeros(M, M)
+		c, d = hcat(zeros(M, 1), vcat(1/4, zeros(M-1, 1))), reshape((-1).^(0:M-1), M, 1)
 		
-		K = kron(I(M), diagm((1:N).==n))
-		B[:, :, n] = K * B₀
-		c[:, 1] = c[:, 1] + μ[n] * (K * c₀) / 4
-		c[:, n+1] = (K * c₀) / 4
-		d[:, n] = kron((-1).^(0:M-1), (1:N).==n)
-		
+		if (μ == 0) & (λ == [0, 0])
+			B₀(j, k) = 4*(-1)^(j-k+1)/((2j-2k-1)*(2j-2k+1)*(2j+2k+3)*(2j+2k+5))/π
+			[[B[j+1, k+1] = B₀(j, k) for j = 0:M-1] for k = 0:M-1]
+		else
+			D_func(ξ) = @. sqrt(ξ^2 + μ) * tanh(sqrt(ξ^2 + μ) / λ[1]) + λ[2]
+			[[B[j+1, k+1] = JJ_int(x -> 1 ./(D_func(x).*x), j, k, tol)[1] for j = 0:M-1] for k = 0:M-1]
+		end
+
 	end
 
 	return A, B, c, d
