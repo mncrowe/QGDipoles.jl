@@ -34,5 +34,6 @@ K, a = IncludePassiveLayers(K, a, ActiveLayers)
 
 grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 ψ, q = Calc_ψq(a, U, ℓ, R, β, grid)
+u, v = Calc_uv(ψ, grid)
 
 Nothing

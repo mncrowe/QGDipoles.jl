@@ -11,7 +11,7 @@ R = 1		# Rossby radius in each layer
 M = 8		# number of coefficients in Zernike expansion
 tol = 1e-8	# maximum error in solution evaluation
 cuda = false	# use CuArrays for grid
-method = 0	# 1; eigensolve, 2; root finding, 0; defaults to 1
+method = 0	# 0; eigensolve/nlsolve, 1; nlsolve
 
 # Set grid parameters
 
@@ -30,5 +30,6 @@ K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol, method)
 
 grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 ψ, q = Calc_ψq(a, U, ℓ, R, β, grid)
+u, v = Calc_uv(ψ, grid)
 
 Nothing

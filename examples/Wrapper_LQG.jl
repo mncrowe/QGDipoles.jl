@@ -1,4 +1,4 @@
-# This example demonstates how to use the wrapper function `CreateModon`
+# This example demonstates how to use the wrapper function `CreateModonLQG`
 # This script is currently set up to match `2_Layer_Modon.jl`
 
 using QGDipoles
@@ -27,7 +27,7 @@ grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 
 # create modon solution
 
-ψ, q, K, a = CreateModon(grid, M, U, ℓ, R, β, ActiveLayers, x₀; K₀, a₀, tol)
-# ψ, q = CreateModon(grid, M, U, ℓ, R, β, ActiveLayers, x₀; K₀, a₀, tol) # fields only
+ψ, q, K, a = CreateModonLQG(grid, M, U, ℓ, R, β, ActiveLayers, x₀; K₀, a₀, tol)
+# ψ, q = CreateModonLQG(grid, M, U, ℓ, R, β, ActiveLayers, x₀; K₀, a₀, tol) # fields only
 
 Nothing

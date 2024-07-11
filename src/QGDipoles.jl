@@ -1,5 +1,8 @@
 """
-Package for creating steady modon solutions to the layered quasi-geostrophic equations.
+Package for creating steady modon solutions to the layered quasi-geostrophic equations and the
+surface quasi geostrophic equations.
+
+See `examples/` for example scripts.
 """
 
 module QGDipoles
@@ -26,7 +29,7 @@ include("lin_sys.jl")
 
 # export and define functions to create the modon solution
 
-export ZernikeR, GridStruct, CreateGrid, Calc_ψq, ΔNCalc, CreateModon
+export ZernikeR, GridStruct, CreateGrid, Calc_ψq, Calc_ψb, Calc_uv, ΔNCalc, CreateModonLQG, CreateModonSQG
 include("create_modon.jl")
 
 end

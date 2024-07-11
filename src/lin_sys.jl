@@ -66,12 +66,25 @@ Arguments:
  - λ: ratio of vortex radius to Rossby radius in each layer, Number or Vector
  - μ: nondimensional (y) vorticity gradient in each layer, Number or Vector
  - tol: error tolerance for QuadGK via `JJ_int`, Number (default: 1e-6)
- - sqg: 0; creates layered QG system, 1; creates SQG system (default: 0)
+ - sqg: false; creates layered QG system, true; creates SQG system (default: false)
 """
 
-function BuildLinSys(M::Int, λ::Union{Vector,Number}, μ::Union{Vector,Number}; tol::Number=1e-6, sqg::Int=0)
+function BuildLinSys(M::Int, λ::Union{Vector,Number}, μ::Union{Vector,Number}; tol::Number=1e-6, sqg::Bool=false)
 
-	if sqg == 0
+	if sqg
+
+		A, B = diagm(1 ./(1:M)/4), zeros(M, M)
+		c, d = hcat(zeros(M, 1), vcat(1/4, zeros(M-1, 1))), reshape((-1).^(0:M-1), M, 1)
+		
+		if (μ == 0) & (λ == [0, 0])
+			B₀(j, k) = 4*(-1)^(j-k+1)/((2j-2k-1)*(2j-2k+1)*(2j+2k+3)*(2j+2k+5))/π
+			[[B[j+1, k+1] = B₀(j, k) for j = 0:M-1] for k = 0:M-1]
+		else
+			D_func(ξ) = @. sqrt(ξ^2 + μ) * tanh(sqrt(ξ^2 + μ) / λ[1]) + λ[2]
+			[[B[j+1, k+1] = JJ_int(x -> 1 ./(D_func(x).*x), j, k, tol)[1] for j = 0:M-1] for k = 0:M-1]
+		end
+
+	else
 
 		N = length(μ)
 		A, B₀ = zeros(N*M, N*M), zeros(N*M, N*M)
@@ -88,21 +101,6 @@ function BuildLinSys(M::Int, λ::Union{Vector,Number}, μ::Union{Vector,Number};
 			c[:, 1] = c[:, 1] + μ[n] * (K * c₀) / 4
 			c[:, n+1] = (K * c₀) / 4
 			d[:, n] = kron((-1).^(0:M-1), (1:N).==n)
-		end
-
-	end
-
-	if sqg == 1
-
-		A, B = diagm(1 ./(1:M)/4), zeros(M, M)
-		c, d = hcat(zeros(M, 1), vcat(1/4, zeros(M-1, 1))), reshape((-1).^(0:M-1), M, 1)
-		
-		if (μ == 0) & (λ == [0, 0])
-			B₀(j, k) = 4*(-1)^(j-k+1)/((2j-2k-1)*(2j-2k+1)*(2j+2k+3)*(2j+2k+5))/π
-			[[B[j+1, k+1] = B₀(j, k) for j = 0:M-1] for k = 0:M-1]
-		else
-			D_func(ξ) = @. sqrt(ξ^2 + μ) * tanh(sqrt(ξ^2 + μ) / λ[1]) + λ[2]
-			[[B[j+1, k+1] = JJ_int(x -> 1 ./(D_func(x).*x), j, k, tol)[1] for j = 0:M-1] for k = 0:M-1]
 		end
 
 	end
@@ -181,21 +179,30 @@ Arguments:
  - A, B, c, d: inhomogeneous eigenvalue problem terms, Arrays
  - K₀, a₀: initial guesses for K and a, Arrays or Nothings (default: Nothing)
  - tol: error tolerance for NLSolve, Number (default: 1e-6)
- - method: 1 - eigensolve (1-layer only), 2 - root finding, 0 - select automatically (default: 0)
+ - method: 0 - eigensolve for N = 1 and nlsolve for N > 1, 1 - nlsolve (default: 0)
  - m: exponent of K in eignevalue problem (default: 2)
+ - sqg: false, uses m value specified; true, sets m = 1 (default: false)
+
+Note: setting `sqg=true` overwrites the value of `m` and is equivalent to setting `m=1`.
+The option to set both is included for consistency with `BuildLinSys` and more generality
+with the value of `m`.
 """
 
 function SolveInhomEVP(A::Array, B::Array, c::Array, d::Array; K₀=Nothing, a₀=Nothing,
-		tol::Number=1e-6, method::Int=0, m::Int=2)
+		tol::Number=1e-6, method::Int=0, m::Int=2, sqg::Bool=false)
+	
+	if sqg
+		m = 1
+	end
 	
 	N = size(d)[2]
 	M = Int(size(d)[1]/N)
 
-	if method == 0
-		if N == 1; method = 1; else; method = 2; end
+	if N > 1
+		method = 1
 	end
 
-	if method == 1
+	if method == 0
 		
 		if K₀ == Nothing
 			K₀ = [4]
@@ -223,7 +230,7 @@ function SolveInhomEVP(A::Array, B::Array, c::Array, d::Array; K₀=Nothing, a�
 
 	end
 
-	if method == 2
+	if method == 1
 	
 		e, V, iₑ = OrthogSpace(d)
 	

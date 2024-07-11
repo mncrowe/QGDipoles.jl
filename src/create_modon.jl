@@ -10,6 +10,8 @@ coefficient matrix `a`, M is the number of coefficients calculated and (r, θ)
 are plane polar coordinates about the vortex center. The function R_j denotes
 the Zernike radial function of order j.
 
+-----------------------------------------------------------------------------------
+
 In the layered QG case, the streamfunction and vorticity can be calculated from
 F using:
 
@@ -26,10 +28,20 @@ where
 	        ...       ,        ...      ,  ...  , ...   ... ,     ...         ;
 	         0        ,         0       ,   0   , ... R[N]⁻², ∇²-R[N]⁻²-β[N]/U]
 
+-----------------------------------------------------------------------------------
+
 In the SQG case, the streamfunction and buoyancy can be calculated from F using:
 
+[∂/∂z + 1/R'] ψ = -ℓF,
 
+and
 
+b = ∂ψ/∂z,
+
+where ∂/∂z = √(-∇² + β/U) tanh[√(-∇² + β/U) R] is a Dirichlet-Neumann operator which
+relates the surface derivative of ψ to it's surface value.
+
+-----------------------------------------------------------------------------------
 
 We calculate ψ, q and b in Fourier space where ∇² = -(k² + l²) using the FFTW package.
 Since ψ, q and b are real, we use the `rfft` and `irfft` functions and create
@@ -200,13 +212,83 @@ Function: Calc_ψb
 Calculate SQG fields ψ and b using coefficients and vortex parameters
 
 Arguments:
- - 
+ - a: M x 1 array of coefficients, Array
+ - (U, ℓ): vortex speed and radius, Numbers
+ - R: vector of [R, R'], Vector
+ - β: beta-plane (y) PV gradient, Number
+ - grid: grid structure containing x, y, and Krsq
+ - x₀: position of vortex center, vector (default: [0, 0])
+
+Note: Here R is the baroclinic Rossby radius, R = NH/f, and R' = R₀²/R where R₀ is
+the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = fN/g.
 """
 
-function Calc_ψb()
+function Calc_ψb(a::Array, U::Number, ℓ::Number, R::Vector, β::Number, grid, x₀::Vector=[0, 0])
 	
-	return Nothing
+	M, _ = size(a)
+	Nx, Ny = length(grid.x), length(grid.y)
+	ϵ = 1e-16
 	
+	x, y = reshape(Array(grid.x), :, 1), reshape(Array(grid.y), 1, :)
+	r, θ = @. sqrt((x-x₀[1])^2 + (y-x₀[2])^2), @. atan(y-x₀[2], x-x₀[1])
+
+	F = zeros(Nx, Ny)
+
+	for j in 1:M
+		F[:, :] += a[j, 1] * ZernikeR(j-1, r/ℓ);
+	end
+
+	F = U * F .* sin.(θ)
+	Fh = rfft(F)
+	Fh[1, 1] = 0
+	
+	∂z = sqrt.(grid.Krsq .+ β/U) .* tanh.((ϵ .+ sqrt.(grid.Krsq .+ β/U)) .* R[1])
+
+	if grid.Krsq isa CuArray
+		Fh = CuArray(Fh)
+	end
+
+	ψh = Fh ./ (∂z .+ (1/R[2] + ϵ))
+	bh = ∂z .* ψh
+
+	ψ = irfft(ψh, Nx)
+	b = irfft(bh, Nx)
+	
+	return ψ, b
+	
+end
+
+"""
+Function: Calc_uv
+
+Calculate the velocity fields from ψ using (u, v) = (-∂ψ/∂y, ∂ψ/∂x)
+
+Arguments:
+ - ψ: streamfunction, Array
+ - grid: grid structure containing kr and l
+"""
+
+function Calc_uv(ψ::Union{CuArray,Array}, grid)
+	
+	Nd = ndims(ψ)
+	Nx, Ny = size(ψ)
+	N = Int(length(ψ) / (Nx * Ny))
+
+	ψh = rfft(reshape(ψ, Nx, Ny, N), [1, 2])
+
+	uh = -im .* grid.l .* ψh
+	vh = im .* grid.kr .* ψh
+	
+	u = irfft(uh, Nx, [1, 2])
+	v = irfft(vh, Nx, [1, 2])
+
+	if Nd == 2
+		u = reshape(u, Nx, Ny)
+		v = reshape(v, Nx, Ny)
+	end
+
+	return u, v
+
 end
 
 """
@@ -258,9 +340,9 @@ function ΔNCalc(K²::Union{CuArray,Array}, R::Union{Number,Vector}, β::Union{N
 end
 
 """
-Function: CreateModon
+Function: CreateModonLQG
 
-High level wrapper function for calculating ψ and q using given vortex and background parameters
+High level wrapper function for calculating ψ and q for the Layered QG model using given parameters
 
 Arguments:
  - grid: grid structure containing x, y, and Krsq
@@ -275,7 +357,7 @@ Arguments:
 Note: provide values of K₀ and a₀ for active layers ONLY.
 """
 
-function CreateModon(grid, M::Int=8, U::Number=1, ℓ::Number=1, R::Union{Number,Vector}=1, β::Union{Number,Vector}=0,
+function CreateModonLQG(grid, M::Int=8, U::Number=1, ℓ::Number=1, R::Union{Number,Vector}=1, β::Union{Number,Vector}=0,
 	ActiveLayers::Union{Number,Vector}=1, x₀::Vector=[0, 0]; K₀=Nothing, a₀=Nothing, tol=1e-6)
 	
 	if length(ActiveLayers) < length(R); ActiveLayers = ones(length(R)); end
@@ -291,5 +373,39 @@ function CreateModon(grid, M::Int=8, U::Number=1, ℓ::Number=1, R::Union{Number
 	ψ, q = Calc_ψq(a, U, ℓ, R, β, grid, x₀)
 
 	return ψ, q, K, a
+
+end
+
+"""
+Function: CreateModonSQG
+
+High level wrapper function for calculating ψ and q for the SQG model using given parameters
+
+Arguments:
+ - grid: grid structure containing x, y, and Krsq
+ - M: number of coefficient to solve for, Integer (default: 12)
+ - (U, ℓ): vortex speed and radius, Numbers (default: (1, 1))
+ - R: vector of [R, R'], Vector (default: [Inf, Inf])
+ - β: beta-plane (y) PV gradient, Number (default: 0)
+ - x₀: position of vortex center, vector (default: [0, 0])
+ - K₀, a₀: initial guesses for K and a, Arrays or Nothings (default: Nothing)
+ - tol: error tolerance for QuadGK and NLSolve, Number (default: 1e-6)
+
+Note: Here R is the baroclinic Rossby radius, R = NH/f, and R' = R₀²/R where R₀ is
+the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = fN/g.
+"""
+
+function CreateModonSQG(grid, M::Int=12, U::Number=1, ℓ::Number=1, R::Vector=[Inf, Inf], β::Number=0,
+	x₀::Vector=[0, 0]; K₀=Nothing, a₀=Nothing, tol=1e-6)
+	
+	λ, μ = ℓ ./ R, β .* (ℓ^2/U)
+
+	A, B, c, d = BuildLinSys(M, λ, μ; tol, sqg=true)
+
+	K, a = SolveInhomEVP(A, B, c, d; K₀, a₀, tol, sqg=true)
+
+	ψ, b = Calc_ψb(a, U, ℓ, R, β, grid, x₀)
+
+	return ψ, b, K, a
 
 end
