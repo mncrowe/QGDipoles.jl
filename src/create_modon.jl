@@ -153,9 +153,11 @@ Arguments:
  - (R, β): Rossby radii and (y) PV gradients in each layer, Numbers or Vectors
  - grid: grid structure containing x, y, and Krsq
  - x₀: position of vortex center, vector (default: [0, 0])
+ - α: initial angle of vortex, Number (default: 0)
 """
 
-function Calc_ψq(a::Array, U::Number, ℓ::Number, R::Union{Number,Vector}, β::Union{Number,Vector}, grid, x₀::Vector=[0, 0])
+function Calc_ψq(a::Array, U::Number, ℓ::Number, R::Union{Number,Vector}, β::Union{Number,Vector},
+	grid, x₀::Vector=[0, 0], α::Number=0)
 	
 	M, N = size(a)
 	Nx, Ny = length(grid.x), length(grid.y)
@@ -171,7 +173,7 @@ function Calc_ψq(a::Array, U::Number, ℓ::Number, R::Union{Number,Vector}, β:
 		end
 	end
 
-	F = -U/ℓ * F .* sin.(θ)
+	F = -U/ℓ * F .* sin.(θ .- α)
 	Fh = rfft(F, [1, 2])
 	Fh[1, 1, :] .= 0
 
@@ -218,12 +220,13 @@ Arguments:
  - β: beta-plane (y) PV gradient, Number
  - grid: grid structure containing x, y, and Krsq
  - x₀: position of vortex center, vector (default: [0, 0])
+ - α: initial angle of vortex, Number (default: 0)
 
 Note: Here R is the baroclinic Rossby radius, R = NH/f, and R' = R₀²/R where R₀ is
 the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = fN/g.
 """
 
-function Calc_ψb(a::Array, U::Number, ℓ::Number, R::Vector, β::Number, grid, x₀::Vector=[0, 0])
+function Calc_ψb(a::Array, U::Number, ℓ::Number, R::Vector, β::Number, grid, x₀::Vector=[0, 0], α::Number=0)
 	
 	M, _ = size(a)
 	Nx, Ny = length(grid.x), length(grid.y)
@@ -238,7 +241,7 @@ function Calc_ψb(a::Array, U::Number, ℓ::Number, R::Vector, β::Number, grid,
 		F[:, :] += a[j, 1] * ZernikeR(j-1, r/ℓ);
 	end
 
-	F = U * F .* sin.(θ)
+	F = U * F .* sin.(θ .- α)
 	Fh = rfft(F)
 	Fh[1, 1] = 0
 	
@@ -351,6 +354,7 @@ Arguments:
  - (R, β): Rossby radii and (y) PV gradients in each layer, Numbers or Vectors, (default: (1, 0))
  - ActiveLayers: vector of 1s or 0s where 1 denotes an active layer, Number or Vector, (default: [1,..,1])
  - x₀: position of vortex center, vector (default: [0, 0])
+ - α: initial angle of vortex, Number (default: 0)
  - K₀, a₀: initial guesses for K and a, Arrays or Nothings (default: Nothing)
  - tol: error tolerance for QuadGK and NLSolve, Number (default: 1e-6)
 
@@ -358,7 +362,7 @@ Note: provide values of K₀ and a₀ for active layers ONLY.
 """
 
 function CreateModonLQG(grid, M::Int=8, U::Number=1, ℓ::Number=1, R::Union{Number,Vector}=1, β::Union{Number,Vector}=0,
-	ActiveLayers::Union{Number,Vector}=1, x₀::Vector=[0, 0]; K₀=Nothing, a₀=Nothing, tol=1e-6)
+	ActiveLayers::Union{Number,Vector}=1, x₀::Vector=[0, 0], α::Number=0; K₀=Nothing, a₀=Nothing, tol=1e-6)
 	
 	if length(ActiveLayers) < length(R); ActiveLayers = ones(length(R)); end
 	
@@ -370,7 +374,7 @@ function CreateModonLQG(grid, M::Int=8, U::Number=1, ℓ::Number=1, R::Union{Num
 	K, a = SolveInhomEVP(A, B, c, d; K₀, a₀, tol)
 	K, a = IncludePassiveLayers(K, a, ActiveLayers)
 
-	ψ, q = Calc_ψq(a, U, ℓ, R, β, grid, x₀)
+	ψ, q = Calc_ψq(a, U, ℓ, R, β, grid, x₀, α)
 
 	return ψ, q, K, a
 
@@ -388,6 +392,7 @@ Arguments:
  - R: vector of [R, R'], Vector (default: [Inf, Inf])
  - β: beta-plane (y) PV gradient, Number (default: 0)
  - x₀: position of vortex center, vector (default: [0, 0])
+ - α: initial angle of vortex, Number (default: 0)
  - K₀, a₀: initial guesses for K and a, Arrays or Nothings (default: Nothing)
  - tol: error tolerance for QuadGK and NLSolve, Number (default: 1e-6)
 
@@ -396,7 +401,7 @@ the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = fN/g.
 """
 
 function CreateModonSQG(grid, M::Int=12, U::Number=1, ℓ::Number=1, R::Vector=[Inf, Inf], β::Number=0,
-	x₀::Vector=[0, 0]; K₀=Nothing, a₀=Nothing, tol=1e-6)
+	x₀::Vector=[0, 0], α::Number=0; K₀=Nothing, a₀=Nothing, tol=1e-6)
 	
 	λ, μ = ℓ ./ R, β .* (ℓ^2/U)
 
@@ -404,7 +409,7 @@ function CreateModonSQG(grid, M::Int=12, U::Number=1, ℓ::Number=1, R::Vector=[
 
 	K, a = SolveInhomEVP(A, B, c, d; K₀, a₀, tol, sqg=true)
 
-	ψ, b = Calc_ψb(a, U, ℓ, R, β, grid, x₀)
+	ψ, b = Calc_ψb(a, U, ℓ, R, β, grid, x₀, α)
 
 	return ψ, b, K, a
 
