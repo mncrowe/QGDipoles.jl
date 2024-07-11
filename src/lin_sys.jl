@@ -194,6 +194,10 @@ function SolveInhomEVP(A::Array, B::Array, c::Array, d::Array; K₀=Nothing, a�
 	if sqg
 		m = 1
 	end
+
+	if K₀ isa Number
+		K₀ = [K₀]
+	end
 	
 	N = size(d)[2]
 	M = Int(size(d)[1]/N)
