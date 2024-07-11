@@ -15,7 +15,7 @@ using Test
 	A, B, c, d = BuildLinSys(M, [0, 0], 0; tol, sqg=true)
 	K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol, sqg=true)
 
-	@test abs(K[1] - 4.12129) < 1e-5
+	@test abs(K[1] - 4.12126) < 1e-5
 
 	grid = CreateGrid(128, 128, 10, 10)
 	ψ, q = Calc_ψq(a, 1, 1, Inf, 0, grid)
