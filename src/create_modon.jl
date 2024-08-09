@@ -230,7 +230,7 @@ function Calc_ψb(a::Array, U::Number, ℓ::Number, R::Vector, β::Number, grid,
 	
 	M, _ = size(a)
 	Nx, Ny = length(grid.x), length(grid.y)
-	ϵ = 1e-16
+	ϵ = 1e-15
 	
 	x, y = reshape(Array(grid.x), :, 1), reshape(Array(grid.y), 1, :)
 	r, θ = @. sqrt((x-x₀[1])^2 + (y-x₀[2])^2), @. atan(y-x₀[2], x-x₀[1])
@@ -309,7 +309,7 @@ function ΔNCalc(K²::Union{CuArray,Array}, R::Union{Number,Vector}, β::Union{N
 	
 	N = length(R)
 	Nk, Nl = size(K²)
-	ϵ = 1e-16
+	ϵ = max(1, maximum(R.^-2)) * 1e-15
 	
 	if length(β) < N
 		βU⁻¹ = zeros(N)
