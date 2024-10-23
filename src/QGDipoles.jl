@@ -4,7 +4,6 @@ surface quasi geostrophic equations.
 
 See `examples/` for example scripts.
 """
-
 module QGDipoles
 
 # load required packages
