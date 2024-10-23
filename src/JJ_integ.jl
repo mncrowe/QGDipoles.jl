@@ -30,7 +30,6 @@ Arguments:
  - λ: ratio of vortex radius to Rossby radius in each layer, Number or Vector
  - μ: nondimensional (y) vorticity gradient in each layer, Number or Vector
 """
-
 function A_func(ξ::Number, λ::Union{Vector,Number}, μ::Union{Vector,Number})
 	
 	N = length(μ)
@@ -62,7 +61,6 @@ Arguments:
  - λ: ratio of vortex radius to Rossby radius in each layer, Number or Vector
  - μ: nondimensional (y) vorticity gradient in each layer, Number or Vector
 """
-
 function B_func(ξ::Number, λ::Union{Vector,Number}, μ::Union{Vector,Number})
 	
 	N = length(μ)
@@ -95,7 +93,6 @@ Arguments:
  - k: second Bessel function index, Integer
  - tol: error tolerance for QuadGK, Number (default: 1e-6)
 """
-
 function JJ_int(F::Function, j::Int, k::Int, tol::Number=1e-6)
 	
 	d, D = 1e3, 100		# splitting parameter and domain limit for exp term
