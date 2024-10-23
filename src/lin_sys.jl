@@ -68,7 +68,6 @@ Arguments:
  - tol: error tolerance for QuadGK via `JJ_int`, Number (default: 1e-6)
  - sqg: false; creates layered QG system, true; creates SQG system (default: false)
 """
-
 function BuildLinSys(M::Int, λ::Union{Vector,Number}, μ::Union{Vector,Number}; tol::Number=1e-6, sqg::Bool=false)
 
 	if sqg
@@ -118,7 +117,6 @@ Arguments:
  - A, B, c, d: inhomogeneous eigenvalue problem terms, Arrays
  - ActiveLayers: vector of 1s or 0s where 1 denotes an active layer, Number or Vector
 """
-
 function ApplyPassiveLayers(A::Array, B::Array, c::Array, d::Array, ActiveLayers::Union{Number,Vector})
 	
 	if ActiveLayers isa Number
@@ -150,7 +148,6 @@ Arguments:
  - K, a: eigenvalue and coefficient arrays describing system solution, Arrays
  - ActiveLayers: vector of 1s or 0s where 1 denotes an active layer, Number or Vector
 """
-
 function IncludePassiveLayers(K::Array, a::Array, ActiveLayers::Union{Number,Vector})
 	
 	if ActiveLayers isa Number
@@ -187,7 +184,6 @@ Note: setting `sqg=true` overwrites the value of `m` and is equivalent to settin
 The option to set both is included for consistency with `BuildLinSys` and more generality
 with the value of `m`.
 """
-
 function SolveInhomEVP(A::Array, B::Array, c::Array, d::Array; K₀=Nothing, a₀=Nothing,
 		tol::Number=1e-6, method::Int=0, m::Int=2, sqg::Bool=false)
 	
@@ -284,7 +280,6 @@ Arguments:
  - A, B, c: inhomogeneous eigenvalue problem terms, Arrays
  - e: basis spanning the space perpendicular to the d[n], Array
 """
-
 function InhomEVP_F!(F, J, x::Array, A::Array, B::Array, c::Array, e::Array)
 
 	N, j = size(e)
@@ -324,7 +319,6 @@ Extends the input to an orthonormal basis over R^n using the Gram-Schmidt method
 Arguments:
  - v: array with vectors as columns, Array
 """
-
 function OrthogSpace(v)
 	
 	N = size(v)[1]
