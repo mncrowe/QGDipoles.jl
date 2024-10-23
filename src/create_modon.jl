@@ -62,7 +62,6 @@ Arguments:
  - n: order, Integer
  - x: evaluation point, Number or Array
 """
-
 function ZernikeR(n::Int, x::Union{Number,Array})
 	
 	y = @. (-1)^n * x * jacobi(2*x^2 - 1, n, 0, 1) * (x <= 1)
@@ -80,7 +79,6 @@ Arguments:
  - kr, l: x and y points in Fourier space, Arrays
  - Krsq: kr²+l² in Fourier space, Array
 """
-
 struct GridStruct
 	x
 	y
@@ -99,7 +97,6 @@ Arguments:
  - Lx, Ly: x and y domains, either vectors of endpoints or lengths, Numbers or Vectors
  - cuda: true; use CUDA CuArray for fields
 """
-
 function CreateGrid(Nx::Int, Ny::Int, Lx::Union{Number,Vector}, Ly::Union{Number,Vector}; cuda::Bool=false)
 
 	if length(Lx) == 2
@@ -155,7 +152,6 @@ Arguments:
  - x₀: position of vortex center, vector (default: [0, 0])
  - α: initial angle of vortex, Number (default: 0)
 """
-
 function Calc_ψq(a::Array, U::Number, ℓ::Number, R::Union{Number,Vector}, β::Union{Number,Vector},
 	grid, x₀::Vector=[0, 0], α::Number=0)
 	
@@ -225,7 +221,6 @@ Arguments:
 Note: Here R is the baroclinic Rossby radius, R = NH/f, and R' = R₀²/R where R₀ is
 the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = fN/g.
 """
-
 function Calc_ψb(a::Array, U::Number, ℓ::Number, R::Vector, β::Number, grid, x₀::Vector=[0, 0], α::Number=0)
 	
 	M, _ = size(a)
@@ -270,7 +265,6 @@ Arguments:
  - ψ: streamfunction, Array
  - grid: grid structure containing kr and l
 """
-
 function Calc_uv(ψ::Union{CuArray,Array}, grid)
 	
 	Nd = ndims(ψ)
@@ -304,7 +298,6 @@ Arguments:
  - (R, β): Rossby radii and (y) PV gradients in each layer, Numbers or Vectors
  - U: vortex speed, Number (default: 1)
 """
-
 function ΔNCalc(K²::Union{CuArray,Array}, R::Union{Number,Vector}, β::Union{Number,Vector}, U::Number=1)
 	
 	N = length(R)
@@ -360,7 +353,6 @@ Arguments:
 
 Note: provide values of K₀ and a₀ for active layers ONLY.
 """
-
 function CreateModonLQG(grid, M::Int=8, U::Number=1, ℓ::Number=1, R::Union{Number,Vector}=1, β::Union{Number,Vector}=0,
 	ActiveLayers::Union{Number,Vector}=1, x₀::Vector=[0, 0], α::Number=0; K₀=Nothing, a₀=Nothing, tol=1e-6)
 	
@@ -399,7 +391,6 @@ Arguments:
 Note: Here R is the baroclinic Rossby radius, R = NH/f, and R' = R₀²/R where R₀ is
 the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = fN/g.
 """
-
 function CreateModonSQG(grid, M::Int=12, U::Number=1, ℓ::Number=1, R::Vector=[Inf, Inf], β::Number=0,
 	x₀::Vector=[0, 0], α::Number=0; K₀=Nothing, a₀=Nothing, tol=1e-6)
 	
