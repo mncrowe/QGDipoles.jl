@@ -44,21 +44,100 @@ Solving this linear system allows the surface streamfunction, $\psi$, and surfac
 
 ### Solving the Linear System
 
-Consider the problem
+Consider the multi-parameter, inhomogeneous eigenvalue problem
 
 $$ \left[ \textbf{A} -  \sum _{n = 1}^N K_n^m\textbf{B}_n \right] \textbf{a} = \textbf{c}_0 + \sum _{n = 1}^N K_n^m \textbf{c}_n, \quad \textrm{s.t.} \quad \textbf{d}_n \cdot a = 0 \quad \textrm{for} \quad n \in [1, \dots N], $$
 
-which describes both the SQG ($m, N = 1$) and LQG ($m = 2$) systems.
+which describes both the SQG ($m, N = 1$) and LQG ($m = 2$) systems. For $N = 1$, this system may be converted into a quadratic eigenvalue problem and solved by standard techniques. For $N > 1$, existing techniques scale poorly with matrix size so we take an alternative approach and find $(K, \textbf{a})$ using a root finding method, where the orthogonality conditions ($\textbf{d}_n \cdot a = 0$) are used to reduce the dimension of the space. These two approaches are described in the Appendix of [3].
+
+### Recovering the Vortex Solution
+
+Once the coefficients are determined, they are multiplied by the basis polynomials and summed on a specified numerical grid to give an intermediate field, $\textbf{F}$. The streamfunction, $\psi$, potential vorticity anomaly, $q$ (LQG), and surface buoyancy, $b$ (SQG), are related to $\textbf{F}$ by differential operators and may be calculated using discrete Fourier transforms. Note that the streamfunction may decay slowly in the far-field for certain parameters so a sufficiently large domain is required to avoid Gibbs phenemenon near the domain edges.
+
+### Integration with GeophysicalFlows.jl
+
+This package is designed to work with the `TwoDGrid` structure from FourierFlows.jl and GeophysicalFlows.jl. As such, these functions may be used to define initial conditions for layered and surface quasi-geostrophic simulations which may run on either CPUs or GPUs. However, FourierFlows.jl and GeophysicalFlows.jl are NOT required for this package to function as an alternative grid (created using `CreateGrid`), using the same field names as FourierFlows.jl, is available.
 
 ## Examples
 
-Examples; make and plot examples based on example scripts.
+Here we present some examples which demonstrate the how to use this package. Further examples are available in the `examples/` directory.
 
-### Example 1: stuff...
+### Example 1: 1-layer QG
 
-### Example 2: more stuff ...
+Let's calculate and plot the Larichev-Reznik dipole (LRD). This diople exists on the $\beta$-plane in the equivalent barotropic model so we take $\beta = R = 1$ and consider a 1-layer solution ($N = 1$). We'll also assume unit radius and velocity, $\ell = U = 1$. Let's start by loading the package and defining some parameters.
 
-### Example 3: and so on ...
+```julia
+
+using QGDipoles
+
+# Set problem parameters
+
+U, ℓ = 1, 1	# vortex speed and radius
+R = 1		# Rossby radius in each layer
+β = 1		# background PV gradient in each layer
+
+M = 8		# number of coefficients in Zernike expansion
+tol = 1e-8	# maximum error in solution evaluation
+
+# Set grid parameters
+
+Nx, Ny = 512, 512
+Lx, Ly = 10, 10
+
+```
+
+We've taken $M = 8$ as this is generally a sufficient number of terms to get a relative error $< 10^{-6}$ in the final result. The tolerance, `tol`, is used in calculating the terms in the linear system and a value of $10^{-8}$ corresponds to approximately the same error as our chosen $M$ value. We're also going to build a grid with $512$ points in each direction and have taken the grid size to be $10$ in each direction, which is sufficient to capture the far-field decay of the vortex. We can now build the linear system and solve for the coefficients as follows:
+
+```julia
+
+# Build and solve linear system for coefficients
+
+λ = ℓ / R
+μ = β * ℓ^2/U
+
+A, B, c, d = BuildLinSys(M, λ, μ; tol)
+K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol)
+
+```
+
+The intermediate parameters, $\lambda$ and $\mu$, describe the rescaled vortex radius and PV gradient. Finally, we can define a grid and evaluate our streamfunction, PV and velocities using:
+
+```julia
+
+# Create grid and calculate streamfunctions and vorticities
+
+grid = CreateGrid(Nx, Ny, Lx, Ly)
+ψ, q = Calc_ψq(a, U, ℓ, R, β, grid)
+u, v = Calc_uv(ψ, grid)
+
+```
+
+We can plot our solution 
+
+
+### Example 2: multi-layer QG
+
+Introduce passive layers.
+
+no figure
+
+### Example 3: SQG
+
+simple, include GPU
+
+no figure
+
+### Example 4: Wrappers
+
+both LQG and SQG
+
+no figure
+
+### Example 5: A GeophysicalFlows.jl simulation
+
+1 layer LCD evol steady propagation.
+
+figure of start and end state
 
 ## Appendix
 
