@@ -211,11 +211,13 @@ no figure
 
 ### Example 4: Wrappers
 
+Introduce wrappers, maybe make an LCD specific wrapper?
 
+Also, play around with K_0 to get a higher order radial modon [1].
 
 both LQG and SQG
 
-no figure
+plot of higher order SQG solution.
 
 ### Example 5: A GeophysicalFlows.jl simulation
 
