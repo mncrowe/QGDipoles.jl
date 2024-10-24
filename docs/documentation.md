@@ -112,8 +112,23 @@ u, v = Calc_uv(ψ, grid)
 
 ```
 
-We can plot our solution 
+We can plot our solution using Plots.jl:
 
+```julia
+
+using Plots
+
+heatmap(grid.x, grid.y, transpose(ψ[:,:,1]);
+    colormap = :balance,
+    aspect_ratio=1,
+    xlims=(-Lx/2, Lx/2),
+    ylims = (-Ly/2, Ly/2))
+
+```
+
+<img width="338" alt="image" src="https://github.com/user-attachments/assets/4e17f05d-4edf-4389-968a-bc3e17c85f95">
+
+Note that we transpose $\psi$ when plotting as $x$ corresonds to the first dimension of $\psi$.
 
 ### Example 2: multi-layer QG
 
