@@ -132,6 +132,16 @@ Note that we transpose $\psi$ when plotting as $x$ corresonds to the first dimen
 
 ### Example 2: multi-layer QG
 
+This example considers a 3-layer solution and introduces the concept of active and passive layers. We define an active layer to be a layer with a closed streamline at $x^2 + y^2 = \ell^2$ whereas a passive layer has no closed streamlines. Therefore, fluid within the vortex in an active layer remains trapped in the vortex. Fluid in the passive layer is not trapped within the vortex but can still be affected through the change in layer thickness associated with the streamfunction in neighbouring layers. Passive layers have $F_i(z) = (\beta_i/U) z$ everywhere and hence have no eigenvalue, $K_i$, to solve for. Therefore, the corresponding linear system can be simplified by removing rows and columns corresponding to passive layers and solving the reduced system for the active layers only.
+
+We'll start by defining some parameters:
+
+```julia
+
+
+
+```
+
 Introduce passive layers.
 
 no figure
