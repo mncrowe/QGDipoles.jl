@@ -132,27 +132,86 @@ Note that we transpose $\psi$ when plotting as $x$ corresonds to the first dimen
 
 ### Example 2: multi-layer QG
 
-This example considers a 3-layer solution and introduces the concept of active and passive layers. We define an active layer to be a layer with a closed streamline at $x^2 + y^2 = \ell^2$ whereas a passive layer has no closed streamlines. Therefore, fluid within the vortex in an active layer remains trapped in the vortex. Fluid in the passive layer is not trapped within the vortex but can still be affected through the change in layer thickness associated with the streamfunction in neighbouring layers. Passive layers have $F_i(z) = (\beta_i/U) z$ everywhere and hence have no eigenvalue, $K_i$, to solve for. Therefore, the corresponding linear system can be simplified by removing rows and columns corresponding to passive layers and solving the reduced system for the active layers only.
+This example considers a 3-layer solution and introduces the concept of active and passive layers. We define an active layer to be a layer with a closed streamline at $x^2 + y^2 = \ell^2$ whereas a passive layer has no closed streamlines. Therefore, fluid within the vortex in an active layer remains trapped in the vortex. Conversely, fluid in the passive layer is not trapped in a vortex core but can still be affected through the change in layer thickness associated with the streamfunction in neighbouring layers. Passive layers have $F_i(z) = (\beta_i/U) z$ everywhere and hence have no eigenvalue, $K_i$, to solve for. Further, the coefficients within a passive layer are zero though the solution may still be non-zero due to the coefficients in neighbouring layers. Therefore, the corresponding linear system can be simplified by removing rows and columns corresponding to passive layers and solving the reduced system for the active layers only.
 
 We'll start by defining some parameters:
 
 ```julia
 
+using QGDipoles
 
+# Set problem parameters
+
+U, ℓ = 1, 1			# vortex speed and radius
+R = [1, 1, 1]			# Rossby radius in each layer
+β = [0, 0, 1]			# background PV gradient in each layer
+ActiveLayers = [0, 1, 0]	# 1 => layer contains vortex region
+x₀ = [5, 5]			# location of vortex center
+
+M = 8				# number of coefficients in Zernike expansion
+tol = 1e-8			# maximum error in solution evaluation
+
+# Set grid parameters
+
+Nx, Ny = 512, 512
+Lx, Ly = [0, 10], [0, 10]
 
 ```
 
-Introduce passive layers.
+We've assumed that only the middle layer is active. Therefore our solution will describe a mid-depth propagating structure. We've also taken a background PV gradient in the lower layer only, to represent, say, a topographic slope. Finally, we've taken our vortex to be centred at $[5, 5]$ and taken $x$ and $y$ to run from $0$ to $10$.
 
-no figure
+We start by building the full linear system:
+
+```julia
+
+# Build and solve linear system for coefficients
+
+λ = ℓ ./ R
+μ = β * ℓ^2/U
+
+A, B, c, d = BuildLinSys(M, λ, μ; tol)
+
+```
+
+Next we remove the passive layers:
+
+```julia
+
+A, B, c, d = ApplyPassiveLayers(A, B, c, d, ActiveLayers)
+
+```
+
+We can now solve the reduced system and put the passive layers, which have $(K, \textbf{a}) = (0, \textbf{0})$, back in to ensure the sizes of $K$ and $\textbf{a}$ match the number of layers:
+
+```julia
+
+K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol)
+K, a = IncludePassiveLayers(K, a, ActiveLayers)
+
+```
+
+Finally, we can calculate our solution
+
+```julia
+
+# Create grid and calculate streamfunctions and vorticities
+
+grid = CreateGrid(Nx, Ny, Lx, Ly)
+ψ, q = Calc_ψq(a, U, ℓ, R, β, grid, x₀)
+
+```
 
 ### Example 3: SQG
+
+This example covers the SQG vortex and introduces grids on a GPU.
 
 simple, include GPU
 
 no figure
 
 ### Example 4: Wrappers
+
+
 
 both LQG and SQG
 
