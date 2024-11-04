@@ -24,7 +24,7 @@ where ``\beta_i`` denotes the background PV gradient, ``i \in [1,\dots,N]`` is t
 \left[ \textbf{A} -  \sum _{n = 1}^N K_n^2\textbf{B}_n \right] \textbf{a} = \textbf{c}_0 + \sum _{n = 1}^N K_n^2 \textbf{c}_n,
 ```
 
-where ``\textbf{A}`` and ``\textbf{B}_n`` are matrices, ``\textbf{a}`` is a vector containing the coefficients in the polynomial expansion, ``\textbf{c}_j`` are vectors and the ``K_n`` are defined in ``F_i`` above and appear as unknown eigenvalues in the linear problem. In order to solve the system, ``N`` additional conditions are required. These are ``\textbf{d}_n \cdot a = 0`` for ``n \in [1, \dots, N]`` where the ``\textbf{d}_n`` are vectors. These conditions correspond to the requirement that the streamfunction and vorticity are continuous in each layer. In principal, we have an infinite number of coefficients in ``\textbf{a}``. However, since we know that these coefficients must decay with increasing index (since ``\psi`` in continuous), we can truncate the expansion after ``M`` terms. The resulting linear system is of size ``MN \times MN``.
+where ``\textbf{A}`` and ``\textbf{B}_n`` are matrices, ``\textbf{a}`` is a vector containing the coefficients in the polynomial expansion, ``\textbf{c}_j`` are vectors and the ``K_n`` are defined in ``F_i`` above and appear as unknown eigenvalues in the linear problem. In order to solve the system, ``N`` additional conditions are required. These are ``\textbf{d}_n \cdot textbf{a} = 0`` for ``n \in [1, \dots, N]`` where the ``\textbf{d}_n`` are vectors. These conditions correspond to the requirement that the streamfunction and vorticity are continuous in each layer. In principal, we have an infinite number of coefficients in ``\textbf{a}``. However, since we know that these coefficients must decay with increasing index (since ``\psi`` in continuous), we can truncate the expansion after ``M`` terms. The resulting linear system is of size ``MN \times MN``.
 
 Solving this system determines the expansion coefficients and eigenvalues and hence allows ``\psi`` and ``q`` to be evaluated on any given spatial grid. In the one-layer case the problem reduces to known analytical solutions, such as the Lamb-Chaplygin dipole [4] and the Larichev-Reznik dipole [5].
 
@@ -48,7 +48,7 @@ is a Dirichlet-Neumann operator linking the surface streamfunction, ``\psi``, an
 \left[ \textbf{A} -  K\textbf{B} \right] \textbf{a} = \textbf{c}_0 + K \textbf{c}_1,
 ```
 
-where ``\textbf{A}`` and ``\textbf{B}`` are matrices, ``\textbf{c}_i`` are vectors, ``\textbf{a}`` is a vector of coefficients and ``K`` is an eigenvalue related to ``F``. An additional condition is required to solve this system for a unique set of ``K``. This condition is taken to be continuity across the vortex boundary and corresponds to ``\textbf{d} \cdot a = 0`` for some vector ``\textbf{d}``. In principal, we have an infinite number of coefficients in ``\textbf{a}``. However, since we know that these coefficients must decay with increasing index (since ``\psi`` in continuous), we can truncate the expansion after ``M`` terms. The resulting linear system is of size ``M \times M``.
+where ``\textbf{A}`` and ``\textbf{B}`` are matrices, ``\textbf{c}_i`` are vectors, ``\textbf{a}`` is a vector of coefficients and ``K`` is an eigenvalue related to ``F``. An additional condition is required to solve this system for a unique set of ``K``. This condition is taken to be continuity across the vortex boundary and corresponds to ``\textbf{d} \cdot \textbf{a} = 0`` for some vector ``\textbf{d}``. In principal, we have an infinite number of coefficients in ``\textbf{a}``. However, since we know that these coefficients must decay with increasing index (since ``\psi`` in continuous), we can truncate the expansion after ``M`` terms. The resulting linear system is of size ``M \times M``.
 
 Solving this linear system allows the surface streamfunction, ``\psi``, and surface bouyancy, ``b``, to be calculated.
 
@@ -57,10 +57,10 @@ Solving this linear system allows the surface streamfunction, ``\psi``, and surf
 Consider the multi-parameter, inhomogeneous eigenvalue problem
 
 ```math
-\left[ \textbf{A} -  \sum _{n = 1}^N K_n^m\textbf{B}_n \right] \textbf{a} = \textbf{c}_0 + \sum _{n = 1}^N K_n^m \textbf{c}_n, \quad \textrm{s.t.} \quad \textbf{d}_n \cdot a = 0 \quad \textrm{for} \quad n \in [1, \dots N],
+\left[ \textbf{A} -  \sum _{n = 1}^N K_n^m\textbf{B}_n \right] \textbf{a} = \textbf{c}_0 + \sum _{n = 1}^N K_n^m \textbf{c}_n, \quad \textrm{s.t.} \quad \textbf{d}_n \cdot \textbf{a} = 0 \quad \textrm{for} \quad n \in [1, \dots N],
 ```
 
-which describes both the SQG (``m, N = 1``) and LQG (``m = 2``) systems. For ``N = 1``, this system may be converted into a quadratic eigenvalue problem and solved by standard techniques. For ``N > 1``, existing techniques scale poorly with matrix size so we take an alternative approach and find ``(K, \textbf{a})`` using a root finding method, where the orthogonality conditions (``\textbf{d}_n \cdot a = 0``) are used to reduce the dimension of the space. These two approaches are described in the Appendix of [3].
+which describes both the SQG (``m, N = 1``) and LQG (``m = 2``) systems. For ``N = 1``, this system may be converted into a quadratic eigenvalue problem and solved by standard techniques. For ``N > 1``, existing techniques scale poorly with matrix size so we take an alternative approach and find ``(K, \textbf{a})`` using a root finding method, where the orthogonality conditions (``\textbf{d}_n \cdot \textbf{a} = 0``) are used to reduce the dimension of the space. These two approaches are described in the Appendix of [3].
 
 ### Recovering the Vortex Solution
 
