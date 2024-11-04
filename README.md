@@ -20,7 +20,7 @@ This package is not compatible with versions of Julia earlier than 1.10 due to t
 
 ## Examples and Documentation
 
-See `examples/` for example scripts and `docs/documentation.md` for information on how to use this package and how it works. Full documetation is available at ...
+See `examples/` for example scripts and `docs/documentation.md` for information on how to use this package and how it works. Full documetation is available [here](https://mncrowe.github.io/QGDipoles.jl).
 
 ## Files
 
