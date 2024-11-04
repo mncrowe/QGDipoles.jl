@@ -1,0 +1,6 @@
+[deps]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+QGDipoles = "192f05a4-068c-458e-9e9e-a50cd96b7215"
+
+[compat]
+Documenter = "1.7"
