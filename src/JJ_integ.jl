@@ -21,7 +21,7 @@ required for building A and B. The function `JJ_int` below is still used in the 
 
 
 """
-Function: A_func
+Function: A_func(ξ, λ, μ)
 
 Evaluates the matrix function A(ξ, λ, μ) = K(ξ) [K(ξ) + D(μ)]⁻¹ ξ⁻¹
 
@@ -52,7 +52,7 @@ function A_func(ξ::Number, λ::Union{Vector,Number}, μ::Union{Vector,Number})
 end
 
 """
-Function: B_func
+Function: B_func(ξ, λ, μ)
 
 Evaluates the matrix function B(ξ, λ, μ) = [K(ξ) + D(μ)]⁻¹ ξ⁻¹
 
@@ -83,7 +83,7 @@ function B_func(ξ::Number, λ::Union{Vector,Number}, μ::Union{Vector,Number})
 end
 
 """
-Function: JJ_int
+Function: JJ_int(F, j, k, tol=1e-6)
 
 Evaluates the integral I = int_0^inf F(ξ) J_{2j+2}(ξ) J_{2k+2}(ξ) dξ
 

@@ -57,7 +57,7 @@ B_{j+1, k+1} = 4*(-1)^(j-k+1)/((2j-2k-1)*(2j-2k+1)*(2j+2k+3)*(2j+2k+5))/π.
 
 
 """
-Function: BuildLinSys
+Function: BuildLinSys(M, λ, μ; tol=1e-6, sqg=false)
 
 Builds the terms in the inhomogeneous eigenvalue problem; A, B, c, d
 
@@ -115,7 +115,7 @@ function BuildLinSys(M::Int, λ::Union{Vector,Number}, μ::Union{Vector,Number};
 end
 
 """
-Function: ApplyPassiveLayers
+Function: ApplyPassiveLayers(A, B, c, d, ActiveLayers)
 
 Removes rows and columns corresponding to passive layers from the system
 
@@ -148,7 +148,7 @@ function ApplyPassiveLayers(A::Array, B::Array, c::Array, d::Array, ActiveLayers
 end
 
 """
-Function: IncludePassiveLayers
+Function: IncludePassiveLayers(K, a, ActiveLayers)
 
 Includes columns corresponding to passive layers in the eigenvalue and coefficient arrays
 
@@ -178,7 +178,7 @@ function IncludePassiveLayers(K::Array, a::Array, ActiveLayers::Union{Number,Vec
 end
 
 """
-Function: SolveInhomEVP
+Function: SolveInhomEVP(A, B, c, d; K₀=Nothing, a₀=Nothing, tol=1e-6, method=0, m=2, sqg=false)
 
 Solves the inhomogeneous eigenvalue problem using nonlinear root finding
 
@@ -301,7 +301,7 @@ function SolveInhomEVP(A::Array, B::Array, c::Array, d::Array; K₀=Nothing, a�
 end
 
 """
-Function: InhomEVP_F!
+Function: InhomEVP_F!(F, J, x, A, B, c, d, e)
 
 Calculates the function F and it's derivatives, J, at a given point x
 
@@ -347,7 +347,7 @@ function InhomEVP_F!(F, J, x::Array, A::Array, B::Array, c::Array, e::Array)
 end
 
 """
-Function: OrthogSpace
+Function: OrthogSpace(v)
 
 Extends the input to an orthonormal basis over R^n using the Gram-Schmidt method
 

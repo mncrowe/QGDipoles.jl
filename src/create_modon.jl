@@ -54,7 +54,7 @@ GeophysicalFlows.jl so will also work with this grid.
 
 
 """
-Function: ZernikeR
+Function: ZernikeR(n, x)
 
 Define the Zernike radial function using the jacobi function from SpecialFunctions
 
@@ -88,7 +88,7 @@ struct GridStruct
 end
 
 """
-Function: CreateGrid
+Function: CreateGrid(Nx, Ny, Lx, Ly; cuda=false)
 
 Define the numerical grid as a `GridStruct`
 
@@ -140,7 +140,7 @@ function CreateGrid(Nx::Int, Ny::Int, Lx::Union{Number,Vector}, Ly::Union{Number
 end
 
 """
-Function: Calc_ψq
+Function: Calc_ψq(a, U, ℓ, R, β, grid, x₀=[0, 0], α=0)
 
 Calculate ψ and q in a layered QG model using coefficients and vortex parameters
 
@@ -221,7 +221,7 @@ function Calc_ψq(a::Array, U::Number, ℓ::Number, R::Union{Number,Vector}, β:
 end
 
 """
-Function: Calc_ψb
+Function: Calc_ψb(a, U, ℓ, R, β, grid, x₀=[0, 0], α=0)
 
 Calculate SQG fields ψ and b using coefficients and vortex parameters
 
@@ -277,7 +277,7 @@ function Calc_ψb(a::Array, U::Number, ℓ::Number, R::Vector, β::Number, grid,
 end
 
 """
-Function: Calc_uv
+Function: Calc_uv(ψ, grid)
 
 Calculate the velocity fields from ψ using (u, v) = (-∂ψ/∂y, ∂ψ/∂x)
 
@@ -311,7 +311,7 @@ function Calc_uv(ψ::Union{CuArray,Array}, grid)
 end
 
 """
-Function: ΔNCalc
+Function: ΔNCalc(K², R, β, U=1)
 
 Defines the Δ_N(β) matrix used to invert for ψ and q
 
@@ -365,7 +365,7 @@ function ΔNCalc(K²::Union{CuArray,Array}, R::Union{Number,Vector}, β::Union{N
 end
 
 """
-Function: CreateModonLQG
+Function: CreateModonLQG(grid, M, U=1, ℓ=1, R=1, β=0, ActiveLayers=1, x₀=[0, 0], α=0; K₀=Nothing, a₀=Nothing, tol=1e-6)
 
 High level wrapper function for calculating ψ and q for the Layered QG model using given parameters
 
@@ -406,7 +406,7 @@ function CreateModonLQG(grid, M::Int=8, U::Number=1, ℓ::Number=1, R::Union{Num
 end
 
 """
-Function: CreateModonSQG
+Function: CreateModonSQG(grid, M, U=1, ℓ=1, R=[Inf, Inf], β=0, x₀=[0, 0], α=0; K₀=Nothing, a₀=Nothing, tol=1e-6)
 
 High level wrapper function for calculating ψ and b for the SQG model using given parameters
 
@@ -440,7 +440,7 @@ function CreateModonSQG(grid, M::Int=12, U::Number=1, ℓ::Number=1, R::Vector=[
 end
 
 """
-Function: CreateLCD
+Function: CreateLCD(grid, U=1, ℓ=1, x₀=[0, 0], α=0)
 
 High level wrapper function for calculating ψ and q for the Lamb-Chaplygin dipole using given parameters
 
@@ -475,7 +475,7 @@ function CreateLCD(grid, U::Number=1, ℓ::Number=1, x₀::Vector=[0, 0], α::Nu
 end
 
 """
-Function: CreateLRD
+Function: CreateLRD(grid, U=1, ℓ=1, R=1, β=0, x₀=[0, 0], α=0)
 
 High level wrapper function for calculating ψ and q for the Larichev-Reznik dipole using given parameters
 
