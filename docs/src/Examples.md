@@ -208,7 +208,7 @@ grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 
 ```
 
-Most of these have been described in previous examples, but ``K_0`` and ``\textbf{a}`` are new. These are the initial guesses for ``K`` and ``\textbf{a}`` and are not required. They can be useful when doing a parameter sweep; since values from a case with similar parameters can be used to speed up the root-finding step for the new parameter case. In general, ``K = 4`` is a good guess for most LQG and SQG vortices. In principle, there are a (countably) infinite set of solutions with increasing radial mode number. The solutions we normally think of as dipolar vortices are the first mode and higher modes are generally unstable [1].
+Most of these have been described in previous examples, but ``K_0`` and ``\textbf{a}`` are new. These are the initial guesses for ``K`` and ``\textbf{a}`` and are not required. They can be useful when doing a parameter sweep; since values from a case with similar parameters can be used to speed up the root-finding step for the new parameter case. In general, ``K = 4`` is a good guess for most LQG and SQG vortices. In principle, there are a (countably) infinite set of solutions with increasing radial mode number. The solutions we normally think of as dipolar vortices are the first mode and higher modes are generally unstable[^1].
 
 Now we have our parameters, we can get our vortex solution with a single function call:
 
@@ -266,11 +266,11 @@ If we look at ``K``, we find that ``K \approx 7.34205`` which is not the value w
 
 ![image](Ex_4.png)
 
-In addition to these wrapper functions, the functions `CreateLCD` and `CreateLCD` implement the Lamb-Chaplygin dipole [4] and Larichev-Reznik dipole [5] directly using the analytical solution for these cases.
+In addition to these wrapper functions, the functions `CreateLCD` and `CreateLCD` implement the Lamb-Chaplygin dipole[^2] and Larichev-Reznik dipole[^3] directly using the analytical solution for these cases.
 
 ## Example 5: A GeophysicalFlows.jl simulation
 
-This package is designed to be compatible with `GeophysicalFlows.jl` [6] and provide a means of generating dipolar vortex initial conditions for layered QG and surface QG simulations. Here, we'll discuss a simple example of how to setup a 1-layer simulation in `GeophyiscalFlows.jl` using the Lamb-Chaplygin dipole as the initial condition. We'll also see that, as expected, the dipole retains it's form during the evolution and hence is a steady solution in a co-moving frame. Let's begin by defining some parameters for our vortex initial condition and our numerical simulation:
+This package is designed to be compatible with `GeophysicalFlows.jl`[^4] and provide a means of generating dipolar vortex initial conditions for layered QG and surface QG simulations. Here, we'll discuss a simple example of how to setup a 1-layer simulation in `GeophyiscalFlows.jl` using the Lamb-Chaplygin dipole as the initial condition. We'll also see that, as expected, the dipole retains it's form during the evolution and hence is a steady solution in a co-moving frame. Let's begin by defining some parameters for our vortex initial condition and our numerical simulation:
 
 ```julia
 using GeophysicalFlows, QGDipoles
@@ -356,3 +356,8 @@ Note that we need to move our fields back to the CPU prior to plotting. The two 
 ![image](Ex_5a.png)![image](Ex_5b.png)
 
 See the `GeophyiscalFlows.jl` documentation [here](https://fourierflows.github.io/GeophysicalFlowsDocumentation/stable/) for more details on how to run QG simulations.
+
+[^1]: [Johnson, E. R., and M. N. Crowe, 2023, Oceanic dipoles in a surface quasigeostrophic model, J. Fluid Mech., 958, R2](https://doi.org/10.1017/jfm.2023.87).
+[^2]: [Lamb, H., 1932, Hydrodynamics. Cambridge University Press](https://archive.org/details/hydrodynamics00lamb).
+[^3]: [Larichev, V.D. & Reznik, G.M., 1976, Two-dimensional solitary Rossby waves, Dokl. Akad. Nauk SSSR, 12–13](https://www.researchgate.net/publication/248173065_Two-dimensional_solitary_Rossby_waves).
+[^4]: [Constantinou et al., 2021, GeophysicalFlows.jl: Solvers for geophysical fluid dynamics problems in periodic domains on CPUs & GPUs, JOSS, 6(60), 3053](https://joss.theoj.org/papers/10.21105/joss.03053).
