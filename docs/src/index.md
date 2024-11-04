@@ -184,9 +184,9 @@ Here, ``b = N \partial\psi/\partial z`` is the buoyancy and ``\eta = f\psi/g`` i
 
 The SQG system is typically derived by assuming that ``q = 0`` in the interior.
 We instead take ``q = (\beta/U)\psi`` which satisfies the steady evolution equation for ``q`` given above and reduces to the usual result for ``\beta = 0``.
-Since ``b(z = 0)`` can be determined from ``psi(z = 0)`` using the Dirichlet-Neumann operator given above, this system reduces to a 2D system for the modified surface buoyancy, ``b + N^2 \eta``, only.
+Since ``b(z = 0)`` can be determined from ``\psi(z = 0)`` using the Dirichlet-Neumann operator given above, this system reduces to a 2D system for the modified surface buoyancy, ``b + N^2 \eta``, only.
 
-`QGDipoles.jl` solves for steady, dipolar solutions to this surface equation and hence calculates only the surface values of ``b`` and ``\psi``.
+QGDipoles.jl solves for steady, dipolar solutions to this surface equation and hence calculates only the surface values of ``b`` and ``\psi``.
 If a 3D solution is required, a layered model with a large number of layers is recommended.
 The full list of parameters for the SQG system is given in the table below.
 
