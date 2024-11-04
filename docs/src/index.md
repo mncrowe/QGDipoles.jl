@@ -8,7 +8,7 @@ This Julia package provides functions for evaluating dipolar vortex solutions in
 
 ## Method Summary
 
-The full method is outlined in [1], [2] and [3]. A summary is presented here such that the notation and examples presented later make some sense. We consider a dipolar vortex of radius ``\ell``, moving with speed ``U``. This vortex consists of an isolated region of high vorticity with a closed streamline at ``x^2 + y^2 = \ell^2`` (in a frame co-moving with the vortex), hence fluid does not escape during propagation. Within the vortex core, ``x^2 + y^2 < \ell^2``, are two counter rotating regions, corresponding to a dipole. The streamfunction describing the flow is denoted by ``\psi`` and potential vorticity (PV) anomaly by ``q``. Velocities may be derived as ``(u, v) = (-\partial_y\psi, \partial_x\psi)``. The streamfunction, ``\psi``, and PV anomaly, ``q``, are related through PV inversion. In the case of multiple layers, ``\psi`` and ``q`` are vector valued functions of length equal to the number of layers, ``N``.
+The full method is outlined in [^1], [2] and [3]. A summary is presented here such that the notation and examples presented later make some sense. We consider a dipolar vortex of radius ``\ell``, moving with speed ``U``. This vortex consists of an isolated region of high vorticity with a closed streamline at ``x^2 + y^2 = \ell^2`` (in a frame co-moving with the vortex), hence fluid does not escape during propagation. Within the vortex core, ``x^2 + y^2 < \ell^2``, are two counter rotating regions, corresponding to a dipole. The streamfunction describing the flow is denoted by ``\psi`` and potential vorticity (PV) anomaly by ``q``. Velocities may be derived as ``(u, v) = (-\partial_y\psi, \partial_x\psi)``. The streamfunction, ``\psi``, and PV anomaly, ``q``, are related through PV inversion. In the case of multiple layers, ``\psi`` and ``q`` are vector valued functions of length equal to the number of layers, ``N``.
 
 ### Layered Quasi-Geostrophic (LQG) Solutions
 
@@ -24,7 +24,7 @@ where ``\beta_i`` denotes the background PV gradient, ``i \in [1,\dots,N]`` is t
 \left[ \textbf{A} -  \sum _{n = 1}^N K_n^2\textbf{B}_n \right] \textbf{a} = \textbf{c}_0 + \sum _{n = 1}^N K_n^2 \textbf{c}_n,
 ```
 
-where ``\textbf{A}`` and ``\textbf{B}_n`` are matrices, ``\textbf{a}`` is a vector containing the coefficients in the polynomial expansion, ``\textbf{c}_j`` are vectors and the ``K_n`` are defined in ``F_i`` above and appear as unknown eigenvalues in the linear problem. In order to solve the system, ``N`` additional conditions are required. These are ``\textbf{d}_n \cdot textbf{a} = 0`` for ``n \in [1, \dots, N]`` where the ``\textbf{d}_n`` are vectors. These conditions correspond to the requirement that the streamfunction and vorticity are continuous in each layer. In principal, we have an infinite number of coefficients in ``\textbf{a}``. However, since we know that these coefficients must decay with increasing index (since ``\psi`` in continuous), we can truncate the expansion after ``M`` terms. The resulting linear system is of size ``MN \times MN``.
+where ``\textbf{A}`` and ``\textbf{B}_n`` are matrices, ``\textbf{a}`` is a vector containing the coefficients in the polynomial expansion, ``\textbf{c}_j`` are vectors and the ``K_n`` are defined in ``F_i`` above and appear as unknown eigenvalues in the linear problem. In order to solve the system, ``N`` additional conditions are required. These are ``\textbf{d}_n \cdot textbf{a} = 0`` for ``n \in [1, \dots, N]`` where the ``\textbf{d}_n`` are vectors. These conditions correspond to the requirement that the streamfunction and vorticity are continuous in each layer. In principal, we have an infinite number of coefficients in ``\textbf{a}``. However, since we know that these coefficients must decay with increasing index (since ``\psi`` is continuous), we can truncate the expansion after ``M`` terms. The resulting linear system is of size ``MN \times MN``.
 
 Solving this system determines the expansion coefficients and eigenvalues and hence allows ``\psi`` and ``q`` to be evaluated on any given spatial grid. In the one-layer case the problem reduces to known analytical solutions, such as the Lamb-Chaplygin dipole [4] and the Larichev-Reznik dipole [5].
 
@@ -48,7 +48,7 @@ is a Dirichlet-Neumann operator linking the surface streamfunction, ``\psi``, an
 \left[ \textbf{A} -  K\textbf{B} \right] \textbf{a} = \textbf{c}_0 + K \textbf{c}_1,
 ```
 
-where ``\textbf{A}`` and ``\textbf{B}`` are matrices, ``\textbf{c}_i`` are vectors, ``\textbf{a}`` is a vector of coefficients and ``K`` is an eigenvalue related to ``F``. An additional condition is required to solve this system for a unique set of ``K``. This condition is taken to be continuity across the vortex boundary and corresponds to ``\textbf{d} \cdot \textbf{a} = 0`` for some vector ``\textbf{d}``. In principal, we have an infinite number of coefficients in ``\textbf{a}``. However, since we know that these coefficients must decay with increasing index (since ``\psi`` in continuous), we can truncate the expansion after ``M`` terms. The resulting linear system is of size ``M \times M``.
+where ``\textbf{A}`` and ``\textbf{B}`` are matrices, ``\textbf{c}_i`` are vectors, ``\textbf{a}`` is a vector of coefficients and ``K`` is an eigenvalue related to ``F``. An additional condition is required to solve this system for a unique set of ``K``. This condition is taken to be continuity across the vortex boundary and corresponds to ``\textbf{d} \cdot \textbf{a} = 0`` for some vector ``\textbf{d}``. In principal, we have an infinite number of coefficients in ``\textbf{a}``. However, since we know that these coefficients must decay with increasing index (since ``\psi`` is continuous), we can truncate the expansion after ``M`` terms. The resulting linear system is of size ``M \times M``.
 
 Solving this linear system allows the surface streamfunction, ``\psi``, and surface bouyancy, ``b``, to be calculated.
 
@@ -139,7 +139,7 @@ The tables below summarise all parameters used in functions and structures in QG
 
 ## References
 
-- [1]: [Johnson, E. R., and M. N. Crowe, 2023, Oceanic dipoles in a surface quasigeostrophic model, J. Fluid Mech., 958, R2](https://doi.org/10.1017/jfm.2023.87).
+[^1]: [Johnson, E. R., and M. N. Crowe, 2023, Oceanic dipoles in a surface quasigeostrophic model, J. Fluid Mech., 958, R2](https://doi.org/10.1017/jfm.2023.87).
 - [2]: [Crowe, M. N., and E. R. Johnson, 2023, The evolution of surface quasi-geostrophic modons on sloping topography, J. Fluid. Mech., 970, A10](https://doi.org/10.1017/jfm.2023.607).
 - [3]: [Crowe, M. N., and E. R. Johnson, 2024, Modon solutions in an N-layer quasi-geostrophic model, J. Fluid. Mech., 994, R1](https://doi.org/10.1017/jfm.2024.619).
 - [4]: [Lamb, H., 1932, Hydrodynamics. Cambridge University Press](https://archive.org/details/hydrodynamics00lamb).
