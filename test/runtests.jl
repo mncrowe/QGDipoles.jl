@@ -1,3 +1,18 @@
+"""
+Tests for QGDipoles.jl
+
+Four tests are run:
+
+1. Compare LCD value of K with analytical solution
+
+2. Compare LRD maximum of ψ with numerical solution
+
+3. Compare 2-layer vortex value of K_1 with numerical solution
+
+4. Compare SQG vortex maximum y velocity with numerical solution
+
+"""
+
 using QGDipoles
 using Test
 

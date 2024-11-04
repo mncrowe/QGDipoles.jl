@@ -1,6 +1,6 @@
 # Examples
 
-This directory contains a series of examples for generating dipolar vortex solutions in the layered QG and surface QG model. Further discussion of these examples is contained in `docs/documentation.md`.
+This directory contains a series of examples for generating dipolar vortex solutions in the layered QG and surface QG model. Further discussion of these examples is given [here](https://mncrowe.github.io/QGDipoles.jl/dev/Examples/).
 
 The available example scripts are:
 
