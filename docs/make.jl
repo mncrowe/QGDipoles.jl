@@ -5,6 +5,7 @@ makedocs(
  sitename = "QGDipoles.jl",
     pages = Any[
                 "Home" => "index.md",
+		"Examples" => "Examples.md",
 		"List of Functions" => "Functions.md"
 		]
 	)
