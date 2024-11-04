@@ -186,7 +186,7 @@ Arguments:
  - `A`, `B`, `c`, `d`: inhomogeneous eigenvalue problem terms, Arrays
  - `K₀`, `a₀`: initial guesses for K and a, Arrays or Nothings (default: `Nothing`)
  - `tol`: error tolerance for `nlsolve`, Number (default: `1e-6`)
- - `method`: `0` - eigensolve for N = 1 and `nlsolve` for N > 1, `1` - nlsolve (default: `0`)
+ - `method`: `0` - eigensolve for N = 1 and `nlsolve` for N > 1, `1` - `nlsolve` (default: `0`)
  - `m`: exponent of K in eignevalue problem (default: `2`)
  - `sqg`: `false`, uses `m` value specified; `true`, sets `m=1` (default: `false`)
 

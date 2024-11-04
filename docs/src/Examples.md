@@ -1,6 +1,6 @@
 # Examples
 
-Here we present some examples which demonstrate how to use this package. Further examples are available in the `examples/` directory.
+Here we present some examples which demonstrate how to use this package. Further examples are available in the `examples/` directory [here](https://github.com/mncrowe/QGDipoles.jl/tree/main/examples).
 
 ## Example 1: 1-layer QG
 
