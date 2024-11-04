@@ -2,7 +2,7 @@
 Package for creating steady modon solutions to the layered quasi-geostrophic equations and the
 surface quasi geostrophic equations.
 
-See `examples/` for example scripts.
+See `examples/` for example scripts and [here](https://mncrowe.github.io/QGDipoles.jl/) for documentation.
 """
 module QGDipoles
 

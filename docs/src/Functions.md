@@ -2,6 +2,12 @@
 
 This page lists all Functions and Structures available in this package.
 
+## `QGDipoles.jl`
+
+```@docs
+QGDipoles
+```
+
 ## `JJ_integ.jl`
 
 ```@docs
@@ -26,6 +32,7 @@ OrthogSpace
 ```@docs
 ZernikeR
 GridStruct
+CreateGrid
 Calc_ψq
 Calc_ψb
 Calc_uv
