@@ -54,13 +54,13 @@ GeophysicalFlows.jl so will also work with this grid.
 
 
 """
-Function: ZernikeR(n, x)
+Function: `ZernikeR(n, x)`
 
 Define the Zernike radial function using the jacobi function from SpecialFunctions
 
 Arguments:
- - n: order, Integer
- - x: evaluation point, Number or Array
+ - `n`: order, Integer
+ - `x`: evaluation point, Number or Array
 """
 function ZernikeR(n::Int, x::Union{Number,Array})
 	
@@ -70,14 +70,14 @@ function ZernikeR(n::Int, x::Union{Number,Array})
 end
 
 """
-Structure: GridStruct
+Structure: `GridStruct`
 
 Stores the grid variables in physical and Fourier space
 
 Arguments:
- - x, y: x and y points in physical space, Ranges
- - kr, l: x and y points in Fourier space, Arrays
- - Krsq: kr²+l² in Fourier space, Array
+ - `x`, `y`: x and y points in physical space, Ranges
+ - `kr`, `l`: x and y points in Fourier space, Arrays
+ - `Krsq`: `kr²+l²` in Fourier space, Array
 """
 struct GridStruct
 	x
@@ -88,14 +88,14 @@ struct GridStruct
 end
 
 """
-Function: CreateGrid(Nx, Ny, Lx, Ly; cuda=false)
+Function: `CreateGrid(Nx, Ny, Lx, Ly; cuda=false)`
 
 Define the numerical grid as a `GridStruct`
 
 Arguments:
- - Nx, Ny: number of gridpoints in x and y directions, Integers
- - Lx, Ly: x and y domains, either vectors of endpoints or lengths, Numbers or Vectors
- - cuda: true; use CUDA CuArray for fields
+ - `Nx`, `Ny`: number of gridpoints in x and y directions, Integers
+ - `Lx`, `Ly`: x and y domains, either vectors of endpoints or lengths, Numbers or Vectors
+ - `cuda`: `true`; use CUDA CuArray for fields (default: `false`)
 """
 function CreateGrid(Nx::Int, Ny::Int, Lx::Union{Number,Vector}, Ly::Union{Number,Vector}; cuda::Bool=false)
 
@@ -140,17 +140,17 @@ function CreateGrid(Nx::Int, Ny::Int, Lx::Union{Number,Vector}, Ly::Union{Number
 end
 
 """
-Function: Calc_ψq(a, U, ℓ, R, β, grid, x₀=[0, 0], α=0)
+Function: `Calc_ψq(a, U, ℓ, R, β, grid, x₀=[0, 0], α=0)`
 
 Calculate ψ and q in a layered QG model using coefficients and vortex parameters
 
 Arguments:
- - a: M x N array of coefficients, Array
- - (U, ℓ): vortex speed and radius, Numbers
- - (R, β): Rossby radii and (y) PV gradients in each layer, Numbers or Vectors
- - grid: grid structure containing x, y, and Krsq
- - x₀: position of vortex center, vector (default: [0, 0])
- - α: initial angle of vortex, Number (default: 0)
+ - `a`: M x N array of coefficients, Array
+ - (`U`, `ℓ`): vortex speed and radius, Numbers
+ - (`R`, `β`): Rossby radii and (y) PV gradients in each layer, Numbers or Vectors
+ - `grid`: grid structure containing x, y, and Krsq
+ - `x₀`: position of vortex center, vector (default: `[0, 0]`)
+ - `α`: initial angle of vortex, Number (default: `0`)
 """
 function Calc_ψq(a::Array, U::Number, ℓ::Number, R::Union{Number,Vector}, β::Union{Number,Vector},
 	grid, x₀::Vector=[0, 0], α::Number=0)
@@ -221,18 +221,18 @@ function Calc_ψq(a::Array, U::Number, ℓ::Number, R::Union{Number,Vector}, β:
 end
 
 """
-Function: Calc_ψb(a, U, ℓ, R, β, grid, x₀=[0, 0], α=0)
+Function: `Calc_ψb(a, U, ℓ, R, β, grid, x₀=[0, 0], α=0)`
 
 Calculate SQG fields ψ and b using coefficients and vortex parameters
 
 Arguments:
- - a: M x 1 array of coefficients, Array
- - (U, ℓ): vortex speed and radius, Numbers
- - R: vector of [R, R'], Vector
- - β: beta-plane (y) PV gradient, Number
- - grid: grid structure containing x, y, and Krsq
- - x₀: position of vortex center, vector (default: [0, 0])
- - α: initial angle of vortex, Number (default: 0)
+ - `a`: M x 1 array of coefficients, Array
+ - (`U`, `ℓ`): vortex speed and radius, Numbers
+ - `R`: vector of [R, R'], Vector
+ - `β`: beta-plane (y) PV gradient, Number
+ - `grid`: grid structure containing x, y, and Krsq
+ - `x₀`: position of vortex center, vector (default: `[0, 0]`)
+ - `α`: initial angle of vortex, Number (default: `0`)
 
 Note: Here R is the baroclinic Rossby radius, R = NH/f, and R' = R₀²/R where R₀ is
 the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = fN/g.
@@ -277,13 +277,13 @@ function Calc_ψb(a::Array, U::Number, ℓ::Number, R::Vector, β::Number, grid,
 end
 
 """
-Function: Calc_uv(ψ, grid)
+Function: `Calc_uv(ψ, grid)`
 
 Calculate the velocity fields from ψ using (u, v) = (-∂ψ/∂y, ∂ψ/∂x)
 
 Arguments:
- - ψ: streamfunction, Array
- - grid: grid structure containing kr and l
+ - `ψ`: streamfunction, Array
+ - `grid`: grid structure containing kr and l
 """
 function Calc_uv(ψ::Union{CuArray,Array}, grid)
 	
@@ -311,14 +311,14 @@ function Calc_uv(ψ::Union{CuArray,Array}, grid)
 end
 
 """
-Function: ΔNCalc(K², R, β, U=1)
+Function: `ΔNCalc(K², R, β, U=1)`
 
 Defines the Δ_N(β) matrix used to invert for ψ and q
 
 Arguments:
- - K²: value of k²+l² in Fourier space, Array
- - (R, β): Rossby radii and (y) PV gradients in each layer, Numbers or Vectors
- - U: vortex speed, Number (default: 1)
+ - `K²`: value of k²+l² in Fourier space, Array
+ - (`R`, `β`): Rossby radii and (y) PV gradients in each layer, Numbers or Vectors
+ - `U`: vortex speed, Number (default: `1`)
 """
 function ΔNCalc(K²::Union{CuArray,Array}, R::Union{Number,Vector}, β::Union{Number,Vector}, U::Number=1)
 	
@@ -365,20 +365,20 @@ function ΔNCalc(K²::Union{CuArray,Array}, R::Union{Number,Vector}, β::Union{N
 end
 
 """
-Function: CreateModonLQG(grid, M, U=1, ℓ=1, R=1, β=0, ActiveLayers=1, x₀=[0, 0], α=0; K₀=Nothing, a₀=Nothing, tol=1e-6)
+Function: `CreateModonLQG(grid, M, U=1, ℓ=1, R=1, β=0, ActiveLayers=1, x₀=[0, 0], α=0; K₀=Nothing, a₀=Nothing, tol=1e-6)`
 
 High level wrapper function for calculating ψ and q for the Layered QG model using given parameters
 
 Arguments:
- - grid: grid structure containing x, y, and Krsq
- - M: number of coefficient to solve for, Integer (default: 8)
- - (U, ℓ): vortex speed and radius, Numbers (default: (1, 1))
- - (R, β): Rossby radii and (y) PV gradients in each layer, Numbers or Vectors, (default: (1, 0))
- - ActiveLayers: vector of 1s or 0s where 1 denotes an active layer, Number or Vector, (default: [1,..,1])
- - x₀: position of vortex center, vector (default: [0, 0])
- - α: initial angle of vortex, Number (default: 0)
- - K₀, a₀: initial guesses for K and a, Arrays or Nothings (default: Nothing)
- - tol: error tolerance for QuadGK and NLSolve, Number (default: 1e-6)
+ - `grid`: grid structure containing x, y, and Krsq
+ - `M`: number of coefficient to solve for, Integer (default: `8`)
+ - (`U`, `ℓ`): vortex speed and radius, Numbers (default: (`1`, `1`))
+ - (`R`, `β`): Rossby radii and (y) PV gradients in each layer, Numbers or Vectors, (default: (`1`, `0`))
+ - `ActiveLayers`: vector of 1s or 0s where 1 denotes an active layer, Number or Vector, (default: `[1,..,1]`)
+ - `x₀`: position of vortex center, vector (default: `[0, 0]`)
+ - `α`: initial angle of vortex, Number (default: 0)
+ - `K₀`, `a₀`: initial guesses for K and a, Arrays or Nothings (default: `Nothing`)
+ - `tol`: error tolerance passed to `QuadGK` and `NLSolve` functions, Number (default: `1e-6`)
 
 Note: provide values of K₀ and a₀ for active layers ONLY.
 """
@@ -406,20 +406,20 @@ function CreateModonLQG(grid, M::Int=8, U::Number=1, ℓ::Number=1, R::Union{Num
 end
 
 """
-Function: CreateModonSQG(grid, M, U=1, ℓ=1, R=[Inf, Inf], β=0, x₀=[0, 0], α=0; K₀=Nothing, a₀=Nothing, tol=1e-6)
+Function: `CreateModonSQG(grid, M, U=1, ℓ=1, R=[Inf, Inf], β=0, x₀=[0, 0], α=0; K₀=Nothing, a₀=Nothing, tol=1e-6)`
 
 High level wrapper function for calculating ψ and b for the SQG model using given parameters
 
 Arguments:
- - grid: grid structure containing x, y, and Krsq
- - M: number of coefficient to solve for, Integer (default: 12)
- - (U, ℓ): vortex speed and radius, Numbers (default: (1, 1))
- - R: vector of [R, R'], Vector (default: [Inf, Inf])
- - β: beta-plane (y) PV gradient, Number (default: 0)
- - x₀: position of vortex center, vector (default: [0, 0])
- - α: initial angle of vortex, Number (default: 0)
- - K₀, a₀: initial guesses for K and a, Arrays or Nothings (default: Nothing)
- - tol: error tolerance for QuadGK and NLSolve, Number (default: 1e-6)
+ - `grid`: grid structure containing x, y, and Krsq
+ - `M`: number of coefficient to solve for, Integer (default: `12`)
+ - (`U`, `ℓ`): vortex speed and radius, Numbers (default: (`1`, `1`))
+ - `R`: vector of [R, R'], Vector (default: `[Inf, Inf]`)
+ - `β`: beta-plane (y) PV gradient, Number (default: `0`)
+ - `x₀`: position of vortex center, vector (default: `[0, 0]`)
+ - `α`: initial angle of vortex, Number (default: `0`)
+ - `K₀`, `a₀`: initial guesses for K and a, Arrays or Nothings (default: `Nothing`)
+ - `tol`: error tolerance passed to `QuadGK` and `NLSolve` functions, Number (default: `1e-6`)
 
 Note: Here R is the baroclinic Rossby radius, R = NH/f, and R' = R₀²/R where R₀ is
 the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = fN/g.
@@ -440,15 +440,15 @@ function CreateModonSQG(grid, M::Int=12, U::Number=1, ℓ::Number=1, R::Vector=[
 end
 
 """
-Function: CreateLCD(grid, U=1, ℓ=1, x₀=[0, 0], α=0)
+Function: `CreateLCD(grid, U=1, ℓ=1, x₀=[0, 0], α=0)`
 
 High level wrapper function for calculating ψ and q for the Lamb-Chaplygin dipole using given parameters
 
 Arguments:
- - grid: grid structure containing x, y, and Krsq
- - (U, ℓ): vortex speed and radius, Numbers (default: (1, 1))
- - x₀: position of vortex center, vector (default: [0, 0])
- - α: initial angle of vortex, Number (default: 0)
+ - `grid`: grid structure containing x, y, and Krsq
+ - (`U`, `ℓ`): vortex speed and radius, Numbers (default: (`1`, `1`))
+ - `x₀`: position of vortex center, vector (default: `[0, 0]`)
+ - `α`: initial angle of vortex, Number (default: `0`)
 
 Note: This function uses the analytic solution for the LCD to calculate ψ and q.
 """
@@ -475,16 +475,16 @@ function CreateLCD(grid, U::Number=1, ℓ::Number=1, x₀::Vector=[0, 0], α::Nu
 end
 
 """
-Function: CreateLRD(grid, U=1, ℓ=1, R=1, β=0, x₀=[0, 0], α=0)
+Function: `CreateLRD(grid, U=1, ℓ=1, R=1, β=0, x₀=[0, 0], α=0)`
 
 High level wrapper function for calculating ψ and q for the Larichev-Reznik dipole using given parameters
 
 Arguments:
- - grid: grid structure containing x, y, and Krsq
- - (U, ℓ): vortex speed and radius, Numbers (default: (1, 1))
- - (R, β): Rossby radii and (y) PV gradient, Numbers, (default: (1, 0))
- - x₀: position of vortex center, vector (default: [0, 0])
- - α: initial angle of vortex, Number (default: 0)
+ - `grid`: grid structure containing x, y, and Krsq
+ - (`U`, `ℓ`): vortex speed and radius, Numbers (default: (`1`, `1`))
+ - (`R`, `β`): Rossby radii and (y) PV gradient, Numbers, (default: (`1`, `0`))
+ - `x₀`: position of vortex center, vector (default: `[0, 0]`)
+ - `α`: initial angle of vortex, Number (default: `0`)
 
 Note: This function uses the analytic solution for the LRD to calculate ψ and q.
 """

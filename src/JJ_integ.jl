@@ -21,14 +21,14 @@ required for building A and B. The function `JJ_int` below is still used in the 
 
 
 """
-Function: A_func(ξ, λ, μ)
+Function: `A_func(ξ, λ, μ)`
 
 Evaluates the matrix function A(ξ, λ, μ) = K(ξ) [K(ξ) + D(μ)]⁻¹ ξ⁻¹
 
 Arguments:
- - ξ: point in [0, ∞), Number
- - λ: ratio of vortex radius to Rossby radius in each layer, Number or Vector
- - μ: nondimensional (y) vorticity gradient in each layer, Number or Vector
+ - `ξ`: point in [0, ∞), Number
+ - `λ`: ratio of vortex radius to Rossby radius in each layer, Number or Vector
+ - `μ`: nondimensional (y) vorticity gradient in each layer, Number or Vector
 """
 function A_func(ξ::Number, λ::Union{Vector,Number}, μ::Union{Vector,Number})
 	
@@ -52,14 +52,14 @@ function A_func(ξ::Number, λ::Union{Vector,Number}, μ::Union{Vector,Number})
 end
 
 """
-Function: B_func(ξ, λ, μ)
+Function: `B_func(ξ, λ, μ)`
 
 Evaluates the matrix function B(ξ, λ, μ) = [K(ξ) + D(μ)]⁻¹ ξ⁻¹
 
 Arguments:
- - ξ: point in [0, ∞), Number
- - λ: ratio of vortex radius to Rossby radius in each layer, Number or Vector
- - μ: nondimensional (y) vorticity gradient in each layer, Number or Vector
+ - `ξ`: point in [0, ∞), Number
+ - `λ`: ratio of vortex radius to Rossby radius in each layer, Number or Vector
+ - `μ`: nondimensional (y) vorticity gradient in each layer, Number or Vector
 """
 function B_func(ξ::Number, λ::Union{Vector,Number}, μ::Union{Vector,Number})
 	
@@ -83,15 +83,15 @@ function B_func(ξ::Number, λ::Union{Vector,Number}, μ::Union{Vector,Number})
 end
 
 """
-Function: JJ_int(F, j, k, tol=1e-6)
+Function: `JJ_int(F, j, k, tol=1e-6)`
 
-Evaluates the integral I = ∫~0^∞ F(ξ) J_{2j+2}(ξ) J_{2k+2}(ξ) dξ
+Evaluates the integral I = ∫ F(ξ) J_{2j+2}(ξ) J_{2k+2}(ξ) dξ for ξ ∈ [0, ∞)
 
 Arguments:
- - F: function to integrate, typically A_func or B_func, Function
- - j: first Bessel function index, Integer
- - k: second Bessel function index, Integer
- - tol: error tolerance for QuadGK, Number (default: 1e-6)
+ - `F`: function to integrate, typically A_func or B_func, Function
+ - `j`: first Bessel function index, Integer
+ - `k`: second Bessel function index, Integer
+ - `tol`: error tolerance for QuadGK, Number (default: `1e-6`)
 
 Note: This integral is performed by deforming the contour of integration into the complex plane
 where the Bessel function decays exponentially in the imaginary direction.

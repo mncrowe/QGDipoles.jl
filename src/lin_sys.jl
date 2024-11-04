@@ -57,16 +57,16 @@ B_{j+1, k+1} = 4*(-1)^(j-k+1)/((2j-2k-1)*(2j-2k+1)*(2j+2k+3)*(2j+2k+5))/π.
 
 
 """
-Function: BuildLinSys(M, λ, μ; tol=1e-6, sqg=false)
+Function: `BuildLinSys(M, λ, μ; tol=1e-6, sqg=false)`
 
 Builds the terms in the inhomogeneous eigenvalue problem; A, B, c, d
 
 Arguments:
- - M: number of coefficient to solve for, Integer
- - λ: ratio of vortex radius to Rossby radius in each layer, Number or Vector
- - μ: nondimensional (y) vorticity gradient in each layer, Number or Vector
- - tol: error tolerance for QuadGK via `JJ_int`, Number (default: 1e-6)
- - sqg: false; creates layered QG system, true; creates SQG system (default: false)
+ - `M`: number of coefficient to solve for, Integer
+ - `λ`: ratio of vortex radius to Rossby radius in each layer, Number or Vector
+ - `μ`: nondimensional (y) vorticity gradient in each layer, Number or Vector
+ - `tol`: error tolerance for QuadGK via `JJ_int`, Number (default: `1e-6`)
+ - `sqg`: `false`; creates layered QG system, `true`; creates SQG system (default: `false`)
 """
 function BuildLinSys(M::Int, λ::Union{Vector,Number}, μ::Union{Vector,Number}; tol::Number=1e-6, sqg::Bool=false)
 
@@ -115,13 +115,13 @@ function BuildLinSys(M::Int, λ::Union{Vector,Number}, μ::Union{Vector,Number};
 end
 
 """
-Function: ApplyPassiveLayers(A, B, c, d, ActiveLayers)
+Function: `ApplyPassiveLayers(A, B, c, d, ActiveLayers)`
 
 Removes rows and columns corresponding to passive layers from the system
 
 Arguments:
- - A, B, c, d: inhomogeneous eigenvalue problem terms, Arrays
- - ActiveLayers: vector of 1s or 0s where 1 denotes an active layer, Number or Vector
+ - `A`, `B`, `c`, `d`: inhomogeneous eigenvalue problem terms, Arrays
+ - `ActiveLayers`: vector of 1s or 0s where 1 denotes an active layer, Number or Vector
 """
 function ApplyPassiveLayers(A::Array, B::Array, c::Array, d::Array, ActiveLayers::Union{Number,Vector})
 	
@@ -148,13 +148,13 @@ function ApplyPassiveLayers(A::Array, B::Array, c::Array, d::Array, ActiveLayers
 end
 
 """
-Function: IncludePassiveLayers(K, a, ActiveLayers)
+Function: `IncludePassiveLayers(K, a, ActiveLayers)`
 
 Includes columns corresponding to passive layers in the eigenvalue and coefficient arrays
 
 Arguments:
- - K, a: eigenvalue and coefficient arrays describing system solution, Arrays
- - ActiveLayers: vector of 1s or 0s where 1 denotes an active layer, Number or Vector
+ - `K`, `a`: eigenvalue and coefficient arrays describing system solution, Arrays
+ - `ActiveLayers`: vector of 1s or 0s where 1 denotes an active layer, Number or Vector
 """
 function IncludePassiveLayers(K::Array, a::Array, ActiveLayers::Union{Number,Vector})
 	
@@ -178,17 +178,17 @@ function IncludePassiveLayers(K::Array, a::Array, ActiveLayers::Union{Number,Vec
 end
 
 """
-Function: SolveInhomEVP(A, B, c, d; K₀=Nothing, a₀=Nothing, tol=1e-6, method=0, m=2, sqg=false)
+Function: `SolveInhomEVP(A, B, c, d; K₀=Nothing, a₀=Nothing, tol=1e-6, method=0, m=2, sqg=false)`
 
 Solves the inhomogeneous eigenvalue problem using nonlinear root finding
 
 Arguments:
- - A, B, c, d: inhomogeneous eigenvalue problem terms, Arrays
- - K₀, a₀: initial guesses for K and a, Arrays or Nothings (default: Nothing)
- - tol: error tolerance for NLSolve, Number (default: 1e-6)
- - method: 0 - eigensolve for N = 1 and nlsolve for N > 1, 1 - nlsolve (default: 0)
- - m: exponent of K in eignevalue problem (default: 2)
- - sqg: false, uses m value specified; true, sets m = 1 (default: false)
+ - `A`, `B`, `c`, `d`: inhomogeneous eigenvalue problem terms, Arrays
+ - `K₀`, `a₀`: initial guesses for K and a, Arrays or Nothings (default: `Nothing`)
+ - `tol`: error tolerance for `nlsolve`, Number (default: `1e-6`)
+ - `method`: `0` - eigensolve for N = 1 and `nlsolve` for N > 1, `1` - nlsolve (default: `0`)
+ - `m`: exponent of K in eignevalue problem (default: `2`)
+ - `sqg`: `false`, uses `m` value specified; `true`, sets `m=1` (default: `false`)
 
 Note: setting `sqg=true` overwrites the value of `m` and is equivalent to setting `m=1`.
 The option to set both is included for consistency with `BuildLinSys` and more generality
@@ -301,15 +301,15 @@ function SolveInhomEVP(A::Array, B::Array, c::Array, d::Array; K₀=Nothing, a�
 end
 
 """
-Function: InhomEVP_F!(F, J, x, A, B, c, d, e)
+Function: `InhomEVP_F!(F, J, x, A, B, c, d, e)`
 
 Calculates the function F and it's derivatives, J, at a given point x
 
 Arguments:
- - F, J: values of F and it's derivatives, updated by function
- - x: evaluation point, Array
- - A, B, c: inhomogeneous eigenvalue problem terms, Arrays
- - e: basis spanning the space perpendicular to the d[n], Array
+ - `F`, `J`: values of F and it's derivatives, updated by function
+ - `x`: evaluation point, Array
+ - `A`, `B`, `c`: inhomogeneous eigenvalue problem terms, Arrays
+ - `e`: basis spanning the space perpendicular to the d[n], Array
 """
 function InhomEVP_F!(F, J, x::Array, A::Array, B::Array, c::Array, e::Array)
 
@@ -347,12 +347,12 @@ function InhomEVP_F!(F, J, x::Array, A::Array, B::Array, c::Array, e::Array)
 end
 
 """
-Function: OrthogSpace(v)
+Function: `OrthogSpace(v)`
 
 Extends the input to an orthonormal basis over R^n using the Gram-Schmidt method
 
 Arguments:
- - v: array with vectors as columns, Array
+ - `v`: array with vectors as columns, Array
 """
 function OrthogSpace(v)
 	
