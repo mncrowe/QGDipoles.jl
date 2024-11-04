@@ -1,6 +1,6 @@
 # Functions
 
-This page lists all Functions and Structures available in this package.
+This page lists all Modules, Functions and Structures available in this package.
 
 ## `QGDipoles.jl`
 
