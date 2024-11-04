@@ -49,7 +49,7 @@ The specified versions are confirmed to work. Earlier versions may also work.
 ## Methodology
 
 Dipolar vortex solutions are calculated using a method originally proposed for surface QG by [Johnson & Crowe 2023](https://doi.org/10.1017/jfm.2023.87) and extended to layered QG by [Crowe & Johnson 2024](https://doi.org/10.1017/jfm.2024.619).
-An overview of this method is discussed in `docs/documentation.md`.
+An overview of this method is discussed in the [full documentation](https://mncrowe.github.io/QGDipoles.jl).
 This code contains a Julia implementation of the MATLAB code included as supplementary material with [Crowe & Johnson 2024](https://doi.org/10.1017/jfm.2024.619) and also includes a version of the previously unrealeased SQG version discussed in [Johnson & Crowe 2023](https://doi.org/10.1017/jfm.2023.87) and [Crowe & Johnson 2023](https://doi.org/10.1017/jfm.2023.607).
 For those interested in the original (layered QG only) implementation, it can be found [here](https://github.com/mncrowe/QGDipoles.m). 
 
