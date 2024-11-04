@@ -1,6 +1,6 @@
 # QGDipoles.jl
 
-Documentation and examples for QGDipoles.jl by Matthew N. Crowe.
+Documentation and examples for QGDipoles.jl by [Matthew N. Crowe](https://mncrowe.github.io/).
 
 ## About
 
