@@ -85,7 +85,7 @@ end
 """
 Function: JJ_int(F, j, k, tol=1e-6)
 
-Evaluates the integral I = ``\int_0^\infty F(\xi) J_{2j+2}(\xi) J_{2k+2}(\xi) d\xi``
+Evaluates the integral I = $\int_0^\infty F(\xi) J_{2j+2}(\xi) J_{2k+2}(\xi) d\xi$
 
 Arguments:
  - F: function to integrate, typically A_func or B_func, Function
