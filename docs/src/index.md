@@ -157,7 +157,7 @@ The 3D QG equations are
 
 ```math
 
-(\partial_t - U \partial_x) q + J(\psi,q) + \beta \partial_x \psi = 0, \quad \textrm{for} \quad z \in [-H, 0],
+(\partial_t - U \partial_x) q + J(\psi,q) + \beta \partial_x \psi = 0, \quad \textrm{for} \quad z \in [-NH/f, 0],
 
 ```
 
@@ -165,11 +165,30 @@ where
 
 ```math
 
-q = 
+q = \left[\frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2} + \frac{\partial^2}{\partial z^2}\right] \psi, \quad \textrm{for} \quad z \in [-R, 0],
 
 ```
 
+where ``R = NH/f`` is the Baroclinic Rossby radius.
+Note that we have rescaled ``z`` by ``N/f`` so ``q`` contains the 3D Laplacian operator.
+The top boundary condition is taken to be
 
+```math
+
+(\partial_t - U \partial_x) [b + N^2 \eta] + J(\psi, b + N^2 \eta) = 0, \quad \textrm{on} \quad z  = 0,
+
+```
+
+and we assume that ``b = 0`` on the bottom surface, ``z = -R``.
+Here, ``b = N \partial\psi/\partial z`` is the buoyancy and ``\eta = f\psi/g`` is the surface elevation.
+From here, the SQG system is typically derived by assuming that ``q = 0`` in the interior.
+We instead take ``q = (\beta/U)\psi`` which satisfies the steady evolution equation for ``q`` given above and reduces to the usual result for ``\beta = 0``.
+Therefore, ``b(z = 0)`` can be determined from ``psi(z = 0)`` using the Dirichlet-Neumann operator given above and the system is reduced to a 2D system for the modified surface buoyancy, ``b + N^2 \eta``, only.
+`QGDipoles.jl` solve for steady, dipolar solutions to this surface equation and hence calculates only the surface values of ``b`` and ``\psi``.
+If a 3D solution is required, a layered model with a large number of layers is recommended.
+
+Note: this package returns ``b/N`` rather than ``b``. When working with dimensional variables, this factor of ``1/N`` should be included manually.
+The full list of parameters for the SQG system is given in the table below.
 
 | Parameter | Description | Definition |
 | :-- | :-- | :-- |
@@ -184,7 +203,7 @@ q =
 | ``x_0`` | position of vortex center | - |
 | ``M`` | number of terms in polynomial expansion | - |
 | ``N`` | buoyancy frequency | - |
-| ``R_0`` | barotropic Rossby radius | ``R = \sqrt {gH} / f`` |
+| ``R_0`` | barotropic Rossby radius | ``R_0 = \sqrt {gH} / f`` |
 | ``g`` | gravitational acceleration | - |
 | ``f`` | Coriolis parameters | - |
 | ``H`` | layer depth | - |
