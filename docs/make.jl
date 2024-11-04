@@ -4,7 +4,7 @@ makedocs(
   authors = "Matthew N. Crowe",
   modules = [QGDipoles],
  sitename = "QGDipoles.jl",
-   format = Documenter.HTML(assets = ["assets/favicon.ico"])
+   format = Documenter.HTML(assets = ["assets/favicon.ico"]),
     pages = Any[
                 "Home" => "index.md",
 		"Examples" => "Examples.md",
