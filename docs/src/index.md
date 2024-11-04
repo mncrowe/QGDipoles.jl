@@ -4,7 +4,11 @@ Documentation and examples for QGDipoles.jl by [Matthew N. Crowe](https://mncrow
 
 ## About
 
-This Julia package provides functions for evaluating dipolar vortex solutions in the surface quasi-geostrophic (SQG) and multi-layer quasi-geostrophic (LQG) models. It is intended for use by those researching vortex dynamics in strongly rotating flows, in particular for researchers in physical oceanography and atmospheric dynamics. This package is based on the semi-analytic theory of dipolar vortices derived in Johnson & Crowe 2023[^1] and Crowe & Johnson 2023[^2] for SQG solutions and Crowe & Johnson 2024[^3] for LQG solutions. The method used a basis of orthogonal polynomials (Zernike radial functions) to convert a steady PDE into a linear algebra system which is solved using standard methods. This code consists of an updated version of the MATLAB code released as supplementary material with Crowe & Johnson 2024[^3] and incorporates (unreleased) functions for the SQG problem. For those interested in the original (LQG only) implementation, it can be found [here](https://github.com/mncrowe/QGDipoles.m).
+This Julia package provides functions for evaluating dipolar vortex solutions in the surface quasi-geostrophic (SQG) and multi-layer quasi-geostrophic (LQG) models.
+It is intended for use by those researching vortex dynamics in strongly rotating flows, in particular for researchers in physical oceanography and atmospheric dynamics.
+This package is based on the semi-analytic theory of dipolar vortices derived in Johnson & Crowe 2023[^1] and Crowe & Johnson 2023[^2] for SQG solutions and Crowe & Johnson 2024[^3] for LQG solutions.
+The method used a basis of orthogonal polynomials (Zernike radial functions) to convert a steady PDE into a linear algebra system which is solved using standard methods.
+This code consists of an updated version of the MATLAB code released as supplementary material with Crowe & Johnson 2024[^3] and incorporates (unreleased) functions for the SQG problem. For those interested in the original (LQG only) implementation, it can be found [here](https://github.com/mncrowe/QGDipoles.m).
 
 ## Method Summary
 
@@ -137,7 +141,6 @@ The tables below summarise all parameters used in functions and structures in QG
 | `CreateLCD` | `src/create_modon.jl` | Function | High level wrapper function for calculating ``\psi``, ``q`` and ``K`` for the Lamb-Chaplygin dipole using given parameters |
 | `CreateLRD` | `src/create_modon.jl` | Function | High level wrapper function for calculating ``\psi``, ``q`` and ``K`` for the Larichev-Reznik dipole using given parameters |
 
-## References
 
 [^1]: [Johnson, E. R., and M. N. Crowe, 2023, Oceanic dipoles in a surface quasigeostrophic model, J. Fluid Mech., 958, R2](https://doi.org/10.1017/jfm.2023.87).
 [^2]: [Crowe, M. N., and E. R. Johnson, 2023, The evolution of surface quasi-geostrophic modons on sloping topography, J. Fluid. Mech., 970, A10](https://doi.org/10.1017/jfm.2023.607).
