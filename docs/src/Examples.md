@@ -4,7 +4,7 @@ Here we present some examples which demonstrate the how to use this package. Fur
 
 ## Example 1: 1-layer QG
 
-Let's calculate and plot the Larichev-Reznik dipole (LRD). This diople exists on the $\beta$-plane in the equivalent barotropic model so we take $\beta = R = 1$ and consider a 1-layer solution ($N = 1$). We'll also assume unit radius and velocity, $\ell = U = 1$. Let's start by loading the package and defining some parameters.
+Let's calculate and plot the Larichev-Reznik dipole (LRD). This diople exists on the ``\beta``-plane in the equivalent barotropic model so we take ``\beta = R = 1`` and consider a 1-layer solution (``N = 1``). We'll also assume unit radius and velocity, ``\ell = U = 1``. Let's start by loading the package and defining some parameters.
 
 ```julia
 using QGDipoles
@@ -25,7 +25,7 @@ Lx, Ly = 10, 10
 
 ```
 
-We've taken $M = 8$ as this is generally a sufficient number of terms to get a relative error $< 10^{-6}$ in the final result. The tolerance, `tol`, is used in calculating the terms in the linear system and a value of $10^{-8}$ corresponds to approximately the same error as our chosen $M$ value. We're also going to build a grid with $512$ points in each direction and have taken the grid size to be $10$ in each direction, which is sufficient to capture the far-field decay of the vortex. We can now build the linear system and solve for the coefficients as follows:
+We've taken ``M = 8`` as this is generally a sufficient number of terms to get a relative error ``< 10^{-6}`` in the final result. The tolerance, `tol`, is used in calculating the terms in the linear system and a value of `tol=10^{-8}` corresponds to approximately the same error as our chosen ``M`` value. We're also going to build a grid with ``512`` points in each direction and have taken the grid size to be ``10`` in each direction, which is sufficient to capture the far-field decay of the vortex. We can now build the linear system and solve for the coefficients as follows:
 
 ```julia
 # Build and solve linear system for coefficients
@@ -38,7 +38,7 @@ K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol)
 
 ```
 
-The intermediate parameters, $\lambda$ and $\mu$, describe the rescaled vortex radius and PV gradient. Finally, we can define a grid and evaluate our streamfunction, PV and velocities using:
+The intermediate parameters, ``\lambda`` and ``\mu``, describe the rescaled vortex radius and PV gradient. Finally, we can define a grid and evaluate our streamfunction, PV and velocities using:
 
 ```julia
 # Create grid and calculate streamfunctions and vorticities
@@ -64,11 +64,11 @@ heatmap(grid.x, grid.y, transpose(ψ[:,:,1]);
 
 ![image](Ex_1.png)
 
-Note that we transpose $\psi$ when plotting as $x$ corresonds to the first dimension of $\psi$.
+Note that we transpose ``\psi`` when plotting as ``x`` corresonds to the first dimension of ``\psi``.
 
 ## Example 2: multi-layer QG
 
-This example considers a 3-layer solution and introduces the concept of active and passive layers. We define an active layer to be a layer with a closed streamline at $x^2 + y^2 = \ell^2$ whereas a passive layer has no closed streamlines. Therefore, fluid within the vortex in an active layer remains trapped in the vortex. Conversely, fluid in the passive layer is not trapped in a vortex core but can still be affected through the change in layer thickness associated with the streamfunction in neighbouring layers. Passive layers have $F_i(z) = (\beta_i/U) z$ everywhere and hence have no eigenvalue, $K_i$, to solve for. Further, the coefficients within a passive layer are zero though the solution may still be non-zero due to the coefficients in neighbouring layers. Therefore, the corresponding linear system can be simplified by removing rows and columns corresponding to passive layers and solving the reduced system for the active layers only.
+This example considers a 3-layer solution and introduces the concept of active and passive layers. We define an active layer to be a layer with a closed streamline at ``x^2 + y^2 = \ell^2`` whereas a passive layer has no closed streamlines. Therefore, fluid within the vortex in an active layer remains trapped in the vortex. Conversely, fluid in the passive layer is not trapped in a vortex core but can still be affected through the change in layer thickness associated with the streamfunction in neighbouring layers. Passive layers have ``F_i(z) = (\beta_i/U) z`` everywhere and hence have no eigenvalue, ``K_i``, to solve for. Further, the coefficients within a passive layer are zero though the solution may still be non-zero due to the coefficients in neighbouring layers. Therefore, the corresponding linear system can be simplified by removing rows and columns corresponding to passive layers and solving the reduced system for the active layers only.
 
 We'll start by defining some parameters:
 
@@ -93,7 +93,7 @@ Lx, Ly = [0, 10], [0, 10]
 
 ```
 
-We've assumed that only the middle layer is active. Therefore our solution will describe a mid-depth propagating structure. We've also taken a background PV gradient in the lower layer only, to represent, say, a topographic slope. Finally, we've taken our vortex to be centred at $[5, 5]$ and taken $x$ and $y$ to run from $0$ to $10$.
+We've assumed that only the middle layer is active. Therefore our solution will describe a mid-depth propagating structure. We've also taken a background PV gradient in the lower layer only, to represent, say, a topographic slope. Finally, we've taken our vortex to be centred at ``[5, 5]`` and taken ``x`` and ``y`` to run from ``0`` to ``10``.
 
 We start by building the full linear system:
 
@@ -114,7 +114,7 @@ A, B, c, d = ApplyPassiveLayers(A, B, c, d, ActiveLayers)
 
 ```
 
-We can now solve the reduced system and put the passive layers, which have $(K, \textbf{a}) = (0, \textbf{0})$, back in to ensure the sizes of $K$ and $\textbf{a}$ match the number of layers:
+We can now solve the reduced system and put the passive layers, which have ``(K, \textbf{a}) = (0, \textbf{0})``, back in to ensure the sizes of ``K`` and ``\textbf{a}`` match the number of layers:
 
 ```julia
 K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol)
@@ -134,7 +134,7 @@ grid = CreateGrid(Nx, Ny, Lx, Ly)
 
 ## Example 3: SQG
 
-This example covers the SQG vortex and introduces grids on a GPU. We'll start by defining some parameters. There are a few changes here compared to the LQG setup. Firstly, we'll need to set the flag `sqg` to `true` as the linear system is different in the SQG case and the functions assume LQG by default. Also, despite the SQG problem having only 1-layer, we enter `R` as a 2 element vector since we need both the (reduced) barotropic and baroclinic Rossby radii, $R$ and $R'$. We'll take these as $\infty$ using `Int` and note that these functions accept infinite Rossby radii in both the SQG and LQG cases. However, $R = 0$ is not valid since the QG assumptions break down in this limit. Note that we take $M = 20$ here and in general we'll need more coefficients for the SQG problem compared to the LQG problem as they decay slower with coefficient number. This is compensated by the fact that the SQG system is faster to calculate than the LQG system.
+This example covers the SQG vortex and introduces grids on a GPU. We'll start by defining some parameters. There are a few changes here compared to the LQG setup. Firstly, we'll need to set the flag `sqg` to `true` as the linear system is different in the SQG case and the functions assume LQG by default. Also, despite the SQG problem having only 1-layer, we enter `R` as a 2 element vector since we need both the (reduced) barotropic and baroclinic Rossby radii, ``R`` and ``R'``. We'll take these as ``\infty`` using `Int` and note that these functions accept infinite Rossby radii in both the SQG and LQG cases. However, ``R = 0`` is not valid since the QG assumptions break down in this limit. Note that we take ``M = 20`` here and in general we'll need more coefficients for the SQG problem compared to the LQG problem as they decay slower with coefficient number. This is compensated by the fact that the SQG system is faster to calculate than the LQG system.
 
 ```julia
 using QGDipoles
@@ -158,7 +158,7 @@ Lx, Ly = 10, 10
 
 ```
 
-We have introduced a couple of new variables here. Firstly, `cuda` is a flag that is passed to the grid object and when set to `true` will create the grid on an available GPU. Secondly, `method` is passed to the linear system solver, `SolveInhomEVP`, and determines if root-finding is used as the default method (`method = 1`) or if the problem is solved by eigenvalue methods for the 1-layer LQG and SQG problems (`method = 0`). In general, `method = 0` should be used, but if you have a good initial guess for $K$ and $\textbf{a}$, it may be faster to use `method = 1`.
+We have introduced a couple of new variables here. Firstly, `cuda` is a flag that is passed to the grid object and when set to `true` will create the grid on an available GPU. Secondly, `method` is passed to the linear system solver, `SolveInhomEVP`, and determines if root-finding is used as the default method (`method = 1`) or if the problem is solved by eigenvalue methods for the 1-layer LQG and SQG problems (`method = 0`). In general, `method = 0` should be used, but if you have a good initial guess for ``K`` and ``\textbf{a}``, it may be faster to use `method = 1`.
 
 Next we can build the linear system:
 
@@ -208,7 +208,7 @@ grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 
 ```
 
-Most of these have been described in previous examples, but $K_0$ and $\textbf{a}$ are new. These are the initial guesses for $K$ and $\textbf{a}$ and are not required. They can be useful when doing a parameter sweep; since values from a case with similar parameters can be used to speed up the root-finding step for the new parameter case. In general, $K = 4$ is a good guess for most LQG and SQG vortices. In principle, there are a (countably) infinite set of solutions with increasing radial mode number. The solutions we normally think of as dipolar vortices are the first mode and higher modes are generally unstable [1].
+Most of these have been described in previous examples, but ``K_0`` and ``\textbf{a}`` are new. These are the initial guesses for ``K`` and ``\textbf{a}`` and are not required. They can be useful when doing a parameter sweep; since values from a case with similar parameters can be used to speed up the root-finding step for the new parameter case. In general, ``K = 4`` is a good guess for most LQG and SQG vortices. In principle, there are a (countably) infinite set of solutions with increasing radial mode number. The solutions we normally think of as dipolar vortices are the first mode and higher modes are generally unstable [1].
 
 Now we have our parameters, we can get our vortex solution with a single function call:
 
@@ -245,7 +245,7 @@ grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 
 ```
 
-Note that we've used $K_0 = 8$ this time. We'll see what happens when we create and plot our solution:
+Note that we've used ``K_0 = 8`` this time. We'll see what happens when we create and plot our solution:
 
 ```julia
 # create modon solution
@@ -262,7 +262,7 @@ heatmap(grid.x, grid.y, transpose(ψ);
 
 ```
 
-If we look at $K$, we find that $K \approx 7.34205$ which is not the value we'd expect for the usual dipole solution. Instead, if we look at our plot, we see that it's a different solution with a mode 2 structure in the radial direction.
+If we look at ``K``, we find that ``K \approx 7.34205`` which is not the value we'd expect for the usual dipole solution. Instead, if we look at our plot, we see that it's a different solution with a mode 2 structure in the radial direction.
 
 ![image](Ex_4.png)
 
@@ -332,7 +332,7 @@ SingleLayerQG.updatevars!(prob)
 
 ```
 
-We can plot our initial condition and solution at $t = 10.0$ using:
+We can plot our initial condition and solution at ``t = 10.0`` using:
 
 ```julia
 using Plots
