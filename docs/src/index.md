@@ -76,9 +76,31 @@ This package is designed to work with the `TwoDGrid` structure from `FourierFlow
 
 ## Appendix
 
-The tables below summarise all parameters used in functions and structures in QGDipoles.jl. This appendix also contains an index of all functions and structures.
+This appendix contains a summary of the LQG and SQG systems of equations and tables which summarise all parameters used in functions and structures of QGDipoles.jl. This appendix also contains an index of all functions and structures.
 
-### LQG Parameters
+### The LQG System
+
+The layered QG equations are
+
+```math
+
+(\partial_t - U \partial_x) q_i + J(\psi_i,q_i) + \beta_i \partial_x \psi_i = 0, \quad i \in \{1,2,\dots, N\},
+
+```
+
+where the potential vorticity in eqch layer is given by
+
+```math
+
+\begin{align}
+q_1 = &\, \nabla^2 \psi_1 + R_1^{-2} (\psi_2 - \psi_1),\\
+q_i = &\, \nabla^2 \psi_i + R_i^{-2} (\psi_{i-1}-2\,\psi_i+\psi_{i+1}), \quad i \in \{2,\dots N-1\},\\
+q_N = &\, \nabla^2 \psi_N  + R_N^{-2} (\psi_{N-1}-\psi_N),
+\end{align}
+
+```
+
+and ``R_i = \sqrt{g'H_i}/f`` is the Rossby radius of deformation in each layer. The full list of parameters for the LQG system is given in the table below.
 
 | Parameter | Description | Definition |
 | :-- | :-- | :-- |
