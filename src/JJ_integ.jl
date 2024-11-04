@@ -88,7 +88,7 @@ Function: `JJ_int(F, j, k, tol=1e-6)`
 Evaluates the integral I = ∫ F(ξ) J_{2j+2}(ξ) J_{2k+2}(ξ) dξ for ξ ∈ [0, ∞)
 
 Arguments:
- - `F`: function to integrate, typically A_func or B_func, Function
+ - `F`: function to integrate, typically `A_func` or `B_func`, Function
  - `j`: first Bessel function index, Integer
  - `k`: second Bessel function index, Integer
  - `tol`: error tolerance for QuadGK, Number (default: `1e-6`)
