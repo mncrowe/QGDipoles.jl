@@ -264,7 +264,7 @@ heatmap(grid.x, grid.y, transpose(ψ);
 
 If we look at $K$, we find that $K \approx 7.34205$ which is not the value we'd expect for the usual dipole solution. Instead, if we look at our plot, we see that it's a different solution with a mode 2 structure in the radial direction.
 
-![image](https://github.com/mncrowe/QGDipoles.jl/blob/gh-pages/docs/src/Ex_4.png)
+![image](Ex_4.png)
 
 In addition to these wrapper functions, the functions `CreateLCD` and `CreateLCD` implement the Lamb-Chaplygin dipole [4] and Larichev-Reznik dipole [5] directly using the analytical solution for these cases.
 
@@ -353,6 +353,6 @@ heatmap(prob.grid.x, prob.grid.y, device_array(CPU())(transpose(prob.vars.q));
 
 Note that we need to move our fields back to the CPU prior to plotting. The two plots are shown below and are approximately identical. Therefore, we observe that the vortex remains centred at the origin. Over long times, numerical error will result in the vortex moving at a slightly different speed to `U` and hence moving away from the origin.
 
-![image](https://github.com/mncrowe/QGDipoles.jl/blob/gh-pages/docs/src/Ex_5a.png)![image](https://github.com/mncrowe/QGDipoles.jl/blob/gh-pages/docs/src/Ex_5b.png)
+![image](Ex_5a.png)![image](Ex_5b.png)
 
 See the `GeophyiscalFlows.jl` documentation [here](https://fourierflows.github.io/GeophysicalFlowsDocumentation/stable/) for more details on how to run QG simulations.

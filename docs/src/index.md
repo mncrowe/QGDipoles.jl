@@ -65,7 +65,7 @@ The tables below summarise all parameters used in functions and structures in QG
 ### LQG Parameters
 
 | Parameter | Description | Definition |
-| ----------- | ----------- | ----------- |
+| :-- | :-- | :-- |
 | $U$ | vortex speed | - |
 | $\ell$ | vortex radius | - |
 | $\beta$ | background (y) vorticity gradient in each layer | - |
@@ -83,7 +83,7 @@ The tables below summarise all parameters used in functions and structures in QG
 ### SQG Parameters
 
 | Parameter | Description | Definition |
-| ----------- | ----------- | ----------- |
+| :-- | :-- | :-- |
 | $U$ | vortex speed | - |
 | $\ell$ | vortex radius | - |
 | $\beta$ | background (y) vorticity gradient in each layer | - |
@@ -103,7 +103,7 @@ The tables below summarise all parameters used in functions and structures in QG
 ### Index
 
 | Name | Location | Type | Description |
-| -----------| ----------- | ----------- | ----------- |
+| :--| :-- | :-- | :-- |
 | `A_func` | `src/JJ_integ.jl` | Function | Evaluates a function required to calculate the matrix $\textbf{A}$ in the LQG case |
 | `B_func` | `src/JJ_integ.jl` | Function | Evaluates a function required to calculate the matrix $\textbf{B}$ in the LQG case |
 | `JJ_Int` | `src/JJ_integ.jl` | Function | Calculates a double Bessel function integral required to calculate $\textbf{A}$ and $\textbf{B}$ |
