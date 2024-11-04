@@ -3,7 +3,7 @@
 ```@docs
 A_func
 B_func
-JJ_Int
+JJ_int
 BuildLinSys
 ApplyPassiveLayers
 IncludePassiveLayers

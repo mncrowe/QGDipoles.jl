@@ -100,13 +100,13 @@ The tables below summarise all parameters used in functions and structures in QG
 | $f$ | Coriolis parameters | - |
 | $H$ | layer depth | - |
 
-### Index
+### Index of Functions
 
 | Name | Location | Type | Description |
 | :--| :-- | :-- | :-- |
 | `A_func` | `src/JJ_integ.jl` | Function | Evaluates a function required to calculate the matrix $\textbf{A}$ in the LQG case |
 | `B_func` | `src/JJ_integ.jl` | Function | Evaluates a function required to calculate the matrix $\textbf{B}$ in the LQG case |
-| `JJ_Int` | `src/JJ_integ.jl` | Function | Calculates a double Bessel function integral required to calculate $\textbf{A}$ and $\textbf{B}$ |
+| `JJ_int` | `src/JJ_integ.jl` | Function | Calculates a double Bessel function integral required to calculate $\textbf{A}$ and $\textbf{B}$ |
 | `BuildLinSys` | `src/lin_sys.jl` | Function | Builds the terms in the inhomogeneous eigenvalue problem; $\textbf{A}$, $\textbf{B}$, $\textbf{c}$ and $\textbf{d}$ |
 | `ApplyPassiveLayers` | `src/lin_sys.jl` | Function | Removes rows and columns corresponding to passive layers from the linear system |
 |`IncludePassiveLayers` | `src/lin_sys.jl` | Function | Includes columns corresponding to passive layers in the eigenvalue and coefficient arrays |
