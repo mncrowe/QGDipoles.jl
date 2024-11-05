@@ -1,7 +1,7 @@
 # Installation Instructions
 
 Installing QGDipoles.jl is fairly straightforward and can be done using the Julia package manager.
-Note that QGDipoles is not (currently) listed as a Julia package so **cannot* be installed using `] add QGDipoles`.
+Note that QGDipoles is not (currently) listed as a Julia package so **cannot** be installed using `] add QGDipoles`.
 
 ## Installing
 
