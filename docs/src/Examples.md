@@ -225,7 +225,7 @@ While the procedure outlined in Examples 1 to 3 gives an understanding our how t
 Therefore, this package also includes wrappers for the SQG and LQG problems.
 Let's start with the LQG case and define some parameters:
 
-```@example sqg
+```@example wrapper
 # Set problem parameters
 
 U, ℓ = 1, 1			# vortex speed and radius
@@ -255,7 +255,7 @@ The solutions we normally think of as dipolar vortices are the first mode and hi
 
 Now we have our parameters, we can get our vortex solution with a single function call:
 
-```@example sqg
+```@example wrapper
 # create modon solution
 
 ψ, q, K, a = CreateModonLQG(grid, M, U, ℓ, R, β, ActiveLayers, x₀; K₀, a₀, tol)
@@ -265,7 +265,7 @@ nothing
 
 The SQG wrapper is similar. We start by defining our paramters:
 
-```@example sqg
+```@example wrapper
 # Set problem parameters
 
 U, ℓ = 1, 1			# vortex speed and radius
@@ -292,7 +292,7 @@ nothing
 
 Note that we've used ``K_0 = 8`` this time. We'll see what happens when we create and plot our solution:
 
-```@example sqg
+```@example wrapper
 # create modon solution
 
 ψ, b, K, a = CreateModonSQG(grid, M, U, ℓ, R, β, x₀; K₀, a₀, tol)
