@@ -243,12 +243,15 @@ K₀, a₀ = [4, 4], Nothing	# guesses for K and a
 
 # create grid
 
+Nx, Ny = 512, 512
+Lx, Ly = 10, 10
+
 grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 
 nothing
 ```
 
-Most of these have been described in previous examples, but ``K_0`` and ``\textbf{a}`` are new.
+Most of these have been described in previous examples, but ``K_0`` and ``\textbf{a}_0`` are new.
 These are the initial guesses for ``K`` and ``\textbf{a}`` and are not required.
 They can be useful when doing a parameter sweep; since values from a case with similar parameters can be used to speed up the root-finding step for the new parameter case.
 In general, ``K = 4`` is a good guess for most LQG and SQG vortices.
