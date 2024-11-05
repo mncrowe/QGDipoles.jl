@@ -41,4 +41,7 @@ CreateModonLQG
 CreateModonSQG
 CreateLCD
 CreateLRD
+Eval_ψ_SQG
+Eval_q_SQG
+Eval_b_SQG
 ```

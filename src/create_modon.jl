@@ -235,7 +235,7 @@ Arguments:
  - `α`: initial angle of vortex, Number (default: `0`)
 
 Note: Here R is the baroclinic Rossby radius, R = NH/f, and R' = R₀²/R where R₀ is
-the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = fN/g.
+the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = g/(fN).
 """
 function Calc_ψb(a::Array, U::Number, ℓ::Number, R::Vector, β::Number, grid, x₀::Vector=[0, 0], α::Number=0)
 	
@@ -422,7 +422,7 @@ Arguments:
  - `tol`: error tolerance passed to `QuadGK` and `NLSolve` functions, Number (default: `1e-6`)
 
 Note: Here R is the baroclinic Rossby radius, R = NH/f, and R' = R₀²/R where R₀ is
-the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = fN/g.
+the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = g/(fN).
 """
 function CreateModonSQG(grid, M::Int=12, U::Number=1, ℓ::Number=1, R::Vector=[Inf, Inf], β::Number=0,
 	x₀::Vector=[0, 0], α::Number=0; K₀=Nothing, a₀=Nothing, tol=1e-6)
@@ -527,5 +527,111 @@ function CreateLRD(grid, U::Number=1, ℓ::Number=1, R::Number=1, β::Number=0, 
 		return ψ, q, [K;;]
 
 	end
+
+end
+
+"""
+Function: `Eval_ψ_SQG(grid, ψ, z=[0], U=1, R=[Inf, Inf], β=0)`
+
+Evaluates ψ at specified depths, z in [-R, 0], for the SQG problem
+
+Arguments:
+ - `grid`: grid structure containing x, y, and Krsq
+ - `ψ`: surface streamfunction, calculated using `Calc_ψb` or `CreateModonSQG`
+ - `z`: vector of depths (default: `[0]`)
+ - `U`: vortex speed, Number
+ - `R`: vector of [R, R'], Vector
+ - `β`: beta-plane (y) PV gradient, Number
+
+Note: Here R is the baroclinic Rossby radius, R = NH/f, and R' = R₀²/R where R₀ is
+the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = g/(fN).
+"""
+function Eval_ψ_SQG(grid, ψ::Union{CuArray,Array}, z::Vector=[0], U::Number=1, R::Vector=[Inf, Inf], β::Number=0)
+
+	Nx = length(grid.x)
+	
+	z = reshape(z, 1, 1, :)
+
+	if grid.Krsq isa CuArray
+			
+		z, ψ = CuArray(z), CuArray(ψ)
+			
+	end
+
+	ψh = rfft(ψ)
+
+	k₁ = @. (grid.Krsq + β/U) * z
+	k₂ = @. (grid.Krsq + β/U) * R[1]
+
+	ψ₃h = @. ψh * (exp(k₁) + exp(- k₁ - 2* k₂)) / (1 + exp(- 2 * k₂))
+
+	ψ₃ = irfft(ψ₃h, Nx, [1, 2])
+
+	return ψ₃
+
+end
+
+"""
+Function: `Eval_q_SQG(grid, ψ, z=[0], U=1, R=[Inf, Inf], β=0)`
+
+Evaluates q at specified depths, z in [-R, 0], for the SQG problem
+
+Arguments:
+ - `grid`: grid structure containing x, y, and Krsq
+ - `ψ`: surface streamfunction, calculated using `Calc_ψb` or `CreateModonSQG`
+ - `z`: vector of depths (default: `[0]`)
+ - `U`: vortex speed, Number
+ - `R`: vector of [R, R'], Vector
+ - `β`: beta-plane (y) PV gradient, Number
+
+Note: Here R is the baroclinic Rossby radius, R = NH/f, and R' = R₀²/R where R₀ is
+the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = g/(fN).
+"""
+function Eval_q_SQG(grid, ψ::Union{CuArray,Array}, z::Vector=[0], U::Number=1, R::Vector=[Inf, Inf], β::Number=0)
+
+	q₃ = β / U * Eval_ψ_SQG(grid, ψ, z, U, R, β)
+
+	return q₃
+
+end
+
+"""
+Function: `Eval_b_SQG(grid, ψ, z=[0], U=1, R=[Inf, Inf], β=0)`
+
+Evaluates b at specified depths, z in [-R, 0], for the SQG problem
+
+Arguments:
+ - `grid`: grid structure containing x, y, and Krsq
+ - `ψ`: surface streamfunction, calculated using `Calc_ψb` or `CreateModonSQG`
+ - `z`: vector of depths (default: `[0]`)
+ - `U`: vortex speed, Number
+ - `R`: vector of [R, R'], Vector
+ - `β`: beta-plane (y) PV gradient, Number
+
+Note: Here R is the baroclinic Rossby radius, R = NH/f, and R' = R₀²/R where R₀ is
+the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = g/(fN).
+"""
+function Eval_b_SQG(grid, ψ::Union{CuArray,Array}, z::Vector=[0], U::Number=1, R::Vector=[Inf, Inf], β::Number=0)
+
+	Nx = length(grid.x)
+	
+	z = reshape(z, 1, 1, :)
+
+	if grid.Krsq isa CuArray
+			
+		z, ψ = CuArray(z), CuArray(ψ)
+			
+	end
+
+	ψh = rfft(ψ)
+
+	k₁ = @. sqrt(grid.Krsq + β/U) * z
+	k₂ = @. sqrt(grid.Krsq + β/U) * R[1]
+
+	b₃h = @. sqrt(grid.Krsq + β/U) * ψh * (exp(k₁) - exp(- k₁ - 2* k₂)) / (1 + exp(- 2 * k₂))
+
+	b₃ = irfft(b₃h, Nx, [1, 2])
+
+	return b₃
 
 end

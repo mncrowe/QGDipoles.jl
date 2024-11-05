@@ -186,8 +186,9 @@ The SQG system is typically derived by assuming that ``q = 0`` in the interior.
 We instead take ``q = (\beta/U)\psi`` which satisfies the steady evolution equation for ``q`` given above and reduces to the usual result for ``\beta = 0``.
 Since ``b(z = 0)`` can be determined from ``\psi(z = 0)`` using the Dirichlet-Neumann operator given above, this system reduces to a 2D system for the modified surface buoyancy, ``b + N^2 \eta``, only.
 
-QGDipoles.jl solves for steady, dipolar solutions to this surface equation and hence calculates only the surface values of ``b`` and ``\psi``.
-If a 3D solution is required, a layered model with a large number of layers is recommended.
+QGDipoles.jl solves for steady, dipolar solutions to this surface equation and hence calculates only the surface values of ``b`` and ``\psi`` using `Calc_ψb` or `CreateModonSQG`.
+If a 3D solution is required, the functions `Eval_ψ_SQG`, `Eval_q_SQG` and `Eval_b_SQG` can be used to calculate `ψ`, `q` and `b` at specified depths.
+Alternatively, a layered model with a large number of layers can be used to model the continuous system.
 The full list of parameters for the SQG system is given in the table below.
 
 Note: this package returns ``b/N`` rather than ``b``. When working with dimensional variables, this factor of ``1/N`` should be included manually.
@@ -237,6 +238,9 @@ Full descriptions can be found on the [List of Functions](https://mncrowe.github
 | `CreateModonSQG` | `src/create_modon.jl` | Function | High level wrapper function for calculating ``\psi``, ``b``, ``K`` and ``\textbf{a}`` for the SQG model using given parameters |
 | `CreateLCD` | `src/create_modon.jl` | Function | High level wrapper function for calculating ``\psi``, ``q`` and ``K`` for the Lamb-Chaplygin dipole using given parameters |
 | `CreateLRD` | `src/create_modon.jl` | Function | High level wrapper function for calculating ``\psi``, ``q`` and ``K`` for the Larichev-Reznik dipole using given parameters |
+| `Eval_ψ_SQG` | `src/create_modon.jl` | Function | Evaluates ψ at specified depths in the SQG model |
+| `Eval_q_SQG` | `src/create_modon.jl` | Function | Evaluates q at specified depths in the SQG model |
+| `Eval_b_SQG` | `src/create_modon.jl` | Function | Evaluates b at specified depths in the SQG model |
 
 
 [^1]: [Johnson, E. R., and M. N. Crowe, 2023, Oceanic dipoles in a surface quasigeostrophic model, J. Fluid Mech., 958, R2](https://doi.org/10.1017/jfm.2023.87).
