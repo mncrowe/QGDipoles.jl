@@ -101,9 +101,9 @@ Note that the streamfunction may decay slowly in the far-field for certain param
 
 ### Integration with GeophysicalFlows.jl
 
-This package is designed to work with the `TwoDGrid` structure from `FourierFlows.jl` and `GeophysicalFlows.jl`[^6].
+This package is designed to work with the `TwoDGrid` structure from [FourierFlows.jl](https://fourierflows.github.io/FourierFlowsDocumentation/) and [GeophysicalFlows.jl](https://fourierflows.github.io/GeophysicalFlowsDocumentation/stable/)[^6].
 As such, these functions may be used to define initial conditions for layered and surface quasi-geostrophic simulations which may run on either CPUs or GPUs.
-However, `FourierFlows.jl` and `GeophysicalFlows.jl` are NOT required to use this package as an alternative grid structure (created using `CreateGrid`), which uses the same field names as `FourierFlows.jl`, is available.
+However, [FourierFlows.jl](https://fourierflows.github.io/FourierFlowsDocumentation/) and [GeophysicalFlows.jl](https://fourierflows.github.io/GeophysicalFlowsDocumentation/stable/) are NOT required to use this package as an alternative grid structure is available (created using `CreateGrid`), which uses the same field names as the eqivalent [FourierFlows.jl](https://fourierflows.github.io/FourierFlowsDocumentation/) function.
 
 ## Equations and Parameters
 
@@ -212,7 +212,7 @@ Note: this package returns ``b/N`` rather than ``b``. When working with dimensio
 
 ## Index of Functions
 
-This list contains all Functions and Structures from the `QGDipoles.jl` package.
+This list contains all Functions and Structures from the QGDipoles.jl package.
 Full descriptions can be found on the [List of Functions](https://mncrowe.github.io/QGDipoles.jl/dev/Functions/) page.
 
 | Name | Location | Type | Description |
