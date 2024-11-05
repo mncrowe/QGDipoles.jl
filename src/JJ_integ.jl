@@ -110,7 +110,7 @@ where the Bessel function decays exponentially in the imaginary direction.
 """
 function JJ_int(F::Function, j::Int, k::Int, tol::Number=1e-6)
 	
-	Define parameters for numerical integration
+	# Define parameters for numerical integration
 
 	d, D = 1e3, 100		# splitting parameter and domain limit for exp term
 	atol = 1e-4*tol		# absolute error tolerance for quadgk
