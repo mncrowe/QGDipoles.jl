@@ -226,6 +226,8 @@ Therefore, this package also includes wrappers for the SQG and LQG problems.
 Let's start with the LQG case and define some parameters:
 
 ```@example wrapper
+using QGDipoles
+
 # Set problem parameters
 
 U, ℓ = 1, 1			# vortex speed and radius
