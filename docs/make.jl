@@ -13,6 +13,7 @@ makedocs(
    format = format,
     pages = Any[
                 "Home" => "index.md",
+		"Installation" => "Installation.md",
 		"Examples" => "Examples.md",
 		"List of Functions" => "Functions.md"
 		]
