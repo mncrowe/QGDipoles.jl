@@ -35,14 +35,20 @@ function A_func(ξ::Number, λ::Union{Vector,Number}, μ::Union{Vector,Number})
 	N = length(μ)
 	
 	if N == 1
+
+		# Calculate A in 1-layer case
 		
 		K = @. ξ^2 + λ^2
+
 		A = @. K / (K + μ) / ξ
 
 	else
+
+		# Calculate A in N-layer case (N > 1)
 		
 		K = I(N) * ξ^2 + diagm([λ[1]^2; 2*λ[2:end-1].^2; λ[end]^2]) +
 			-diagm(1 => λ[1:end-1].^2, -1 => λ[2:end].^2)
+
 		A = (K / (K .+ diagm(μ))) / ξ
 
 	end	
@@ -67,13 +73,19 @@ function B_func(ξ::Number, λ::Union{Vector,Number}, μ::Union{Vector,Number})
 
 	if N == 1
 
+		# Calculate B in 1-layer case
+
 		K = @. ξ^2 + λ^2
+
 		B = @. 1 / (K + μ) / ξ
 
 	else
+
+		# Calculate B in N-layer case (N > 1)
 		
 		K = I(N) * ξ^2 + diagm([λ[1]^2; 2*λ[2:end-1].^2; λ[end]^2]) +
 			-diagm(1 => λ[1:end-1].^2, -1 => λ[2:end].^2)
+
 		B = inv(K .+ diagm(μ)) / ξ
 
 	end
@@ -98,27 +110,39 @@ where the Bessel function decays exponentially in the imaginary direction.
 """
 function JJ_int(F::Function, j::Int, k::Int, tol::Number=1e-6)
 	
+	Define parameters for numerical integration
+
 	d, D = 1e3, 100		# splitting parameter and domain limit for exp term
 	atol = 1e-4*tol		# absolute error tolerance for quadgk
+
+	# Define Bessel functions
 	
 	J(n, x) = besselj(n, x)
 	Y(n, x) = bessely(n, x)
 	H₁(n, x) = hankelh1(n, x)
 	H₂(n, x) = hankelh2(n, x)
+
+	# Define products of Bessel functions
 	
 	HH₁₂(m,n,x) = @. 2*(J(m, x) * J(n, x) + Y(m, x) * Y(n, x))
 	ϕ₁₁(m,n,x) = @. H₁(m, x) * H₁(n, x) / exp(2*im*x)
 	ϕ₂₂(m,n,x) = @. H₂(m, x) * H₂(n, x) / exp(-2*im*x)
+
+	# Define integrands for each of the 4 contour segments
 	
 	F₁(x) = F(x) .* J(2*j+2,x) * J(2*k+2,x)
 	F₂(x) = F(x) .* HH₁₂(2*j+2, 2*k+2, x)/4
 	F₃(x) = F(d + im*x) .* (ϕ₁₁(2*j+2, 2*k+2, d + im*x) * exp(-2*x))
 	F₄(x) = F(d - im*x) .* (ϕ₂₂(2*j+2, 2*k+2, d - im*x) * exp(-2*x))
+
+	# Integrate along each contour segment
 	
 	I₁ = quadgk(F₁ ,0, d, rtol=tol, atol=atol)
 	I₂ = quadgk(F₂, d, Inf, rtol=tol, atol=atol)
 	I₃ = quadgk(F₃, 0, D, rtol=tol, atol=atol)
 	I₄ = quadgk(F₄, 0, D, rtol=tol, atol=atol)
+
+	# Define integral I and total error ϵ
 	
 	I = I₁[1] + I₂[1] - imag(exp(2*im*d)*I₃[1] - exp(-2*im*d)*I₄[1])/4
 	ϵ = I₁[2] + I₂[2] + I₃[2] + I₄[2]

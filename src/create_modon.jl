@@ -56,7 +56,7 @@ GeophysicalFlows.jl so will also work with this grid.
 """
 Function: `ZernikeR(n, x)`
 
-Define the Zernike radial function using the jacobi function from SpecialFunctions
+Define the Zernike radial function using the `jacobi` function from SpecialFunctions
 
 Arguments:
  - `n`: order, Integer
@@ -94,7 +94,7 @@ Define the numerical grid as a `GridStruct`
 
 Arguments:
  - `Nx`, `Ny`: number of gridpoints in x and y directions, Integers
- - `Lx`, `Ly`: x and y domains, either vectors of endpoints or lengths, Numbers or Vectors
+ - `Lx`, `Ly`: x and y domains, either vectors of endpoints or lengths, Vectors or Numbers
  - `cuda`: `true`; use CUDA CuArray for fields (default: `false`)
 """
 function CreateGrid(Nx::Int, Ny::Int, Lx::Union{Number,Vector}, Ly::Union{Number,Vector}; cuda::Bool=false)
@@ -129,6 +129,8 @@ function CreateGrid(Nx::Int, Ny::Int, Lx::Union{Number,Vector}, Ly::Union{Number
 
 	Krsq = @. kr^2 + l^2
 
+	# Convert to CuArrays if using CUDA
+
 	if cuda
 
 		kr, l, Krsq = CuArray(kr), CuArray(l), CuArray(Krsq)
@@ -156,12 +158,19 @@ function Calc_ψq(a::Array, U::Number, ℓ::Number, R::Union{Number,Vector}, β:
 	grid, x₀::Vector=[0, 0], α::Number=0)
 	
 	M, N = size(a)
+
 	Nx, Ny = length(grid.x), length(grid.y)
+
+	# Create Cartesian and polar grids
 	
 	x, y = reshape(Array(grid.x), :, 1), reshape(Array(grid.y), 1, :)
 	r, θ = @. sqrt((x-x₀[1])^2 + (y-x₀[2])^2), @. atan(y-x₀[2], x-x₀[1])
 
+	# Define temporary variable for RHS terms
+
 	F = zeros(Nx, Ny, N)
+
+	# Set RHS terms as sum of coefficients multiplied by Zernike polynomials
 
 	for j in 1:M
 		
@@ -173,12 +182,18 @@ function Calc_ψq(a::Array, U::Number, ℓ::Number, R::Union{Number,Vector}, β:
 		
 	end
 
+	# Fourier transform F, set (0, 0) mode to 0 to avoid NaN errors later
+
 	F = -U/ℓ * F .* sin.(θ .- α)
 	Fh = rfft(F, [1, 2])
 	Fh[1, 1, :] .= 0
 
+	# Define PV inversion operators for ψ and q
+
 	ΔN_i = stack(inv, eachslice(ΔNCalc(grid.Krsq, R, β, U), dims=(3,4)))
 	ΔN_0 = ΔNCalc(grid.Krsq, R, 0)
+
+	# Define temporary variables for ψ and q in Fourier space
 
 	if grid.Krsq isa CuArray
 		
@@ -193,6 +208,8 @@ function Calc_ψq(a::Array, U::Number, ℓ::Number, R::Union{Number,Vector}, β:
 		
 	end
 
+	# Calculate ψ in each layer in Fourier space
+
 	for n in 1:N
 		
 		for j in 1:N
@@ -203,6 +220,8 @@ function Calc_ψq(a::Array, U::Number, ℓ::Number, R::Union{Number,Vector}, β:
 		
 	end
 
+	# Calculate q in each layer in Fourier space
+
 	for n in 1:N
 		
 		for j in 1:N
@@ -212,6 +231,8 @@ function Calc_ψq(a::Array, U::Number, ℓ::Number, R::Union{Number,Vector}, β:
 		end
 		
 	end
+
+	# Transform back to real space
 
 	ψ = irfft(ψh, Nx, [1, 2])
 	q = irfft(qh, Nx, [1, 2])
@@ -242,11 +263,17 @@ function Calc_ψb(a::Array, U::Number, ℓ::Number, R::Vector, β::Number, grid,
 	M, _ = size(a)
 	Nx, Ny = length(grid.x), length(grid.y)
 	ϵ = 1e-15
+
+	# Create Cartesian and polar grids
 	
 	x, y = reshape(Array(grid.x), :, 1), reshape(Array(grid.y), 1, :)
 	r, θ = @. sqrt((x-x₀[1])^2 + (y-x₀[2])^2), @. atan(y-x₀[2], x-x₀[1])
 
+	# Define temporary variable for RHS terms
+
 	F = zeros(Nx, Ny)
+
+	# Set RHS terms as sum of coefficients multiplied by Zernike polynomials
 
 	for j in 1:M
 		
@@ -254,11 +281,17 @@ function Calc_ψb(a::Array, U::Number, ℓ::Number, R::Vector, β::Number, grid,
 		
 	end
 
+	# Fourier transform F, set (0, 0) mode to 0 to avoid NaN errors later
+
 	F = U * F .* sin.(θ .- α)
 	Fh = rfft(F)
 	Fh[1, 1] = 0
+
+	# Define Dirichlet-Neumann operator linking ψ and b
 	
 	∂z = sqrt.(grid.Krsq .+ β/U) .* tanh.((ϵ .+ sqrt.(grid.Krsq .+ β/U)) .* R[1])
+
+	# Move Fh to GPU if `cuda=true` in grid
 
 	if grid.Krsq isa CuArray
 		
@@ -266,8 +299,12 @@ function Calc_ψb(a::Array, U::Number, ℓ::Number, R::Vector, β::Number, grid,
 		
 	end
 
+	# Calculate ψ and b in Fourier using Dirichlet-Neumann operator
+
 	ψh = Fh ./ (∂z .+ (1/R[2] + ϵ))
 	bh = ∂z .* ψh
+
+	# Transform back to real space
 
 	ψ = irfft(ψh, Nx)
 	b = irfft(bh, Nx)
@@ -291,13 +328,21 @@ function Calc_uv(ψ::Union{CuArray,Array}, grid)
 	Nx, Ny = size(ψ)
 	N = Int(length(ψ) / (Nx * Ny))
 
+	# Fourier transform ψ
+
 	ψh = rfft(reshape(ψ, Nx, Ny, N), [1, 2])
+
+	# Calculate (u, v) in Fourier space using ∂/∂x = ik, ∂/∂y = il
 
 	uh = -im .* grid.l .* ψh
 	vh = im .* grid.kr .* ψh
+
+	# Transform back to real space
 	
 	u = irfft(uh, Nx, [1, 2])
 	v = irfft(vh, Nx, [1, 2])
+
+	# Output arrays as 2D in SQG case for consistency
 
 	if Nd == 2
 		
@@ -325,6 +370,8 @@ function ΔNCalc(K²::Union{CuArray,Array}, R::Union{Number,Vector}, β::Union{N
 	N = length(R)
 	Nk, Nl = size(K²)
 	ϵ = max(1, maximum(R.^-2)) * 1e-15
+
+	# Define βU⁻¹ depending on input type
 	
 	if length(β) < N
 		
@@ -338,9 +385,13 @@ function ΔNCalc(K²::Union{CuArray,Array}, R::Union{Number,Vector}, β::Union{N
 
 	if N == 1
 
+		# Calculate ΔN in 1-layer case
+
 		ΔN = -reshape(K² .+ (1/R^2 + βU⁻¹ + ϵ), 1, 1, Nk, Nl)
 
 	else
+
+		# Calculate ΔN in N-layer case (N > 1)
 		
 		if K² isa CuArray
 			
@@ -385,19 +436,29 @@ Note: provide values of K₀ and a₀ for active layers ONLY.
 function CreateModonLQG(grid, M::Int=8, U::Number=1, ℓ::Number=1, R::Union{Number,Vector}=1, β::Union{Number,Vector}=0,
 	ActiveLayers::Union{Number,Vector}=1, x₀::Vector=[0, 0], α::Number=0; K₀=Nothing, a₀=Nothing, tol=1e-6)
 	
+	# If ActiveLayers size does not match size of R, assume all layers are active
+
 	if length(ActiveLayers) < length(R)
 		
 		ActiveLayers = ones(length(R))
 	
 	end
+
+	# Define intermediate variables
 	
 	λ, μ = ℓ ./ R, β .* (ℓ^2/U)
+
+	# Build linear system
 
 	A, B, c, d = BuildLinSys(M, λ, μ; tol)
 	A, B, c, d = ApplyPassiveLayers(A, B, c, d, ActiveLayers)
 
+	# Solve linear system
+
 	K, a = SolveInhomEVP(A, B, c, d; K₀, a₀, tol)
 	K, a = IncludePassiveLayers(K, a, ActiveLayers)
+
+	# Construct solution using computed coefficients
 
 	ψ, q = Calc_ψq(a, U, ℓ, R, β, grid, x₀, α)
 
@@ -427,11 +488,19 @@ the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = g/(fN).
 function CreateModonSQG(grid, M::Int=12, U::Number=1, ℓ::Number=1, R::Vector=[Inf, Inf], β::Number=0,
 	x₀::Vector=[0, 0], α::Number=0; K₀=Nothing, a₀=Nothing, tol=1e-6)
 	
+	# Define intermediate variables
+
 	λ, μ = ℓ ./ R, β .* (ℓ^2/U)
+
+	# Build linear system
 
 	A, B, c, d = BuildLinSys(M, λ, μ; tol, sqg=true)
 
+	# Solve linear system
+
 	K, a = SolveInhomEVP(A, B, c, d; K₀, a₀, tol, sqg=true)
+
+	# Construct solution using computed coefficients
 
 	ψ, b = Calc_ψb(a, U, ℓ, R, β, grid, x₀, α)
 
@@ -454,15 +523,26 @@ Note: This function uses the analytic solution for the LCD to calculate ψ and q
 """
 function CreateLCD(grid, U::Number=1, ℓ::Number=1, x₀::Vector=[0, 0], α::Number=0)
 
-	K = 3.83170597020751231561443589 / ℓ	# First root of Bessel J_1(x)
+	# Define K as the first root of Bessel J_1(x)
+
+	K = 3.83170597020751231561443589 / ℓ
+
+	# Define Coefficients in far-field (A) and inside vortex (B)
+
 	A = - U * ℓ^2
 	B = 4 * U / (K * (besselj(0, K * ℓ) - besselj(2, K * ℓ)))
+
+	# Create Cartesian and polar grids
 
 	x, y = reshape(Array(grid.x), :, 1), reshape(Array(grid.y), 1, :)
 	r, θ = @. sqrt((x-x₀[1])^2 + (y-x₀[2])^2), @. atan(y-x₀[2], x-x₀[1])
 
+	# Calculate ψ and q using analytic result
+
 	ψ = @. (A / r * (r >= ℓ) + (B * besselj(1, K * r) - U * r) * (r < ℓ)) * sin(θ - α)
 	q = @. -K^2 * B * besselj(1, K * r) * (r < ℓ) * sin(θ - α)
+
+	# Move result to GPU if `cuda=true` in grid
 
 	if grid.Krsq isa CuArray
 		
@@ -490,33 +570,51 @@ Note: This function uses the analytic solution for the LRD to calculate ψ and q
 """
 function CreateLRD(grid, U::Number=1, ℓ::Number=1, R::Number=1, β::Number=0, x₀::Vector=[0, 0], α::Number=0)
 
+	# Define effective β and external wavenumber p
+
 	β′ = β + U/R^2
 	p = sqrt(β′ / U)
 
 	if p == 0
+
+		# If parameters match the LCD, use `CreateLCD` instead
 		
 		return CreateLCD(grid, U, ℓ, x₀, α)
 		
 	else
 
+		# Define Bessel functions and derivatives
+
 		J1(x) = besselj(1, x)
 		J1p(x) = (besselj(0, x) - besselj(2, x))/2
 		K1(x) = besselk(1, x)
 		K1p(x) = (-besselk(0, x) - besselk(2, x))/2
+
+		# Define a function f(x), K is related to the zeros of f
 		
 		f(x) = @. x * J1p(x) - (1 + x^2 / (p^2 * ℓ^2)) * J1(x) + x^2 * J1(x) * K1p(p * ℓ) / (p * ℓ * K1(p * ℓ))
+
+		# Solve f(x) = 0 and calculate K
 	
 		K′ = nlsolve(f, [3.83170597020751231561443589]).zero[1] / ℓ
 		K = ℓ * sqrt(K′^2 + 1 / R^2)
 
+		# Define Coefficients in far-field (A) and inside vortex (B)
+
 		A = - U * ℓ / K1(p * ℓ)
 		B = p^2 * U * ℓ / (K′^2 * J1(K′ * ℓ))
+
+		# Create Cartesian and polar grids
 	
 		x, y = reshape(Array(grid.x), :, 1), reshape(Array(grid.y), 1, :)
 		r, θ = @. sqrt((x-x₀[1])^2 + (y-x₀[2])^2), @. atan(y-x₀[2], x-x₀[1])
+
+		# Calculate ψ and q using analytic result
 		
 		ψ = @. (A * K1(p *r) * (r >= ℓ) + (B * J1(K′ * r) - U * (K′^2 + p^2) / K′^2 * r) * (r < ℓ)) * sin(θ - α)
 		q = @. β / U * ψ * (r >= ℓ) - (K^2 / ℓ^2 * ψ + (U * K^2 / ℓ^2 + β) * r * sin(θ - α)) * (r < ℓ)
+
+		# Move result to GPU if `cuda=true` in grid
 
 		if grid.Krsq isa CuArray
 			
@@ -539,9 +637,9 @@ Arguments:
  - `grid`: grid structure containing x, y, and Krsq
  - `ψ`: surface streamfunction, calculated using `Calc_ψb` or `CreateModonSQG`
  - `z`: vector of depths (default: `[0]`)
- - `U`: vortex speed, Number
- - `R`: vector of [R, R'], Vector
- - `β`: beta-plane (y) PV gradient, Number
+ - `U`: vortex speed, Number (default: `1`)
+ - `R`: vector of [R, R'], Vector (default: `[Inf, Inf]`)
+ - `β`: beta-plane (y) PV gradient, Number (default: `0`)
 
 Note: Here R is the baroclinic Rossby radius, R = NH/f, and R' = R₀²/R where R₀ is
 the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = g/(fN).
@@ -550,7 +648,11 @@ function Eval_ψ_SQG(grid, ψ::Union{CuArray,Array}, z::Vector=[0], U::Number=1,
 
 	Nx = length(grid.x)
 	
+	# Reshape z so the z direction corresponds to the third dimension of the output
+
 	z = reshape(z, 1, 1, :)
+
+	# Move inputs to GPU if `cuda=true` in grid
 
 	if grid.Krsq isa CuArray
 			
@@ -558,12 +660,20 @@ function Eval_ψ_SQG(grid, ψ::Union{CuArray,Array}, z::Vector=[0], U::Number=1,
 			
 	end
 
+	# Fourier tranform ψ
+
 	ψh = rfft(ψ)
 
-	k₁ = @. (grid.Krsq + β/U) * z
-	k₂ = @. (grid.Krsq + β/U) * R[1]
+	# Calculate exponents for analytic solution in Fourier space
+
+	k₁ = @. sqrt(grid.Krsq + β/U) * z
+	k₂ = @. sqrt(grid.Krsq + β/U) * R[1]
+
+	# Calculate ψ in Fourier space, we divide through by exp(k₂) to prevent Inf values
 
 	ψ₃h = @. ψh * (exp(k₁) + exp(- k₁ - 2* k₂)) / (1 + exp(- 2 * k₂))
+
+	# Transform back to real space
 
 	ψ₃ = irfft(ψ₃h, Nx, [1, 2])
 
@@ -580,14 +690,16 @@ Arguments:
  - `grid`: grid structure containing x, y, and Krsq
  - `ψ`: surface streamfunction, calculated using `Calc_ψb` or `CreateModonSQG`
  - `z`: vector of depths (default: `[0]`)
- - `U`: vortex speed, Number
- - `R`: vector of [R, R'], Vector
- - `β`: beta-plane (y) PV gradient, Number
+ - `U`: vortex speed, Number (default: `1`)
+ - `R`: vector of [R, R'], Vector (default: `[Inf, Inf]`)
+ - `β`: beta-plane (y) PV gradient, Number (default: `0`)
 
 Note: Here R is the baroclinic Rossby radius, R = NH/f, and R' = R₀²/R where R₀ is
 the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = g/(fN).
 """
 function Eval_q_SQG(grid, ψ::Union{CuArray,Array}, z::Vector=[0], U::Number=1, R::Vector=[Inf, Inf], β::Number=0)
+
+	# Calculate q using the result q = (β / U) * ψ in the 3D domain
 
 	q₃ = β / U * Eval_ψ_SQG(grid, ψ, z, U, R, β)
 
@@ -604,9 +716,9 @@ Arguments:
  - `grid`: grid structure containing x, y, and Krsq
  - `ψ`: surface streamfunction, calculated using `Calc_ψb` or `CreateModonSQG`
  - `z`: vector of depths (default: `[0]`)
- - `U`: vortex speed, Number
- - `R`: vector of [R, R'], Vector
- - `β`: beta-plane (y) PV gradient, Number
+ - `U`: vortex speed, Number (default: `1`)
+ - `R`: vector of [R, R'], Vector (default: `[Inf, Inf]`)
+ - `β`: beta-plane (y) PV gradient, Number (default: `0`)
 
 Note: Here R is the baroclinic Rossby radius, R = NH/f, and R' = R₀²/R where R₀ is
 the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = g/(fN).
@@ -614,8 +726,12 @@ the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = g/(fN).
 function Eval_b_SQG(grid, ψ::Union{CuArray,Array}, z::Vector=[0], U::Number=1, R::Vector=[Inf, Inf], β::Number=0)
 
 	Nx = length(grid.x)
+
+	# Reshape z so the z direction corresponds to the third dimension of the output
 	
 	z = reshape(z, 1, 1, :)
+
+	# Move inputs to GPU if `cuda=true` in grid
 
 	if grid.Krsq isa CuArray
 			
@@ -623,12 +739,20 @@ function Eval_b_SQG(grid, ψ::Union{CuArray,Array}, z::Vector=[0], U::Number=1, 
 			
 	end
 
+	# Fourier tranform ψ
+
 	ψh = rfft(ψ)
+
+	# Calculate exponents for analytic solution in Fourier space
 
 	k₁ = @. sqrt(grid.Krsq + β/U) * z
 	k₂ = @. sqrt(grid.Krsq + β/U) * R[1]
 
+	# Calculate ψ in Fourier space, we divide through by exp(k₂) to prevent Inf values
+
 	b₃h = @. sqrt(grid.Krsq + β/U) * ψh * (exp(k₁) - exp(- k₁ - 2* k₂)) / (1 + exp(- 2 * k₂))
+
+	# Transform back to real space
 
 	b₃ = irfft(b₃h, Nx, [1, 2])
 
