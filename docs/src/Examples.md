@@ -27,7 +27,7 @@ tol = 1e-8	# maximum error in solution evaluation
 Nx, Ny = 512, 512
 Lx, Ly = 10, 10
 
-Nothing
+nothing
 ```
 
 We've taken ``M = 8`` as this is generally a sufficient number of terms to get a relative error ``< 10^{-6}`` in the final result.
@@ -44,7 +44,7 @@ We can now build the linear system and solve for the coefficients as follows:
 A, B, c, d = BuildLinSys(M, λ, μ; tol)
 K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol)
 
-Nothing
+nothing
 ```
 
 The intermediate parameters, ``\lambda`` and ``\mu``, describe the rescaled vortex radius and PV gradient.
@@ -57,7 +57,7 @@ grid = CreateGrid(Nx, Ny, Lx, Ly)
 ψ, q = Calc_ψq(a, U, ℓ, R, β, grid)
 u, v = Calc_uv(ψ, grid)
 
-Nothing
+nothing
 ```
 
 We can plot our solution using Plots.jl:
@@ -106,7 +106,7 @@ tol = 1e-8			# maximum error in solution evaluation
 Nx, Ny = 512, 512
 Lx, Ly = [0, 10], [0, 10]
 
-Nothing
+nothing
 ```
 
 We've assumed that only the middle layer is active.
@@ -123,7 +123,7 @@ We start by building the full linear system:
 
 A, B, c, d = BuildLinSys(M, λ, μ; tol)
 
-Nothing
+nothing
 ```
 
 Next we remove the passive layers:
@@ -131,7 +131,7 @@ Next we remove the passive layers:
 ```@example multilayer
 A, B, c, d = ApplyPassiveLayers(A, B, c, d, ActiveLayers)
 
-Nothing
+nothing
 ```
 
 We can now solve the reduced system and put the passive layers, which have ``(K, \textbf{a}) = (0, \textbf{0})``, back in to ensure the sizes of ``K`` and ``\textbf{a}`` match the number of layers:
@@ -140,7 +140,7 @@ We can now solve the reduced system and put the passive layers, which have ``(K,
 K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol)
 K, a = IncludePassiveLayers(K, a, ActiveLayers)
 
-Nothing
+nothing
 ```
 
 Finally, we can calculate our solution:
@@ -151,7 +151,7 @@ Finally, we can calculate our solution:
 grid = CreateGrid(Nx, Ny, Lx, Ly)
 ψ, q = Calc_ψq(a, U, ℓ, R, β, grid, x₀)
 
-Nothing
+nothing
 ```
 
 ## Example 3: SQG
@@ -185,7 +185,7 @@ sqg = true	    	# functions use SQG functionality
 Nx, Ny = 512, 512
 Lx, Ly = 10, 10
 
-Nothing
+nothing
 ```
 
 We have introduced a couple of new variables here.
@@ -204,7 +204,7 @@ Next we can build the linear system:
 A, B, c, d = BuildLinSys(M, λ, μ; tol, sqg)
 K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol, method, sqg)
 
-Nothing
+nothing
 ```
 
 And finally we can create our solution:
@@ -216,7 +216,7 @@ grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 ψ, b = Calc_ψb(a, U, ℓ, R, β, grid)
 u, v = Calc_uv(ψ, grid)
 
-Nothing
+nothing
 ```
 
 ## Example 4: Wrappers
@@ -243,7 +243,7 @@ K₀, a₀ = [4, 4], Nothing	# guesses for K and a
 
 grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 
-Nothing
+nothing
 ```
 
 Most of these have been described in previous examples, but ``K_0`` and ``\textbf{a}`` are new.
@@ -260,7 +260,7 @@ Now we have our parameters, we can get our vortex solution with a single functio
 
 ψ, q, K, a = CreateModonLQG(grid, M, U, ℓ, R, β, ActiveLayers, x₀; K₀, a₀, tol)
 
-Nothing
+nothing
 ```
 
 The SQG wrapper is similar. We start by defining our paramters:
@@ -287,7 +287,7 @@ Lx, Ly = 10, 10
 
 grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 
-Nothing
+nothing
 ```
 
 Note that we've used ``K_0 = 8`` this time. We'll see what happens when we create and plot our solution:
