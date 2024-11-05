@@ -10,7 +10,7 @@ This diople exists on the ``\beta``-plane in the equivalent barotropic model so 
 We'll also assume unit radius and velocity, ``\ell = U = 1``.
 Let's start by loading the package and defining some parameters.
 
-```julia
+```@example 1layer
 using QGDipoles
 
 # Set problem parameters
@@ -26,7 +26,6 @@ tol = 1e-8	# maximum error in solution evaluation
 
 Nx, Ny = 512, 512
 Lx, Ly = 10, 10
-
 ```
 
 We've taken ``M = 8`` as this is generally a sufficient number of terms to get a relative error ``< 10^{-6}`` in the final result.
@@ -34,7 +33,7 @@ The tolerance, `tol`, is used in calculating the terms in the linear system and 
 We're also going to build a grid with ``512`` points in each direction and have taken the grid size to be ``10`` in each direction, which is sufficient to capture the far-field decay of the vortex.
 We can now build the linear system and solve for the coefficients as follows:
 
-```julia
+```@example 1layer
 # Build and solve linear system for coefficients
 
 λ = ℓ / R
@@ -48,7 +47,7 @@ K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol)
 The intermediate parameters, ``\lambda`` and ``\mu``, describe the rescaled vortex radius and PV gradient.
 Finally, we can define a grid and evaluate our streamfunction, PV and velocities using:
 
-```julia
+```@example 1layer
 # Create grid and calculate streamfunctions and vorticities
 
 grid = CreateGrid(Nx, Ny, Lx, Ly)
@@ -59,7 +58,7 @@ u, v = Calc_uv(ψ, grid)
 
 We can plot our solution using Plots.jl:
 
-```julia
+```@example 1layer
 using Plots
 
 heatmap(grid.x, grid.y, transpose(ψ[:,:,1]);
@@ -69,8 +68,6 @@ heatmap(grid.x, grid.y, transpose(ψ[:,:,1]);
     ylims = (-Ly/2, Ly/2))
 
 ```
-
-![image](Ex_1.png)
 
 Note that we transpose ``\psi`` when plotting as ``x`` corresonds to the first dimension of ``\psi``.
 
@@ -86,7 +83,7 @@ Therefore, the corresponding linear system can be simplified by removing rows an
 
 We'll start by defining some parameters:
 
-```julia
+```@example multilayer
 using QGDipoles
 
 # Set problem parameters
@@ -104,7 +101,6 @@ tol = 1e-8			# maximum error in solution evaluation
 
 Nx, Ny = 512, 512
 Lx, Ly = [0, 10], [0, 10]
-
 ```
 
 We've assumed that only the middle layer is active.
@@ -113,39 +109,35 @@ Finally, we've taken our vortex to be centred at ``[5, 5]`` and taken ``x`` and 
 
 We start by building the full linear system:
 
-```julia
+```@example multilayer
 # Build and solve linear system for coefficients
 
 λ = ℓ ./ R
 μ = β * ℓ^2/U
 
 A, B, c, d = BuildLinSys(M, λ, μ; tol)
-
 ```
 
 Next we remove the passive layers:
 
-```julia
+```@example multilayer
 A, B, c, d = ApplyPassiveLayers(A, B, c, d, ActiveLayers)
-
 ```
 
 We can now solve the reduced system and put the passive layers, which have ``(K, \textbf{a}) = (0, \textbf{0})``, back in to ensure the sizes of ``K`` and ``\textbf{a}`` match the number of layers:
 
-```julia
+```@example multilayer
 K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol)
 K, a = IncludePassiveLayers(K, a, ActiveLayers)
-
 ```
 
 Finally, we can calculate our solution:
 
-```julia
+```@example multilayer
 # Create grid and calculate streamfunctions and vorticities
 
 grid = CreateGrid(Nx, Ny, Lx, Ly)
 ψ, q = Calc_ψq(a, U, ℓ, R, β, grid, x₀)
-
 ```
 
 ## Example 3: SQG
@@ -159,7 +151,7 @@ However, ``R = 0`` is not valid since the QG assumptions break down in this limi
 Note that we take ``M = 20`` here and in general we'll need more coefficients for the SQG problem compared to the LQG problem as they decay slower with coefficient number.
 This is compensated by the fact that the SQG system is faster to calculate than the LQG system.
 
-```julia
+```@example sqg
 using QGDipoles
 
 # Set problem parameters
@@ -178,7 +170,6 @@ sqg = true	    	# functions use SQG functionality
 
 Nx, Ny = 512, 512
 Lx, Ly = 10, 10
-
 ```
 
 We have introduced a couple of new variables here.
@@ -188,7 +179,7 @@ In general, `method = 0` should be used, but if you have a good initial guess fo
 
 Next we can build the linear system:
 
-```julia
+```@example sqg
 # Build and solve linear system for coefficients
 
 λ = ℓ ./ R
@@ -196,18 +187,16 @@ Next we can build the linear system:
 
 A, B, c, d = BuildLinSys(M, λ, μ; tol, sqg)
 K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol, method, sqg)
-
 ```
 
 And finally we can create our solution:
 
-```julia
+```@example sqg
 # Create grid and calculate streamfunctions and vorticities
 
 grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 ψ, b = Calc_ψb(a, U, ℓ, R, β, grid)
 u, v = Calc_uv(ψ, grid)
-
 ```
 
 ## Example 4: Wrappers
@@ -216,7 +205,7 @@ While the procedure outlined in Examples 1 to 3 gives an understanding our how t
 Therefore, this package also includes wrappers for the SQG and LQG problems.
 Let's start with the LQG case and define some parameters:
 
-```julia
+```@example sqg
 # Set problem parameters
 
 U, ℓ = 1, 1			# vortex speed and radius
@@ -233,7 +222,6 @@ K₀, a₀ = [4, 4], Nothing	# guesses for K and a
 # create grid
 
 grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
-
 ```
 
 Most of these have been described in previous examples, but ``K_0`` and ``\textbf{a}`` are new.
@@ -245,16 +233,15 @@ The solutions we normally think of as dipolar vortices are the first mode and hi
 
 Now we have our parameters, we can get our vortex solution with a single function call:
 
-```julia
+```@example sqg
 # create modon solution
 
 ψ, q, K, a = CreateModonLQG(grid, M, U, ℓ, R, β, ActiveLayers, x₀; K₀, a₀, tol)
-
 ```
 
 The SQG wrapper is similar. We start by defining our paramters:
 
-```julia
+```@example sqg
 # Set problem parameters
 
 U, ℓ = 1, 1			# vortex speed and radius
@@ -275,12 +262,11 @@ Lx, Ly = 10, 10
 # create grid
 
 grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
-
 ```
 
 Note that we've used ``K_0 = 8`` this time. We'll see what happens when we create and plot our solution:
 
-```julia
+```@example sqg
 # create modon solution
 
 ψ, b, K, a = CreateModonSQG(grid, M, U, ℓ, R, β, x₀; K₀, a₀, tol)
@@ -292,13 +278,10 @@ heatmap(grid.x, grid.y, transpose(ψ);
     aspect_ratio=1,
     xlims = (-Lx/2, Lx/2),
     ylims = (-Ly/2, Ly/2))
-
 ```
 
 If we look at ``K``, we find that ``K \approx 7.34205`` which is not the value we'd expect for the usual dipole solution.
 Instead, if we look at our plot, we see that it's a different solution with a mode 2 structure in the radial direction.
-
-![image](Ex_4.png)
 
 In addition to these wrapper functions, the functions `CreateLCD` and `CreateLCD` implement the Lamb-Chaplygin dipole[^2] and Larichev-Reznik dipole[^3] directly using the analytical solution for these cases.
 
