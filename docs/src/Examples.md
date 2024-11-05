@@ -297,6 +297,10 @@ Note that we've used ``K_0 = 8`` this time. We'll see what happens when we creat
 
 ψ, b, K, a = CreateModonSQG(grid, M, U, ℓ, R, β, x₀; K₀, a₀, tol)
 
+K
+```
+
+```@example wrapper
 using Plots
 
 heatmap(grid.x, grid.y, transpose(ψ);
