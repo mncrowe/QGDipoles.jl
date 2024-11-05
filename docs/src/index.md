@@ -105,10 +105,9 @@ This package is designed to work with the `TwoDGrid` structure from `FourierFlow
 As such, these functions may be used to define initial conditions for layered and surface quasi-geostrophic simulations which may run on either CPUs or GPUs.
 However, `FourierFlows.jl` and `GeophysicalFlows.jl` are NOT required to use this package as an alternative grid structure (created using `CreateGrid`), which uses the same field names as `FourierFlows.jl`, is available.
 
-## Appendix
+## Equations and Parameters
 
-This appendix contains a summary of the LQG and SQG systems of equations and tables which summarise all parameters used in functions and structures of QGDipoles.jl.
-This appendix also contains an index of all functions and structures.
+This section contains a summary of the LQG and SQG systems of equations and tables which summarise all parameters used in functions and structures of QGDipoles.jl.
 
 ### The LQG System
 
@@ -211,7 +210,7 @@ Note: this package returns ``b/N`` rather than ``b``. When working with dimensio
 | ``f`` | Coriolis parameters | - |
 | ``H`` | layer depth | - |
 
-### Index of Functions
+## Index of Functions
 
 This list contains all Functions and Structures from the `QGDipoles.jl` package.
 Full descriptions can be found on the [List of Functions](https://mncrowe.github.io/QGDipoles.jl/dev/Functions/) page.
