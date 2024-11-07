@@ -51,16 +51,20 @@ As such, `QGDipoles.jl` can generate solution arrays on both CPUs and GPUs using
 
 # State of the field
 
-While there has been much recent work on solvers for 
+While there has been much recent work on solvers for time-dependent geophysical fluid dynamics problems [@GeophysicalFlows; @Oceananigans], there are less packages designed for solving the steady problem, and none that solve directly for dipolar vortex solutions that the author could find.
+Some packages which partially address this problem are:
 
-Muraki Snyder method, code? for QSG
+- `GeophysicalFlows.jl` [@GeophysicalFlows] (Julia)
 
-lambdipole function from GeophysicalFlows
+  `GeophysicalFlows.jl` contains the function `lambdipole` within `src/utils.jl`.
+  This function plots the simplest example of a 1-layer QG dipolar vortex using the known analytical solution.
+  However, 
 
-My MATLAB code for LQG
+- `Dedalus` [@Dedalus] (Python)
 
-Good recent Julia codes for QG simulations and PE simulations (GF and Oceananigans)
-This package consistent with GF
+- `QGDipoles.mat` [@QGDipolesMat] (MATLAB)
+
+  This MATLAB package was originally included as supplementary material with 
 
 # Methodology
 
