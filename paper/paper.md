@@ -48,6 +48,7 @@ Much recent work has focussed on the long-time stability of dipolar vortices [@D
 This package is intended both for those studying idealised vortex dynamics in a QG framework, and those looking to initialise a simulation with a steadily propagating, balanced vortex.
 It is designed to be consistent with the framework of `GeophysicalFlows.jl` [@GeophysicalFlows], a Julia package that contains modules for solving various QG systems, and accepts `grid` inputs generated using the `TwoDGrid` function from `FourierFlows.jl` [@FourierFlows].
 As such, `QGDipoles.jl` can generate solution arrays on both CPUs and GPUs using `CUDA.jl`.
+Full documentation exists with examples covering a range of LQG and SQG solutions.
 
 # State of the field
 
@@ -63,23 +64,28 @@ Some packages which partially address this problem are:
 - `Dedalus` [@Dedalus] (Python)
 
   The steady system describing dipolar vortices could be solved using a general PDE solver, such as the widely used Dedalus package.
-  However, at present, there are not available scripts for this problem so these would have to be written by the user.
+  However, at present, there are no available scripts for this problem so these would have to be written by the user.
 
-- `QGDipoles.mat` [@QGDipolesMat] (MATLAB)
+- `QGDipoles.m` [@QGDipolesMat] (MATLAB)
 
-  This MATLAB package was originally included as supplementary material in [@Crowe_Johnson_2024] and solves for QG dipoles in the layered QG system only.
-  This code is a precurser to parts of `QGDipoles.jl` but has now been superseded, with `QGDipoles.jl` incorporating various improvements and optimisations that allow it to outperform the MATLAB version, particularly when using precompiled Julia functions.
+  This MATLAB package was originally included as supplementary material in [@Crowe_Johnson_2024] and solves for QG dipoles in the LQG system only.
+  This code is a precursor to parts of `QGDipoles.jl` but has now been superseded, with `QGDipoles.jl` incorporating various improvements and optimisations that allow it to outperform the MATLAB version, particularly when using precompiled Julia functions.
   Additionally, these MATLAB scripts are not open source and have not been verified to work on open source alternatives (such as Octave).
 
 # Methodology
 
-Summarise solutions, e.g. piecewise linear relationship between (potential) vorticity and streamfunction
-Give brief outline of method, emphasise scalability; i.e. coefficients calculated semi-analytically and once coefficients are found, solution can be calculated on an arbitrarily large grid (so grid independent until final stage).
-Reduce differential equation to a linear algebra problem
-Note current linear algebra techniques not well developed for multi-parameter problems, so root finding used
+This package uses a method originally presented in [Johnson_Crowe_23] and later generalised for the SQG case in [Crowe_Johnson_23] and the LQG case in [Crowe_Johnson_2024].
+Using a Hankel transform, the steady PDE corresponding to dipolar vortex in a QG system can be analytically transformed into a multi-parameter, inhomogeneous eigenvalue problem.
+This resulting linear algebra problem may be solved for a set of coefficients which correspond to an expansion of the solution in a basis of orthogonal polynomials.
+The error in this solution may be controlled by setting the number of coefficients to solve for and prescribing the maximum error in the numerical evaluation of the matrices and vectors in the problem.
+Once the coefficients are found---using either eigenvalue or root-finding methods---the vortex solution may be evaluated on a given grid by summing over the set of orthogonal polynomials.
+Note that this approach is scalable as only the final evaluation step depends on the size of the spatial grid.
+Figure \autoref{fig:examples} shows the streamfunction for some example dipolar vortex solutions.
+
+![Plots of the streamfunction for dipolar vortices in three different cases.\label{fig:examples}](Fig_1.png)
 
 # Acknowledgements
 
-The author would like to thank ...
+The author would like to thank Navid C. Constantinou for helpful discussions and feedback and for assistance with setting up the documentation.
 
 # References
