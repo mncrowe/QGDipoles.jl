@@ -19,3 +19,30 @@ affiliations:
 date: 07 November 2024
 bibliography: paper.bib
 ---
+
+# Summary
+
+Give summary of field, rotating flows, ocean and atmospheric modelling
+
+# Statement of need
+
+Use of QG flows in modelling of processes (reference), use of balanced initial conditions in full primitive equation models
+
+# State of the field
+
+Not much, my Matlab script, basic function from GeophysicalFlows.jl for LCD
+Good recent Julia codes for QG simulations and PE simulations (GF and Oceananigans)
+This package consistent with GF
+
+# Methodology
+
+Summarise solutions, e.g. piecewise linear relationship between (potential) vorticity and streamfunction
+Give brief outline of method, emphasise scalability; i.e. coefficients calculated semi-analytically and once coefficients are found, solution can be calculated on an arbitrarily large grid (so grid independent until final stage).
+Reduce differential equation to a linear algebra problem
+Note current linear algebra techniques not well developed for multi-parameter problems, so root finding used
+
+# Acknowledgements
+
+The author would like to thank ...
+
+# References
