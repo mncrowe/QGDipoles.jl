@@ -22,7 +22,7 @@ bibliography: paper.bib
 
 # Summary
 
-`QGDipoles.jl` is a Julia package that constructs dipolar vortex solutions to the Quasi-Geostrophic (QG) equations using a semi-analytical method.
+`QGDipoles.jl` is a Julia [@Bezanson2017] package that constructs dipolar vortex solutions to the Quasi-Geostrophic (QG) equations using a semi-analytical method.
 It contains functions for creating vortex solutions in both multi-layers QG and surface QG systems and is consistent with the grid framework of `GeophysicalFlows.jl` [@GeophysicalFlows], allowing solutions to be generated on both CPUs and GPUs.
 
 # Statement of need
@@ -41,10 +41,8 @@ Imposing initial conditions that obey QG dynamics can be a particularly effectiv
 
 Dipolar vortices are propagating structures which consist of two counter-rotating monopolar vortices moving together via self-advection.
 Also known as Modons, they are commonly observed coherent structures [@NiZWH20] which are observed to be remarkably stable over long time scales [@NycanderI90].
-In the ocean, dipolar vortices can act to transport water masses over large distances while in atmospheric science they have been used to model various dynamical processes.
-
-In the study of atmospheric dynamics, modons have been used to model various atmospheric processes such as atmospheric blocking \citep{mcwilliams_1980} and Madden-Julian Oscillation events \citep{rostami_zeitlin_2021}.
-
+In the ocean, dipolar vortices can act to transport water masses over large distances while in atmospheric science they have been used to model nonlinear propagating (solitary) Rossby waves [@mcwilliams_1980; @rostami_zeitlin_2021].
+Much recent work has focussed on the long-time stability of dipolar vortices [@Davies_et_al] and they remain a topic of active research.
 
 `QGDipoles.jl` provides a series of functions that allow users to easily generate dipolar vortex solutions to two of the most commonly used QG models; the layered QG system (LQG) and the surface QG (SQG) system.
 This package is intended both for those studying idealised vortex dynamics in a QG framework, and those looking to initialise a simulation with a steadily propagating, balanced vortex.
@@ -55,7 +53,12 @@ As such, `QGDipoles.jl` can generate solution arrays on both CPUs and GPUs using
 
 While there has been much recent work on solvers for 
 
-Not much, my Matlab script, basic function from GeophysicalFlows.jl for LCD
+Muraki Snyder method, code? for QSG
+
+lambdipole function from GeophysicalFlows
+
+My MATLAB code for LQG
+
 Good recent Julia codes for QG simulations and PE simulations (GF and Oceananigans)
 This package consistent with GF
 
