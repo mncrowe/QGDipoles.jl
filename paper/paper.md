@@ -58,13 +58,18 @@ Some packages which partially address this problem are:
 
   `GeophysicalFlows.jl` contains the function `lambdipole` within `src/utils.jl`.
   This function plots the simplest example of a 1-layer QG dipolar vortex using the known analytical solution.
-  However, 
+  However, no functions are available for other vortex solutions.
 
 - `Dedalus` [@Dedalus] (Python)
 
+  The steady system describing dipolar vortices could be solved using a general PDE solver, such as the widely used Dedalus package.
+  However, at present, there are not available scripts for this problem so these would have to be written by the user.
+
 - `QGDipoles.mat` [@QGDipolesMat] (MATLAB)
 
-  This MATLAB package was originally included as supplementary material with 
+  This MATLAB package was originally included as supplementary material in [@Crowe_Johnson_2024] and solves for QG dipoles in the layered QG system only.
+  This code is a precurser to parts of `QGDipoles.jl` but has now been superseded, with `QGDipoles.jl` incorporating various improvements and optimisations that allow it to outperform the MATLAB version, particularly when using precompiled Julia functions.
+  Additionally, these MATLAB scripts are not open source and have not been verified to work on open source alternatives (such as Octave).
 
 # Methodology
 
