@@ -40,10 +40,10 @@ While more realistic, a major difficulty with these models can be setting initia
 Imposing initial conditions that obey QG dynamics can be a particularly effective strategy, as they exist in a 'balanced' state and do not generate fast inertial waves during the transient evolution phase.
 
 Dipolar vortices are propagating structures which consist of two counter-rotating monopolar vortices moving together via self-advection.
-Also known as Modons, they are commonly observed coherent structures which are observed to be remarkably stable over long time scales.
+Also known as Modons, they are commonly observed coherent structures [@NiZWH20] which are observed to be remarkably stable over long time scales [@NycanderI90].
 In the ocean, dipolar vortices can act to transport water masses over large distances while in atmospheric science they have been used to model various dynamical processes.
 
-Modons, or dipolar vortices, are common coherent structures in the ocean and atmosphere. In the ocean, they are remarkably stable, existing over long time scales and transporting fluid over large distances \citep{NycanderI90}. Modons are typically observed at the ocean surface, though they can extend over several kilometers into the deep ocean \citep{NiZWH20}. In the study of atmospheric dynamics, modons have been used to model various atmospheric processes such as atmospheric blocking \citep{mcwilliams_1980} and Madden-Julian Oscillation events \citep{rostami_zeitlin_2021}.
+In the study of atmospheric dynamics, modons have been used to model various atmospheric processes such as atmospheric blocking \citep{mcwilliams_1980} and Madden-Julian Oscillation events \citep{rostami_zeitlin_2021}.
 
 
 `QGDipoles.jl` provides a series of functions that allow users to easily generate dipolar vortex solutions to two of the most commonly used QG models; the layered QG system (LQG) and the surface QG (SQG) system.
