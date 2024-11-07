@@ -82,7 +82,9 @@ Once the coefficients are found---using either eigenvalue or root-finding method
 Note that this approach is scalable as only the final evaluation step depends on the size of the spatial grid.
 Figure \autoref{fig:examples} shows the streamfunction for some example dipolar vortex solutions.
 
-![Plots of the streamfunction for the Larichev-Reznik dipole.\label{fig:fig1a}](Fig_1a.svg){ width=20% }![Plots of the streamfunction for the Lamb-Chaplygin dipole.\label{fig:fig1b}](Fig_1b.svg){ width=20% }![Plots of the streamfunction for a mode 2 SQG dipole.\label{fig:fig1c}](Fig_1c.svg){ width=20% }
+![Plots of the streamfunction for the Larichev-Reznik dipole.\label{fig:fig1a}](Fig_1a.svg){ width=20% }
+![Plots of the streamfunction for the Lamb-Chaplygin dipole.\label{fig:fig1b}](Fig_1b.svg){ width=20% }
+![Plots of the streamfunction for a mode 2 SQG dipole.\label{fig:fig1c}](Fig_1c.svg){ width=20% }
 
 # Acknowledgements
 
