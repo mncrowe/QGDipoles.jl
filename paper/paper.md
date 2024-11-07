@@ -80,11 +80,9 @@ This resulting linear algebra problem may be solved for a set of coefficients wh
 The error in this solution may be controlled by setting the number of coefficients to solve for and prescribing the maximum error in the numerical evaluation of the matrices and vectors in the problem.
 Once the coefficients are found---using either eigenvalue or root-finding methods---the vortex solution may be evaluated on a given grid by summing over the set of orthogonal polynomials.
 Note that this approach is scalable as only the final evaluation step depends on the size of the spatial grid.
-Figure \autoref{fig:examples} shows the streamfunction for some example dipolar vortex solutions.
+Figure \autoref{fig:fig1} shows the streamfunction for some example dipolar vortex solutions.
 
-![Plots of the streamfunction for the Larichev-Reznik dipole.\label{fig:fig1a}](Fig_1a.svg){ width=20% }
-![Plots of the streamfunction for the Lamb-Chaplygin dipole.\label{fig:fig1b}](Fig_1b.svg){ width=20% }
-![Plots of the streamfunction for a mode 2 SQG dipole.\label{fig:fig1c}](Fig_1c.svg){ width=20% }
+![Plots of the streamfunction for the Lamb-Chaplygin dipole, the Larichev-Reznik dipole and a mode 2 SQG dipole.\label{fig:fig1}](Fig_1.svg)
 
 # Acknowledgements
 
