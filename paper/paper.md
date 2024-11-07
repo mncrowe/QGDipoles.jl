@@ -22,7 +22,8 @@ bibliography: paper.bib
 
 # Summary
 
-Give summary of field, rotating flows, ocean and atmospheric modelling
+`QGDipoles.jl` is a Julia package that constructs dipolar vortex solutions to the Quasi-Geostrophic (QG) equations using a semi-analytical method.
+It contains functions for creating vortex solutions in both multi-layers QG and surface QG systems and is consistent with the grid framework of `GeophysicalFlows.jl`, allowing solutions to be generated on both CPUs and GPUs.
 
 # Statement of need
 
