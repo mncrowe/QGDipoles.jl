@@ -58,8 +58,8 @@ Some packages which partially address this problem are:
 - `GeophysicalFlows.jl` [@GeophysicalFlows] (Julia)
 
   The Julia QG solver `GeophysicalFlows.jl` contains the function `lambdipole` within `src/utils.jl`.
-  This function plots the simplest example of a 1-layer QG dipolar vortex using the known analytical solution.
-  However, no functions are available for other vortex solutions.
+  This function calclates the simplest example of a 1-layer QG dipolar vortex using the known analytical solution.
+  However, no functions are available for other vortex solutions where an analytical solution does not necessarily exist.
 
 - `Dedalus` [@Dedalus] (Python)
 
