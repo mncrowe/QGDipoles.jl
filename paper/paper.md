@@ -23,7 +23,7 @@ bibliography: paper.bib
 # Summary
 
 `QGDipoles.jl` is a Julia package that constructs dipolar vortex solutions to the Quasi-Geostrophic (QG) equations using a semi-analytical method.
-It contains functions for creating vortex solutions in both multi-layers QG and surface QG systems and is consistent with the grid framework of `GeophysicalFlows.jl`, allowing solutions to be generated on both CPUs and GPUs.
+It contains functions for creating vortex solutions in both multi-layers QG and surface QG systems and is consistent with the grid framework of `GeophysicalFlows.jl` [@GeophysicalFlows], allowing solutions to be generated on both CPUs and GPUs.
 
 # Statement of need
 
@@ -48,7 +48,7 @@ In the study of atmospheric dynamics, modons have been used to model various atm
 
 `QGDipoles.jl` provides a series of functions that allow users to easily generate dipolar vortex solutions to two of the most commonly used QG models; the layered QG system (LQG) and the surface QG (SQG) system.
 This package is intended both for those studying idealised vortex dynamics in a QG framework, and those looking to initialise a simulation with a steadily propagating, balanced vortex.
-It is designed to be consistent with the framework of `GeophysicalFlows.jl`, a Julia package that contains modules for solving various QG systems, and accepts `grid` inputs generated using the `TwoDGrid` function from `FourierFlows.jl`.
+It is designed to be consistent with the framework of `GeophysicalFlows.jl` [@GeophysicalFlows], a Julia package that contains modules for solving various QG systems, and accepts `grid` inputs generated using the `TwoDGrid` function from `FourierFlows.jl` [@FourierFlows].
 As such, `QGDipoles.jl` can generate solution arrays on both CPUs and GPUs using `CUDA.jl`.
 
 # State of the field
