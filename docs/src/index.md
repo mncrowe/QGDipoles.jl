@@ -39,7 +39,7 @@ Using a Hankel transform and expansion in term of Zernike radial functions, the 
 
 where ``\textbf{A}`` and ``\textbf{B}_n`` are matrices, ``\textbf{a}`` is a vector containing the coefficients in the polynomial expansion, ``\textbf{c}_j`` are vectors and the ``K_n`` are defined in ``F_i`` above and appear as unknown eigenvalues in the linear problem.
 In order to solve the system, ``N`` additional conditions are required.
-These are ``\textbf{d}_n \cdot textbf{a} = 0`` for ``n \in [1, \dots, N]`` where the ``\textbf{d}_n`` are vectors.
+These are ``\textbf{d}_n \cdot \textbf{a} = 0`` for ``n \in [1, \dots, N]`` where the ``\textbf{d}_n`` are vectors.
 These conditions correspond to the requirement that the streamfunction and vorticity are continuous in each layer.
 In principal, we have an infinite number of coefficients in ``\textbf{a}``.
 However, since we know that these coefficients must decay with increasing index (since ``\psi`` is continuous), we can truncate the expansion after ``M`` terms.
