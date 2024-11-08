@@ -396,8 +396,11 @@ function ΔNCalc(K²::Union{CuArray,Array}, R::Union{Number,Vector}, β::Union{N
 		if K² isa CuArray
 			
 			ΔN = CuArray(zeros(N, N, Nk, Nl))
+
 			K2 = reshape(K² .+ ϵ, 1, 1, Nk, Nl)
+
 			[ΔN[i, i, :, :] = -K2 for i in range(1,N)]
+
 			ΔN .+= CuArray(-diagm([R[1]^-2; 2*R[2:end-1].^-2; R[end]^-2] + βU⁻¹) +
 				diagm(1 => R[1:end-1].^-2, -1 => R[2:end].^-2))
 
@@ -647,6 +650,7 @@ the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = g/(fN).
 function Eval_ψ_SQG(grid, ψ::Union{CuArray,Array}, z::Vector=[0], U::Number=1, R::Vector=[Inf, Inf], β::Number=0)
 
 	Nx = length(grid.x)
+	ϵ = 1e-15
 	
 	# Reshape z so the z direction corresponds to the third dimension of the output
 
@@ -666,8 +670,8 @@ function Eval_ψ_SQG(grid, ψ::Union{CuArray,Array}, z::Vector=[0], U::Number=1,
 
 	# Calculate exponents for analytic solution in Fourier space
 
-	k₁ = @. sqrt(grid.Krsq + β/U) * z
-	k₂ = @. sqrt(grid.Krsq + β/U) * R[1]
+	k₁ = @. (ϵ + sqrt(grid.Krsq + β/U)) * z
+	k₂ = @. (ϵ + sqrt(grid.Krsq + β/U)) * R[1]
 
 	# Calculate ψ in Fourier space, we divide through by exp(k₂) to prevent Inf values
 
@@ -726,6 +730,7 @@ the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = g/(fN).
 function Eval_b_SQG(grid, ψ::Union{CuArray,Array}, z::Vector=[0], U::Number=1, R::Vector=[Inf, Inf], β::Number=0)
 
 	Nx = length(grid.x)
+	ϵ = 1e-15
 
 	# Reshape z so the z direction corresponds to the third dimension of the output
 	
@@ -745,8 +750,8 @@ function Eval_b_SQG(grid, ψ::Union{CuArray,Array}, z::Vector=[0], U::Number=1, 
 
 	# Calculate exponents for analytic solution in Fourier space
 
-	k₁ = @. sqrt(grid.Krsq + β/U) * z
-	k₂ = @. sqrt(grid.Krsq + β/U) * R[1]
+	k₁ = @. (ϵ + sqrt(grid.Krsq + β/U)) * z
+	k₂ = @. (ϵ + sqrt(grid.Krsq + β/U)) * R[1]
 
 	# Calculate ψ in Fourier space, we divide through by exp(k₂) to prevent Inf values
 
@@ -757,5 +762,88 @@ function Eval_b_SQG(grid, ψ::Union{CuArray,Array}, z::Vector=[0], U::Number=1, 
 	b₃ = irfft(b₃h, Nx, [1, 2])
 
 	return b₃
+
+end
+
+"""
+Function: `Eval_w_SQG(grid, ψ, z=[0], U=1, R=[Inf, Inf], β=0)`
+
+Evaluates N²w at specified depths, z in [-R, 0], for the SQG problem using N²w = -J[ψ + Uy, b]
+
+Arguments:
+ - `grid`: grid structure containing x, y, and Krsq
+ - `ψ`: surface streamfunction, calculated using `Calc_ψb` or `CreateModonSQG`
+ - `z`: vector of depths (default: `[0]`)
+ - `U`: vortex speed, Number (default: `1`)
+ - `R`: vector of [R, R'], Vector (default: `[Inf, Inf]`)
+ - `β`: beta-plane (y) PV gradient, Number (default: `0`)
+
+Note: Here R is the baroclinic Rossby radius, R = NH/f, and R' = R₀²/R where R₀ is
+the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = g/(fN).
+
+Note: this function is not accurate at the surface as ∇b is discontinuous there.
+Instead use w = -U∂η/∂x where η = fψ/g is the surface elevation, or w = 0 if R' = ∞.
+"""
+function Eval_w_SQG(grid, ψ::Union{CuArray,Array}, z::Vector=[0], U::Number=1, R::Vector=[Inf, Inf], β::Number=0)
+
+	Nx = length(grid.x)
+
+	# Calculate ψ and b at given depth
+
+	ψ₃ = Eval_ψ_SQG(grid, ψ, z, U, R, β)
+	b₃ = Eval_b_SQG(grid, ψ, z, U, R, β)
+
+	# Calculate velocities and buoyancy gradients
+
+	u₃, v₃ = Calc_uv(ψ₃, grid)
+	b₃x, b₃y = Calc_∇(b₃, grid)
+
+	# Evaluate N²w = (U-u)∂b/∂x - v∂b/∂x
+
+	w = @. -((u₃ - U) * b₃x + v₃ * b₃y)
+
+	return w
+
+end
+
+"""
+Function: `Calc_∇(f, grid)`
+
+Calculate the gradient ∇f for a given field f
+
+Arguments:
+ - `f`: function, Array
+ - `grid`: grid structure containing kr and l
+"""
+function Calc_∇(f::Union{CuArray,Array}, grid)
+	
+	Nd = ndims(f)
+	Nx, Ny = size(f)
+	N = Int(length(f) / (Nx * Ny))
+
+	# Fourier transform f
+
+	fh = rfft(reshape(f, Nx, Ny, N), [1, 2])
+
+	# Calculate (∂f/∂x, ∂f/∂y) in Fourier space using ∂/∂x = ik, ∂/∂y = il
+
+	fxh = im .* grid.kr .* fh
+	fyh = im .* grid.l .* fh
+
+	# Transform back to real space
+	
+	fx = irfft(fxh, Nx, [1, 2])
+	fy = irfft(fyh, Nx, [1, 2])
+
+	# Output arrays as 2D in SQG case for consistency
+
+	if Nd == 2
+		
+		fx = reshape(u, Nx, Ny)
+		fy = reshape(v, Nx, Ny)
+		
+	end
+
+	return fx, fy
 
 end
