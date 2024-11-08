@@ -9,7 +9,6 @@ tags:
 authors:
   - name: Matthew N. Crowe
     orcid: 0000-0002-9916-2653
-    equal-contrib: true
     affiliation: "1, 2"
 affiliations:
  - name: School of Mathematics, Statistics and Physics, Newcastle University, Newcastle upon Tyne, NE1 7RU, UK
