@@ -49,6 +49,7 @@ This package is intended both for those studying idealised vortex dynamics in a 
 It is designed to be consistent with the framework of `GeophysicalFlows.jl` [@GeophysicalFlows], a Julia package that contains modules for solving various QG systems, and accepts `grid` inputs generated using the `TwoDGrid` function from `FourierFlows.jl` [@FourierFlows].
 As such, `QGDipoles.jl` can generate solution arrays on both CPUs and GPUs using `CUDA.jl`.
 Full documentation exists with examples covering a range of LQG and SQG solutions.
+This package has been used in a recent study of the stability of 1- and 2-layer dipolar vortices over long times [@CroweSutyrin].
 
 # State of the field
 
