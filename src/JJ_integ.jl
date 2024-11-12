@@ -46,8 +46,13 @@ function A_func(ξ::Number, λ::Union{Vector,Number}, μ::Union{Vector,Number})
 
 		# Calculate A in N-layer case (N > 1)
 		
-		K = I(N) * ξ^2 + diagm([λ[1]^2; 2*λ[2:end-1].^2; λ[end]^2]) +
-			-diagm(1 => λ[1:end-1].^2, -1 => λ[2:end].^2)
+		diagonal_elements       = [λ[1]^2; 2*λ[2:end-1].^2; λ[end]^2]
+		above_diagonal_elements = -λ[1:end-1].^2
+		below_diagonal_elements = -λ[2:end].^2
+
+		K = I(N) * ξ^2 + diagm(0 => diagonal_elements,
+				       1 => above_diagonal_elements,
+				      -1 => below_diagonal_elements)
 
 		A = (K / (K .+ diagm(μ))) / ξ
 
@@ -83,8 +88,13 @@ function B_func(ξ::Number, λ::Union{Vector,Number}, μ::Union{Vector,Number})
 
 		# Calculate B in N-layer case (N > 1)
 		
-		K = I(N) * ξ^2 + diagm([λ[1]^2; 2*λ[2:end-1].^2; λ[end]^2]) +
-			-diagm(1 => λ[1:end-1].^2, -1 => λ[2:end].^2)
+		diagonal_elements       = [λ[1]^2; 2*λ[2:end-1].^2; λ[end]^2]
+		above_diagonal_elements = -λ[1:end-1].^2
+		below_diagonal_elements = -λ[2:end].^2
+
+		K = I(N) * ξ^2 + diagm(0 => diagonal_elements,
+				       1 => above_diagonal_elements,
+				      -1 => below_diagonal_elements)
 
 		B = inv(K .+ diagm(μ)) / ξ
 

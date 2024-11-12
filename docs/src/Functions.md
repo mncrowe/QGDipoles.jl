@@ -46,4 +46,16 @@ Eval_q_SQG
 Eval_b_SQG
 Eval_w_SQG
 Calc_∇
+CartesianGrid
+PolarGrid
+Base.summary
+Base.show
+```
+
+## `monopoles.jl`
+
+```@docs
+CreateRankine
+CreateMonopole
+InvertVorticity1LQG
 ```

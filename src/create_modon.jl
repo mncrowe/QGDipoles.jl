@@ -61,10 +61,12 @@ Define the Zernike radial function using the `jacobi` function from SpecialFunct
 Arguments:
  - `n`: order, Integer
  - `x`: evaluation point, Number or Array
+
+Note: this function is defined on [-1, 1] and is set to 0 for |x| > 1
 """
 function ZernikeR(n::Int, x::Union{Number,Array})
 	
-	y = @. (-1)^n * x * jacobi(2*x^2 - 1, n, 0, 1) * (x <= 1)
+	y = @. (-1)^n * x * jacobi(2*x^2 - 1, n, 0, 1) * (abs.(x) <= 1)
 
 	return y
 end
@@ -80,10 +82,13 @@ Arguments:
  - `Krsq`: `kr²+l²` in Fourier space, Array
 """
 struct GridStruct
+    # position ranges for x and y
 	x
 	y
+    # wavenumber arrays in Fourier space
 	kr::Union{Array{Float64},CuArray{Float64}}
 	l::Union{Array{Float64},CuArray{Float64}}
+    # K² = kr²+l² array in Fourier space
 	Krsq::Union{Array{Float64},CuArray{Float64}}	
 end
 
@@ -100,32 +105,34 @@ Arguments:
 function CreateGrid(Nx::Int, Ny::Int, Lx::Union{Number,Vector}, Ly::Union{Number,Vector}; cuda::Bool=false)
 
 	if length(Lx) == 2
-	
-		x = range(Lx[1], step = (Lx[2] - Lx[1]) / Nx, length = Nx)
-		kr = Array(reshape(rfftfreq(Nx, 2π/(Lx[2]-Lx[1])*Nx), (Int(Nx/2 + 1), 1)))
 
-	end
+		x₀ = Lx[1]
+		Lx = Lx[2]
 
-	if length(Lx) == 1
-	
-		x = range(-Lx/2, step = Lx / Nx, length = Nx)
-		kr = Array(reshape(rfftfreq(Nx, 2π/Lx*Nx), (Int(Nx/2 + 1), 1)))
+	else
+
+		x₀ = -Lx/2
 
 	end
 
 	if length(Ly) == 2
 	
-		y = range(Ly[1], step = (Ly[2] - Ly[1]) / Ny, length = Ny)
-		l =  Array(reshape( fftfreq(Ny, 2π/(Ly[2]-Ly[1])*Ny), (1, Ny)))
+		y₀ = Ly[1]
+		Ly = Ly[2]
+
+	else
+
+		y₀ = -Ly/2
 
 	end
 
-	if length(Ly) == 1
-	
-		y = range(-Ly/2, step = Ly / Ny, length = Ny)
-		l =  Array(reshape( fftfreq(Ny, 2π/Ly*Ny), (1, Ny)))
+	Δx = Lx / Nx
+	Δy = Ly / Ny
 
-	end
+	x  = range(x₀, step = Δx, length = Nx)
+	y  = range(y₀, step = Δy, length = Ny)
+	kr = Array(reshape(rfftfreq(Nx, 2π/Δx), (Int(Nx/2 + 1), 1)))
+	l  = Array(reshape( fftfreq(Ny, 2π/Δy), (1, Ny)))
 
 	Krsq = @. kr^2 + l^2
 
@@ -133,7 +140,9 @@ function CreateGrid(Nx::Int, Ny::Int, Lx::Union{Number,Vector}, Ly::Union{Number
 
 	if cuda
 
-		kr, l, Krsq = CuArray(kr), CuArray(l), CuArray(Krsq)
+		kr   = CuArray(kr)
+		l    = CuArray(l)
+		Krsq = CuArray(Krsq)
 
 	end
 
@@ -163,8 +172,8 @@ function Calc_ψq(a::Array, U::Number, ℓ::Number, R::Union{Number,Vector}, β:
 
 	# Create Cartesian and polar grids
 	
-	x, y = reshape(Array(grid.x), :, 1), reshape(Array(grid.y), 1, :)
-	r, θ = @. sqrt((x-x₀[1])^2 + (y-x₀[2])^2), @. atan(y-x₀[2], x-x₀[1])
+	x, y = CartesianGrid(grid)	
+	r, θ = PolarGrid(x, y, x₀)
 
 	# Define temporary variable for RHS terms
 
@@ -266,8 +275,8 @@ function Calc_ψb(a::Array, U::Number, ℓ::Number, R::Vector, β::Number, grid,
 
 	# Create Cartesian and polar grids
 	
-	x, y = reshape(Array(grid.x), :, 1), reshape(Array(grid.y), 1, :)
-	r, θ = @. sqrt((x-x₀[1])^2 + (y-x₀[2])^2), @. atan(y-x₀[2], x-x₀[1])
+	x, y = CartesianGrid(grid)	
+	r, θ = PolarGrid(x, y, x₀)
 
 	# Define temporary variable for RHS terms
 
@@ -392,6 +401,10 @@ function ΔNCalc(K²::Union{CuArray,Array}, R::Union{Number,Vector}, β::Union{N
 	else
 
 		# Calculate ΔN in N-layer case (N > 1)
+
+		diagonal_elements       = - [R[1]^-2; 2*R[2:end-1].^-2; R[end]^-2] - βU⁻¹
+		above_diagonal_elements =   R[1:end-1].^-2
+		below_diagonal_elements =   R[2:end].^-2
 		
 		if K² isa CuArray
 			
@@ -401,14 +414,16 @@ function ΔNCalc(K²::Union{CuArray,Array}, R::Union{Number,Vector}, β::Union{N
 
 			[ΔN[i, i, :, :] = -K2 for i in range(1,N)]
 
-			ΔN .+= CuArray(-diagm([R[1]^-2; 2*R[2:end-1].^-2; R[end]^-2] + βU⁻¹) +
-				diagm(1 => R[1:end-1].^-2, -1 => R[2:end].^-2))
+			ΔN .+= CuArray(diagm(0 => diagonal_elements,
+					     1 => above_diagonal_elements,
+					    -1 => below_diagonal_elements))
 
 		else
 			
-			ΔN = -diagm([R[1]^-2; 2*R[2:end-1].^-2; R[end]^-2]) - diagm(βU⁻¹) +
-				diagm(1 => R[1:end-1].^-2, -1 => R[2:end].^-2) .-
-				I(N) .* reshape(K² .+ ϵ, 1, 1, Nk, Nl)
+			ΔN = diagm(0 => diagonal_elements,
+				   1 => above_diagonal_elements,
+				  -1 => below_diagonal_elements) .-
+					I(N) .* reshape(K² .+ ϵ, 1, 1, Nk, Nl)
 			
 		end
 
@@ -537,8 +552,8 @@ function CreateLCD(grid, U::Number=1, ℓ::Number=1, x₀::Vector=[0, 0], α::Nu
 
 	# Create Cartesian and polar grids
 
-	x, y = reshape(Array(grid.x), :, 1), reshape(Array(grid.y), 1, :)
-	r, θ = @. sqrt((x-x₀[1])^2 + (y-x₀[2])^2), @. atan(y-x₀[2], x-x₀[1])
+	x, y = CartesianGrid(grid)	
+	r, θ = PolarGrid(x, y, x₀)
 
 	# Calculate ψ and q using analytic result
 
@@ -609,8 +624,8 @@ function CreateLRD(grid, U::Number=1, ℓ::Number=1, R::Number=1, β::Number=0, 
 
 		# Create Cartesian and polar grids
 	
-		x, y = reshape(Array(grid.x), :, 1), reshape(Array(grid.y), 1, :)
-		r, θ = @. sqrt((x-x₀[1])^2 + (y-x₀[2])^2), @. atan(y-x₀[2], x-x₀[1])
+		x, y = CartesianGrid(grid)	
+		r, θ = PolarGrid(x, y, x₀)
 
 		# Calculate ψ and q using analytic result
 		
@@ -795,7 +810,7 @@ function Eval_w_SQG(grid, ψ::Union{CuArray,Array}, z::Vector=[0], U::Number=1, 
 
 	# Calculate velocities and buoyancy gradients
 
-	u₃, v₃ = Calc_uv(ψ₃, grid)
+	u₃,  v₃  = Calc_uv(ψ₃, grid)
 	b₃x, b₃y = Calc_∇(b₃, grid)
 
 	# Evaluate N²w = (U-u)∂b/∂x - v∂b/∂x
@@ -845,5 +860,83 @@ function Calc_∇(f::Union{CuArray,Array}, grid)
 	end
 
 	return fx, fy
+
+end
+
+"""
+Function: `CartesianGrid(grid)`
+
+Formats the (x, y) ranges from `grid` as two-dimensional Arrays
+
+Arguments:
+ - `grid`: grid structure containing kr and l
+"""
+function CartesianGrid(grid)
+
+	x = reshape(Array(grid.x), :, 1)
+	y = reshape(Array(grid.y), 1, :)
+
+	return x, y
+
+end
+
+"""
+Function: `PolarGrid(x, y, x₀)`
+
+Calculates the polar coordinates from (`x`, `y`) as two-dimensional Array centred on `x₀`
+
+Arguments:
+ - `x`, `y`: 2D Arrays for x and y, created using `CartesianGrid`
+ - `x₀`: Vector
+"""
+function PolarGrid(x, y, x₀::Vector=[0])
+
+	r = @. sqrt((x-x₀[1])^2 + (y-x₀[2])^2)
+	θ = @. atan(y-x₀[2], x-x₀[1])
+
+	return r, θ
+
+end
+
+"""
+Base.summary function for custom type `GridStruct`
+
+"""
+function Base.summary(g::GridStruct)
+
+	Nx, Ny = length(g.x), length(g.y)
+
+	if g.Krsq isa CuArray
+		dev = "GPU"
+	else
+		dev = "CPU"
+	end
+
+	return string("Grid on ", dev, " with (Nx, Ny) = ", (Nx, Ny))
+end
+
+"""
+Base.show function for custom type `GridStruct`
+
+"""
+function Base.show(io::IO, g::GridStruct)
+ 
+	Nx, Ny = length(g.x), length(g.y)
+	Δx, Δy = g.x[2] - g.x[1], g.y[2] - g.y[1]
+	Lx, Ly = Nx * Δx, Ny * Δy
+
+	if g.Krsq isa CuArray
+		dev = "GPU"
+	else
+		dev = "CPU"
+	end
+
+	return print(io, "GridStruct\n",
+               "  ├───────────────── Device: ", dev, "\n",
+               "  ├────────── size (Lx, Ly): ", (Lx, Ly), "\n",
+               "  ├──── resolution (Nx, Ny): ", (Nx, Ny), "\n",
+               "  ├── grid spacing (Δx, Δy): ", (Δx, Δy), "\n",
+               "  └───────────────── domain: x ∈ [$(g.x[1]), $(g.x[end])]", "\n",
+               "                             y ∈ [$(g.y[1]), $(g.y[end])]")    
 
 end

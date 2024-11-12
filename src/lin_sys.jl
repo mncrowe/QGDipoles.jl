@@ -74,9 +74,10 @@ function BuildLinSys(M::Int, λ::Union{Vector,Number}, μ::Union{Vector,Number};
 
 		# Define A, B, c, d for the SQG system, B is temporary here
 
-		A, B = diagm(1 ./(1:M)/4), zeros(M, M)
-
-		c, d = hcat(zeros(M, 1), vcat(1/4, zeros(M-1, 1))), reshape((-1).^(0:M-1), M, 1)
+		A = diagm(1 ./(1:M)/4)
+		B = zeros(M, M)
+		c = hcat(zeros(M, 1), vcat(1/4, zeros(M-1, 1)))
+		d = reshape((-1).^(0:M-1), M, 1)
 
 		# Set values of B depending on cases
 		
@@ -86,36 +87,58 @@ function BuildLinSys(M::Int, λ::Union{Vector,Number}, μ::Union{Vector,Number};
 			
 			B₀(j, k) = 4*(-1)^(j-k+1)/((2j-2k-1)*(2j-2k+1)*(2j+2k+3)*(2j+2k+5))/π
 
-			[[B[j+1, k+1] = B₀(j, k) for j = 0:M-1] for k = 0:M-1]
+			for j = 0:M-1
+
+				for k = 0:M-1
+
+					B[j+1, k+1] = B₀(j, k)
+
+				end
+			end
 			
 		else
 
 			# When analytic solution does not exists, use numerical integration
 			
-			D_func(ξ) = @. sqrt(ξ^2 + μ) * tanh(sqrt(ξ^2 + μ) / λ[1]) + λ[2]
+			D_func(ξ) = @. sqrt(ξ^2 + μ) * tanh(sqrt(ξ^2 + μ) / λ[1]) + λ[2]	# SQG kernel function
 
-			[[B[j+1, k+1] = JJ_int(x -> 1 ./(D_func(x).*x), j, k, tol)[1] for j = 0:M-1] for k = 0:M-1]
+			for j = 0:M-1
+
+				for k = 0:M-1
+
+					B[j+1, k+1] = JJ_int(x -> 1 ./(D_func(x).*x), j, k, tol)[1]
+				end
+			end
 			
 		end
 
 	else
-
-		# Set values of A, B, c, d for LQG case
+		
+		# Get number of layers from input size
 
 		N = length(μ)
 
-		A, B₀ = zeros(N*M, N*M), zeros(N*M, N*M)
+		# Set temporary values for A, B, c, d for LQG case
+
+		A  = zeros(N*M, N*M)
+		B₀ = zeros(N*M, N*M) 
+		B  = zeros(N*M, N*M, N)
+		c  = zeros(N*M, N+1)
+		d  = zeros(N*M, N)
+		c₀ = vcat(ones(N), zeros((M-1)*N))
 
 		# Set A and temporary B values using numerical integration
 
-		[[A[j*N.+(1:N), k*N.+(1:N)] .= JJ_int(x -> A_func(x, λ, μ), j, k, tol)[1] for j = 0:M-1] for k = 0:M-1]
+		for j = 0:M-1
 
-		[[B₀[j*N.+(1:N), k*N.+(1:N)] .= JJ_int(x -> B_func(x, λ, μ), j, k, tol)[1] for j = 0:M-1] for k = 0:M-1]
+			for k = 0:M-1
 
-		# Define temporary values for B, c, d
+				 A[j*N.+(1:N), k*N.+(1:N)] .= JJ_int(x -> A_func(x, λ, μ), j, k, tol)[1]
+				B₀[j*N.+(1:N), k*N.+(1:N)] .= JJ_int(x -> B_func(x, λ, μ), j, k, tol)[1]
 
-		B, c, d = zeros(N*M, N*M, N), zeros(N*M, N+1), zeros(N*M, N)
-		c₀ = vcat(ones(N), zeros((M-1)*N))
+			end
+		
+		end
 
 		# Set B, c, d values using existing quantities
 	
@@ -124,11 +147,9 @@ function BuildLinSys(M::Int, λ::Union{Vector,Number}, μ::Union{Vector,Number};
 			K = kron(I(M), diagm((1:N).==n))
 
 			B[:, :, n] = K * B₀
-
-			c[:, 1] = c[:, 1] + μ[n] * (K * c₀) / 4
-			c[:, n+1] = (K * c₀) / 4
-
-			d[:, n] = kron((-1).^(0:M-1), (1:N).==n)
+			c[:, 1]    = c[:, 1] + μ[n] * (K * c₀) / 4
+			c[:, n+1]  = (K * c₀) / 4
+			d[:, n]    = kron((-1).^(0:M-1), (1:N).==n)
 			
 		end
 
@@ -200,7 +221,8 @@ function IncludePassiveLayers(K::Array, a::Array, ActiveLayers::Union{Number,Vec
 
 	# Get numbers of coefficients and layers using input size
 
-	M, N = size(a)[1], length(ActiveLayers)
+	M = size(a)[1]
+	N = length(ActiveLayers)
 
 	# Define variables for (K, a) corresponding to full system size
 
@@ -218,7 +240,7 @@ function IncludePassiveLayers(K::Array, a::Array, ActiveLayers::Union{Number,Vec
 end
 
 """
-Function: `SolveInhomEVP(A, B, c, d; K₀=Nothing, a₀=Nothing, tol=1e-6, method=0, m=2, sqg=false)`
+Function: `SolveInhomEVP(A, B, c, d; K₀=Nothing, a₀=Nothing, tol=1e-6, method=0, m=2, sqg=false, warn=true)`
 
 Solves the inhomogeneous eigenvalue problem using nonlinear root finding
 
@@ -229,13 +251,14 @@ Arguments:
  - `method`: `0` - eigensolve for N = 1 and `nlsolve` for N > 1, `1` - `nlsolve` (default: `0`)
  - `m`: exponent of K in eignevalue problem (default: `2`)
  - `sqg`: `false`, uses `m` value specified; `true`, sets `m=1` (default: `false`)
+ - `warn`: if `true` displays warning if solution includes unextracted passive layers (default: `true`)
 
 Note: setting `sqg=true` overwrites the value of `m` and is equivalent to setting `m=1`.
 The option to set both is included for consistency with `BuildLinSys` and more generality
 with the value of `m`.
 """
 function SolveInhomEVP(A::Array, B::Array, c::Array, d::Array; K₀=Nothing, a₀=Nothing,
-		tol::Number=1e-6, method::Int=0, m::Int=2, sqg::Bool=false)
+		tol::Number=1e-6, method::Int=0, m::Int=2, sqg::Bool=false, warn::Bool=true)
 	
 	# Ensure that m is set correctly for SQG case
 
@@ -280,8 +303,11 @@ function SolveInhomEVP(A::Array, B::Array, c::Array, d::Array; K₀=Nothing, a�
 
 		# Reformat inputs as arrays with correct shape
 
-		B, O = reshape(B, M, M), zeros(M, M)
-		dᵀ, c₀, c₁ = permutedims(d), c[:, 1], c[:, 2]
+		B  = reshape(B, M, M)
+		O  = zeros(M, M)
+		dᵀ = permutedims(d)
+		c₀ = c[:, 1]
+		c₁ = c[:, 2]
 
 		# Build intermediate matrices for quadratic eigenvalue problems
 		
@@ -368,9 +394,9 @@ function SolveInhomEVP(A::Array, B::Array, c::Array, d::Array; K₀=Nothing, a�
 
 	end
 
-	# Raise warning if root finding has converged to (possibly) wrong solution
+	# Raise warning if root finding has converged to (possibly) wrong solution unless suppressed
 
-	if imag(K) != zeros(1, N)
+	if (imag(K) != zeros(1, N)) & warn
 		
 		@warn "Solution has complex K, generally corresponding passive layers."
 		
