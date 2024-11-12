@@ -82,10 +82,13 @@ Arguments:
  - `Krsq`: `kr²+l²` in Fourier space, Array
 """
 struct GridStruct
+    # position ranges for x and y
 	x
 	y
+    # wavenumber arrays in Fourier space
 	kr::Union{Array{Float64},CuArray{Float64}}
 	l::Union{Array{Float64},CuArray{Float64}}
+    # K² = kr²+l² array in Fourier space
 	Krsq::Union{Array{Float64},CuArray{Float64}}	
 end
 
@@ -102,32 +105,34 @@ Arguments:
 function CreateGrid(Nx::Int, Ny::Int, Lx::Union{Number,Vector}, Ly::Union{Number,Vector}; cuda::Bool=false)
 
 	if length(Lx) == 2
-	
-		x = range(Lx[1], step = (Lx[2] - Lx[1]) / Nx, length = Nx)
-		kr = Array(reshape(rfftfreq(Nx, 2π/(Lx[2]-Lx[1])*Nx), (Int(Nx/2 + 1), 1)))
 
-	end
+		x₀ = Lx[1]
+		Lx = Lx[2]
 
-	if length(Lx) == 1
-	
-		x = range(-Lx/2, step = Lx / Nx, length = Nx)
-		kr = Array(reshape(rfftfreq(Nx, 2π/Lx*Nx), (Int(Nx/2 + 1), 1)))
+	else
+
+		x₀ = -Lx/2
 
 	end
 
 	if length(Ly) == 2
 	
-		y = range(Ly[1], step = (Ly[2] - Ly[1]) / Ny, length = Ny)
-		l =  Array(reshape( fftfreq(Ny, 2π/(Ly[2]-Ly[1])*Ny), (1, Ny)))
+		y₀ = Ly[1]
+		Ly = Ly[2]
+
+	else
+
+		y₀ = -Ly/2
 
 	end
 
-	if length(Ly) == 1
-	
-		y = range(-Ly/2, step = Ly / Ny, length = Ny)
-		l =  Array(reshape( fftfreq(Ny, 2π/Ly*Ny), (1, Ny)))
+	Δx = Lx / Nx
+	Δy = Ly / Ny
 
-	end
+	x  = range(x₀, step = Δx, length = Nx)
+	y  = range(y₀, step = Δy, length = Ny)
+	kr = Array(reshape(rfftfreq(Nx, 2π/Δx), (Int(Nx/2 + 1), 1)))
+	l  = Array(reshape( fftfreq(Ny, 2π/Δy), (1, Ny)))
 
 	Krsq = @. kr^2 + l^2
 
@@ -135,7 +140,9 @@ function CreateGrid(Nx::Int, Ny::Int, Lx::Union{Number,Vector}, Ly::Union{Number
 
 	if cuda
 
-		kr, l, Krsq = CuArray(kr), CuArray(l), CuArray(Krsq)
+		kr   = CuArray(kr)
+		l    = CuArray(l)
+		Krsq = CuArray(Krsq)
 
 	end
 

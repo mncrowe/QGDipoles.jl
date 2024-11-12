@@ -103,7 +103,7 @@ end
 
 		# Test LRD function
 
-		@test TestLRD(0.95, 1.15, 1.25, 0.45; cuda=cuda_active)
+		@test TestLRD(0.95, 0.975, 1.25, 0.45; cuda=cuda_active)
 
 	end
 

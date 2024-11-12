@@ -144,6 +144,6 @@ function TestLRD(U::Number, ℓ::Number, R::Number, β::Number; cuda::Bool)
 
 	ψ₂, _, _, _ = CreateModonLQG(grid, M, U, ℓ, R, β; tol)
 
-	return maximum(abs.(ψ₁ - ψ₂)) < U * ℓ * 1e-2
+	return maximum(abs.(ψ₁ - ψ₂)) < U * ℓ * 2e-3
 
 end
