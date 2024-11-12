@@ -49,3 +49,11 @@ Calc_∇
 CartesianGrid
 PolarGrid
 ```
+
+## `monopoles.jl`
+
+```@docs
+CreateRankine
+CreateMonopole
+InvertVorticity1LQG
+```

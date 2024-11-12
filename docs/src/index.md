@@ -244,6 +244,11 @@ Full descriptions can be found on the [List of Functions](https://mncrowe.github
 | `Calc_∇` | `src/create_modon.jl` | Function | Calculates the x and y derivatives of a given field |
 | `CartesianGrid` | `src/create_modon.jl` | Function | Outputs 2D (x, y) Arrays from `grid` |
 | `PolarGrid` | `src/create_modon.jl` | Function | Outputs 2D (r, θ) Arrays created from `CartesianGrid` outputs |
+| `CreateRankine` | `src/monopoles.jl` | Function | High level wrapper function for calculating ``\psi``, ``q``, ``u`` and ``v`` for the Rankine vortex using given parameters |
+| `CreateMonopole` | `src/monopoles.jl` | Function | High level wrapper function for calculating ``\psi``, ``q``, ``u`` and ``v`` for a monopolar QG vortex using given parameters |
+| `InvertVorticity1LQG` | `src/monopoles.jl` | Function | Calculates ``\psi`` from ``q`` for the 1-layer QG model on the f-plane |
+
+
 
 
 [^1]: [Johnson, E. R., and M. N. Crowe, 2023, Oceanic dipoles in a surface quasigeostrophic model, J. Fluid Mech., 958, R2](https://doi.org/10.1017/jfm.2023.87).

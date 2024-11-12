@@ -51,12 +51,18 @@ export
 	Eval_w_SQG,
 	Calc_∇,
 	CartesianGrid,
-	PolarGrid
+	PolarGrid,
+	
+	# monopoles.jl
+	CreateRankine,
+	CreateMonopole,
+	InvertVorticity1LQG
 
 # Include all function and type definitions
 
 include("JJ_integ.jl")
 include("lin_sys.jl")
 include("create_modon.jl")
+include("monopoles.jl")
 
 end
