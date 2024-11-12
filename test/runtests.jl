@@ -38,6 +38,11 @@ use_cuda = CUDA.functional() ? (false, true) : (false,)
 
 	@test Test2QG_K()
 
+	# Test active and passive layers are correctly applied and results match
+	# when layers are inculded in system or removed
+	
+	@test TestLQG_ActiveLayers()
+
 	for cuda_active in use_cuda	#  run for CPU & GPU if available
 
 		# Test ψ matches known numerical result for LCD
@@ -66,18 +71,40 @@ end
 
 		# Test maximum(v) matches known numerical solution for SQG dipole
 
-		@test TestSQG_v(cuda_active)		# SQG vortex
+		@test TestSQG_v(cuda_active)
 
 	end
 
 end
 
-# Wrapper tests
+# Wrapper tests, use 'weird' numbers to check parameter dependence is correct
 
 @testset "Wrappers" begin
 
 	include("Wrapper_tests.jl")
+
+	for cuda_active in use_cuda
+
+		# Test wrapper for LQG, 1-layer
 	
-	@test true
+		@test TestWrapperLQG(1.05, 1.1, 2, 0.5; cuda=cuda_active)
+
+		# Test wrapper for LQG, 2-layer
+	
+		@test TestWrapperLQG(0.8, 0.95, [1, 1], [0, 0.5]; cuda=cuda_active)
+
+		# Test wrapper for SQG
+	
+		@test TestWrapperSQG(0.9, 1.1, [1, Inf], 1; cuda=cuda_active)
+
+		# Test LCD function
+
+		@test TestLCD(0.85, 1.05; cuda=cuda_active)
+
+		# Test LRD function
+
+		@test TestLRD(0.95, 1.15, 1.25, 0.45; cuda=cuda_active)
+
+	end
 
 end

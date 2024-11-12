@@ -177,3 +177,53 @@ function Test2QG_PVinv(cuda)
 	return (No_NaNs_ψ & No_Infs_ψ) & (No_NaNs_q & No_Infs_q)
 
 end
+
+"""
+Function: `TestLQG_ActiveLayers()`
+
+Tests if active and passive layers are being correctly applied. This is done by building a three
+layer system and comparing the results obtained by removing the passive layers with the results
+obtained by looking for negative eigenvalues for passive layers (K^2 = -β/U). We also check if
+the reduced linear system has the correct size, this should be M x A, where A is number of active
+layers, here A = 1. 
+
+"""
+function TestLQG_ActiveLayers()
+
+	# Set parameters
+
+	M = 8
+	tol = 1e-8
+ 	K₀ = [0, 4, 0]	# use 0 as guess for K^2 = -β/U values as close enough to converge
+	warn = false	# suppress warning that solution includes passive layers
+
+	U, ℓ = 1, 1
+	R = [1, 1, 1]
+	β = [0, 0, 1]
+	ActiveLayers = [0, 1, 0]
+
+	# Build and solve full linear system
+	
+	λ = ℓ ./ R
+	μ = β * ℓ^2/U
+
+	A, B, c, d = BuildLinSys(M, λ, μ; tol)
+	K₁, _ = SolveInhomEVP(A, B, c, d; K₀, tol, warn)
+
+	# Build and solve reduced linear system
+
+	A, B, c, d = ApplyPassiveLayers(A, B, c, d, ActiveLayers)
+	K₂, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol)
+	K₂, _ = IncludePassiveLayers(K₂, a, ActiveLayers)
+
+	# Check K values match
+
+	If_K = maximum(abs.(K₁ - K₂)) < 1e-6
+
+	# Check system size
+
+	If_N = size(A) == (M, M)
+
+	return If_K & If_N
+
+end

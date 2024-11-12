@@ -218,7 +218,7 @@ function IncludePassiveLayers(K::Array, a::Array, ActiveLayers::Union{Number,Vec
 end
 
 """
-Function: `SolveInhomEVP(A, B, c, d; K₀=Nothing, a₀=Nothing, tol=1e-6, method=0, m=2, sqg=false)`
+Function: `SolveInhomEVP(A, B, c, d; K₀=Nothing, a₀=Nothing, tol=1e-6, method=0, m=2, sqg=false, warn=true)`
 
 Solves the inhomogeneous eigenvalue problem using nonlinear root finding
 
@@ -229,13 +229,14 @@ Arguments:
  - `method`: `0` - eigensolve for N = 1 and `nlsolve` for N > 1, `1` - `nlsolve` (default: `0`)
  - `m`: exponent of K in eignevalue problem (default: `2`)
  - `sqg`: `false`, uses `m` value specified; `true`, sets `m=1` (default: `false`)
+ - `warn`: if `true` displays warning if solution includes unextracted passive layers (default: `true`)
 
 Note: setting `sqg=true` overwrites the value of `m` and is equivalent to setting `m=1`.
 The option to set both is included for consistency with `BuildLinSys` and more generality
 with the value of `m`.
 """
 function SolveInhomEVP(A::Array, B::Array, c::Array, d::Array; K₀=Nothing, a₀=Nothing,
-		tol::Number=1e-6, method::Int=0, m::Int=2, sqg::Bool=false)
+		tol::Number=1e-6, method::Int=0, m::Int=2, sqg::Bool=false, warn::Bool=true)
 	
 	# Ensure that m is set correctly for SQG case
 
@@ -371,8 +372,12 @@ function SolveInhomEVP(A::Array, B::Array, c::Array, d::Array; K₀=Nothing, a�
 	# Raise warning if root finding has converged to (possibly) wrong solution
 
 	if imag(K) != zeros(1, N)
+
+		if warn
 		
-		@warn "Solution has complex K, generally corresponding passive layers."
+			@warn "Solution has complex K, generally corresponding passive layers."
+
+		end
 		
 	end
 
