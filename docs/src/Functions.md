@@ -48,6 +48,8 @@ Eval_w_SQG
 Calc_∇
 CartesianGrid
 PolarGrid
+Base.summary
+Base.show
 ```
 
 ## `monopoles.jl`
