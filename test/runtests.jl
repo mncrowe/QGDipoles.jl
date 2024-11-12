@@ -1,45 +1,83 @@
 """
 Tests for QGDipoles.jl
 
-Four tests are run:
+The tests are split across three seperate files. Each file contains testing
+functions for a particular part of the code. The three files are:
 
-1. Compare LCD value of K with analytical solution
-
-2. Compare LRD maximum of ψ with numerical solution
-
-3. Compare 2-layer vortex value of K_1 with numerical solution
-
-4. Compare SQG vortex maximum y velocity with numerical solution
+- LQG_tests.jl
+- SQG_tests.jl
+- Wrapper_tests.jl
 
 """
 
 using QGDipoles
 using Test
+using CUDA
+using NLsolve
+using SpecialFunctions
 
-@testset "QGDipoles.jl" begin
+# Perform some tests on CPU if available
 
-	M, tol = 8, 1e-6
+use_cuda = CUDA.functional() ? (false, true) : (false,)
 
-	A, B, c, d = BuildLinSys(M, 0, 0; tol)
-	K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol, method=1)
+# LQG tests
+
+@testset "LQG_Vortices" begin
+
+	include("LQG_tests.jl")
+
+	# Test K matches theoretical prediction for 1-layer LCD
+
+	@test Test1QG_K(1, 1, Inf, 0)
 	
-	@test abs(K[1] - 3.83171) < 1e-5
+	# Test K matches semi-analytical prediction for 1-layer LRD
+	
+	@test Test1QG_K(1, 1, 1, 1)
 
-	grid = CreateGrid(128, 128, 10, 10)
-	ψ, q = Calc_ψq(a, 1, 1, Inf, 0, grid)
+	# Test K matches known numerical result for a 2-layer dipole
 
-	@test abs(maximum(ψ) - 1.28110) < 1e-5
+	@test Test2QG_K()
 
-	M, tol = 13, 1e-6
+	for cuda_active in use_cuda	#  run for CPU & GPU if available
 
-	A, B, c, d = BuildLinSys(M, [0, 0], 0; tol, sqg=true)
-	K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol, sqg=true)
+		# Test ψ matches known numerical result for LCD
 
-	@test abs(K[1] - 4.12126) < 1e-5
+		@test Test1QG_ψ(cuda_active)
 
-	ψ, b = Calc_ψb(a, 1, 1, [Inf, Inf], 0, grid)
-	u, v = Calc_uv(ψ, grid)
+		# Test if multi-layer PV inversion arrays are built correctly
 
-	@test abs(maximum(v) - 3.54912) < 1e-5
+		@test Test2QG_PVinv(cuda_active)
+
+	end
+
+end
+
+# SQG tests
+
+@testset "SQG_Vortices" begin
+
+	include("SQG_tests.jl")
+
+	# Test K matches known numerical result for an SQG dipole
+
+	@test TestSQG_K()
+	
+	for cuda_active in use_cuda	#  run for CPU & GPU if available
+
+		# Test maximum(v) matches known numerical solution for SQG dipole
+
+		@test TestSQG_v(cuda_active)		# SQG vortex
+
+	end
+
+end
+
+# Wrapper tests
+
+@testset "Wrappers" begin
+
+	include("Wrapper_tests.jl")
+	
+	@test true
 
 end
