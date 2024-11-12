@@ -69,7 +69,9 @@ heatmap(grid.x, grid.y, transpose(ψ[:,:,1]);
     colormap = :balance,
     aspect_ratio=1,
     xlims = (-Lx/2, Lx/2),
-    ylims = (-Ly/2, Ly/2))
+    ylims = (-Ly/2, Ly/2),
+    xlabel = "x",
+    ylabel = "y")
 
 ```
 
@@ -312,7 +314,9 @@ heatmap(grid.x, grid.y, transpose(ψ);
     colormap = :balance,
     aspect_ratio=1,
     xlims = (-Lx/2, Lx/2),
-    ylims = (-Ly/2, Ly/2))
+    ylims = (-Ly/2, Ly/2),
+    xlabel = "x",
+    ylabel = "y")
 ```
 
 If we look at ``K``, we find that ``K \approx 7.34205`` which is not the value we'd expect for the usual dipole solution.
@@ -399,16 +403,20 @@ We can plot our initial condition and solution at ``t = 10.0`` using:
 using Plots
 
 heatmap(prob.grid.x, prob.grid.y, device_array(CPU())(transpose(q₀));
-		colormap = :balance,
-		aspect_ratio=1,
-		xlims = (-Lx/2, Lx/2),
-		ylims = (-Ly/2, Ly/2))
+    colormap = :balance,
+    aspect_ratio=1,
+    xlims = (-Lx/2, Lx/2),
+    ylims = (-Ly/2, Ly/2),
+    xlabel = "x",
+    ylabel = "y")
 
 heatmap(prob.grid.x, prob.grid.y, device_array(CPU())(transpose(prob.vars.q));
-		colormap = :balance,
-		aspect_ratio=1,
-		xlims = (-Lx/2, Lx/2),
-		ylims = (-Ly/2, Ly/2))
+    colormap = :balance,
+    aspect_ratio=1,
+    xlims = (-Lx/2, Lx/2),
+    ylims = (-Ly/2, Ly/2),
+    xlabel = "x",
+    ylabel = "y")
 
 ```
 
