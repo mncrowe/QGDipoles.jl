@@ -46,7 +46,7 @@ function A_func(ξ::Number, λ::Union{Vector,Number}, μ::Union{Vector,Number})
 
 		# Calculate A in N-layer case (N > 1)
 		
-		diagonal_elements = [λ[1]^2; 2*λ[2:end-1].^2; λ[end]^2]
+		diagonal_elements       = [λ[1]^2; 2*λ[2:end-1].^2; λ[end]^2]
 		above_diagonal_elements = -λ[1:end-1].^2
 		below_diagonal_elements = -λ[2:end].^2
 
@@ -88,7 +88,7 @@ function B_func(ξ::Number, λ::Union{Vector,Number}, μ::Union{Vector,Number})
 
 		# Calculate B in N-layer case (N > 1)
 		
-		diagonal_elements = [λ[1]^2; 2*λ[2:end-1].^2; λ[end]^2]
+		diagonal_elements       = [λ[1]^2; 2*λ[2:end-1].^2; λ[end]^2]
 		above_diagonal_elements = -λ[1:end-1].^2
 		below_diagonal_elements = -λ[2:end].^2
 

@@ -401,6 +401,10 @@ function ΔNCalc(K²::Union{CuArray,Array}, R::Union{Number,Vector}, β::Union{N
 	else
 
 		# Calculate ΔN in N-layer case (N > 1)
+
+		diagonal_elements       = - [R[1]^-2; 2*R[2:end-1].^-2; R[end]^-2] - βU⁻¹
+		above_diagonal_elements =   R[1:end-1].^-2
+		below_diagonal_elements =   R[2:end].^-2
 		
 		if K² isa CuArray
 			
@@ -410,14 +414,16 @@ function ΔNCalc(K²::Union{CuArray,Array}, R::Union{Number,Vector}, β::Union{N
 
 			[ΔN[i, i, :, :] = -K2 for i in range(1,N)]
 
-			ΔN .+= CuArray(-diagm([R[1]^-2; 2*R[2:end-1].^-2; R[end]^-2] + βU⁻¹) +
-				diagm(1 => R[1:end-1].^-2, -1 => R[2:end].^-2))
+			ΔN .+= CuArray(diagm(0 => diagonal_elements,
+					     1 => above_diagonal_elements,
+					    -1 => below_diagonal_elements))
 
 		else
 			
-			ΔN = -diagm([R[1]^-2; 2*R[2:end-1].^-2; R[end]^-2]) - diagm(βU⁻¹) +
-				diagm(1 => R[1:end-1].^-2, -1 => R[2:end].^-2) .-
-				I(N) .* reshape(K² .+ ϵ, 1, 1, Nk, Nl)
+			ΔN = diagm(0 => diagonal_elements,
+				   1 => above_diagonal_elements,
+				  -1 => below_diagonal_elements) .-
+					I(N) .* reshape(K² .+ ϵ, 1, 1, Nk, Nl)
 			
 		end
 
