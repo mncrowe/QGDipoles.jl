@@ -48,13 +48,17 @@ SingleLayerQG.updatevars!(prob)
 using Plots
 
 heatmap(prob.grid.x, prob.grid.y, device_array(CPU())(transpose(q₀));
-		colormap = :balance,
-		aspect_ratio=1,
-		xlims= (-Lx/2, Lx/2),
-		ylims = (-Ly/2, Ly/2))
+	colormap = :balance,
+	aspect_ratio=1,
+	xlims= (-Lx/2, Lx/2),
+	ylims = (-Ly/2, Ly/2),
+	xlabel = "x",
+	ylabel = "y")
 
 heatmap(prob.grid.x, prob.grid.y, device_array(CPU())(transpose(prob.vars.q));
-		colormap = :balance,
-		aspect_ratio=1,
-		xlims= (-Lx/2, Lx/2),
-		ylims = (-Ly/2, Ly/2))
+	colormap = :balance,
+	aspect_ratio=1,
+	xlims= (-Lx/2, Lx/2),
+	ylims = (-Ly/2, Ly/2),
+	xlabel = "x",
+	ylabel = "y")

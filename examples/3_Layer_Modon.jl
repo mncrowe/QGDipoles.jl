@@ -35,4 +35,14 @@ K, a = IncludePassiveLayers(K, a, ActiveLayers)
 grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 ψ, q = Calc_ψq(a, U, ℓ, R, β, grid, x₀)
 
-Nothing
+# Plot streamfunction ψ in layer 2
+
+using Plots
+
+heatmap(grid.x, grid.y, transpose(ψ[:, :, 2]);
+	colormap = :balance,
+	aspect_ratio = 1,
+	xlims = (-Lx/2, Lx/2),
+	ylims = (-Ly/2, Ly/2),
+	xlabel = "x",
+	ylabel = "y")
