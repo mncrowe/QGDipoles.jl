@@ -50,7 +50,7 @@ function CreateRankine(grid, ℓ::Number=1, Γ::Number=2π, x₀::Vector=[0, 0])
 
 end
 
-""
+"""
 Function: `CreateMonopole(grid, ℓ=1, Γ=2π, R=Inf, x₀=[0, 0])`
 
 Calculates a monopolar vortex satisfying a Long's model assumption q = F(ψ)
@@ -138,7 +138,7 @@ function CreateMonopole(grid, ℓ::Number=1, Γ::Number=2π, R::Number=Inf, x₀
 
 end
 
-""
+"""
 Function: `InvertVorticity1LQG(grid, q, R=Inf)`
 
 This function inverts the potential vorticity relation q = [∇²-1/R²]ψ for 1-layer QG
