@@ -49,7 +49,9 @@ export
 	Eval_q_SQG,
 	Eval_b_SQG,
 	Eval_w_SQG,
-	Calc_∇
+	Calc_∇,
+	CartesianGrid,
+	PolarGrid
 
 # Include all function and type definitions
 

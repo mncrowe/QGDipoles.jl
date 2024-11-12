@@ -172,8 +172,8 @@ function Calc_ψq(a::Array, U::Number, ℓ::Number, R::Union{Number,Vector}, β:
 
 	# Create Cartesian and polar grids
 	
-	x, y = reshape(Array(grid.x), :, 1), reshape(Array(grid.y), 1, :)
-	r, θ = @. sqrt((x-x₀[1])^2 + (y-x₀[2])^2), @. atan(y-x₀[2], x-x₀[1])
+	x, y = CartesianGrid(grid)	
+	r, θ = PolarGrid(grid, x₀)
 
 	# Define temporary variable for RHS terms
 
@@ -275,8 +275,8 @@ function Calc_ψb(a::Array, U::Number, ℓ::Number, R::Vector, β::Number, grid,
 
 	# Create Cartesian and polar grids
 	
-	x, y = reshape(Array(grid.x), :, 1), reshape(Array(grid.y), 1, :)
-	r, θ = @. sqrt((x-x₀[1])^2 + (y-x₀[2])^2), @. atan(y-x₀[2], x-x₀[1])
+	x, y = CartesianGrid(grid)	
+	r, θ = PolarGrid(grid, x₀)
 
 	# Define temporary variable for RHS terms
 
@@ -546,8 +546,8 @@ function CreateLCD(grid, U::Number=1, ℓ::Number=1, x₀::Vector=[0, 0], α::Nu
 
 	# Create Cartesian and polar grids
 
-	x, y = reshape(Array(grid.x), :, 1), reshape(Array(grid.y), 1, :)
-	r, θ = @. sqrt((x-x₀[1])^2 + (y-x₀[2])^2), @. atan(y-x₀[2], x-x₀[1])
+	x, y = CartesianGrid(grid)	
+	r, θ = PolarGrid(grid, x₀)
 
 	# Calculate ψ and q using analytic result
 
@@ -618,8 +618,8 @@ function CreateLRD(grid, U::Number=1, ℓ::Number=1, R::Number=1, β::Number=0, 
 
 		# Create Cartesian and polar grids
 	
-		x, y = reshape(Array(grid.x), :, 1), reshape(Array(grid.y), 1, :)
-		r, θ = @. sqrt((x-x₀[1])^2 + (y-x₀[2])^2), @. atan(y-x₀[2], x-x₀[1])
+		x, y = CartesianGrid(grid)	
+		r, θ = PolarGrid(grid, x₀)
 
 		# Calculate ψ and q using analytic result
 		
@@ -804,7 +804,7 @@ function Eval_w_SQG(grid, ψ::Union{CuArray,Array}, z::Vector=[0], U::Number=1, 
 
 	# Calculate velocities and buoyancy gradients
 
-	u₃, v₃ = Calc_uv(ψ₃, grid)
+	u₃,  v₃  = Calc_uv(ψ₃, grid)
 	b₃x, b₃y = Calc_∇(b₃, grid)
 
 	# Evaluate N²w = (U-u)∂b/∂x - v∂b/∂x
@@ -854,5 +854,40 @@ function Calc_∇(f::Union{CuArray,Array}, grid)
 	end
 
 	return fx, fy
+
+end
+
+"""
+Function: `CartesianGrid(grid)`
+
+Formats the (x, y) ranges from `grid` as two-dimensional Arrays
+
+Arguments:
+ - `grid`: grid structure containing kr and l
+"""
+function CartesianGrid(grid)
+
+	x = reshape(Array(grid.x), :, 1)
+	y = reshape(Array(grid.y), 1, :)
+
+	return x, y
+
+end
+
+"""
+Function: `PolarGrid(grid, x₀)`
+
+Calculates the polar coordinates from `grid` as two-dimensional Array centred on `x₀`
+
+Arguments:
+ - `grid`: grid structure containing kr and l
+ - `x₀`: Vector
+"""
+function PolarGrid(grid, x₀::Vector=[0])
+
+	r = @. sqrt((x-x₀[1])^2 + (y-x₀[2])^2)
+	θ = @. atan(y-x₀[2], x-x₀[1])
+
+	return r, θ
 
 end
