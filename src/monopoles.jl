@@ -54,8 +54,8 @@ end
 Function: `CreateMonopole(grid, ℓ=1, Γ=2π, R=Inf, x₀=[0, 0])`
 
 Calculates a monopolar vortex satisfying a Long's model assumption q = F(ψ)
-where q = [∇²-1/R²]ψ. We take F(z) = -(K²+1/R²)z for r < ℓ and F(z) = 0 for
-r > ℓ. These solutions exist only on an f-plane (β = 0).
+where q = [∇²-1/R²]ψ. We take F(z) = -(K²+1/R²)(z-z₀) for r < ℓ and F(z) = 0
+for r > ℓ and z₀ = ψ(r=ℓ). These solutions exist only on an f-plane (β = 0).
 
 Arguments:
  - `grid`: grid structure containing x, y, and Krsq
@@ -101,13 +101,13 @@ function CreateMonopole(grid, ℓ::Number=1, Γ::Number=2π, R::Number=Inf, x₀
 
 		# Define a function f(x), K is given by the zeros of f
 
-		f(x) = @. x * J0p(x) * K0(ℓ / R) - (ℓ / R) * J0(x) * K0p(ℓ / R)
+		f(x) = @. J0p(x) * K0(ℓ / R) + x * (R / ℓ) * J0(x) * K0p(ℓ / R)
 
 		# Solve f(x) = 0 for x = Kℓ and set coefficients
 
-		K = nlsolve(f, [3.0]).zero[1] / ℓ
+		K = nlsolve(f, [2.40482555769577]).zero[1] / ℓ
 		B = Γ / (2π)
-		A = B * K0(ℓ / R) / J0(K * ℓ)
+		A = - B * K0(ℓ / R) / (K^2 * R^2 * J0(K * ℓ))
 
 		# Create Cartesian and polar grids
 
@@ -116,10 +116,10 @@ function CreateMonopole(grid, ℓ::Number=1, Γ::Number=2π, R::Number=Inf, x₀
 
 		# Calculate ψ and q using analytic result
 
-		ψ = @. A * J0(K * r) * (r < ℓ) + B * K0(r / R) * (r >= ℓ)
-		q = @. -(K^2 + 1/R^2) * A * J0(K * r) * (r < ℓ)
+		ψ = @. (A * J0(K * r) + B * (1 + 1/(K^2 * R^2)) *K0(ℓ / R)) * (r < ℓ) + B * K0(r / R) * (r >= ℓ)
+		q = @. -(K^2 + 1/R^2) * (A * J0(K * r) + B / (K^2 * R^2) *K0(ℓ / R)) * (r < ℓ)
 		u = @. - (A * K * J0p(K * r) * (r < ℓ) + B / R * K0p(r / R) * (r >= ℓ)) * sin(θ)
-		v = @.   (A * K * J0p(K * r) * (r < ℓ) + B / R * K0p(r / R) * (r >= ℓ)) * sin(θ)
+		v = @.   (A * K * J0p(K * r) * (r < ℓ) + B / R * K0p(r / R) * (r >= ℓ)) * cos(θ)
 
 	end
 

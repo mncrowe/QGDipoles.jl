@@ -897,3 +897,46 @@ function PolarGrid(x, y, x₀::Vector=[0])
 	return r, θ
 
 end
+
+"""
+Base.summary function for custom type `GridStruct`
+
+"""
+function Base.summary(g::GridStruct)
+
+	Nx, Ny = length(g.x), length(g.y)
+
+	if g.Krsq isa CuArray
+		dev = "GPU"
+	else
+		dev = "CPU"
+	end
+
+	return string("Grid on ", dev, " with (Nx, Ny) = ", (Nx, Ny))
+end
+
+"""
+Base.show function for custom type `GridStruct`
+
+"""
+function Base.show(io::IO, g::GridStruct)
+ 
+	Nx, Ny = length(g.x), length(g.y)
+	Δx, Δy = g.x[2] - g.x[1], g.y[2] - g.y[1]
+	Lx, Ly = Nx * Δx, Ny * Δy
+
+	if g.Krsq isa CuArray
+		dev = "GPU"
+	else
+		dev = "CPU"
+	end
+
+	return print(io, "GridStruct\n",
+               "  ├───────────────── Device: ", dev, "\n",
+               "  ├────────── size (Lx, Ly): ", (Lx, Ly), "\n",
+               "  ├──── resolution (Nx, Ny): ", (Nx, Ny), "\n",
+               "  ├── grid spacing (Δx, Δy): ", (Δx, Δy), "\n",
+               "  └───────────────── domain: x ∈ [$(g.x[1]), $(g.x[end])]", "\n",
+               "                             y ∈ [$(g.y[1]), $(g.y[end])]")    
+
+end
