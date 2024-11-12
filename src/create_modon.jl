@@ -173,7 +173,7 @@ function Calc_ψq(a::Array, U::Number, ℓ::Number, R::Union{Number,Vector}, β:
 	# Create Cartesian and polar grids
 	
 	x, y = CartesianGrid(grid)	
-	r, θ = PolarGrid(grid, x₀)
+	r, θ = PolarGrid(x, y, x₀)
 
 	# Define temporary variable for RHS terms
 
@@ -276,7 +276,7 @@ function Calc_ψb(a::Array, U::Number, ℓ::Number, R::Vector, β::Number, grid,
 	# Create Cartesian and polar grids
 	
 	x, y = CartesianGrid(grid)	
-	r, θ = PolarGrid(grid, x₀)
+	r, θ = PolarGrid(x, y, x₀)
 
 	# Define temporary variable for RHS terms
 
@@ -547,7 +547,7 @@ function CreateLCD(grid, U::Number=1, ℓ::Number=1, x₀::Vector=[0, 0], α::Nu
 	# Create Cartesian and polar grids
 
 	x, y = CartesianGrid(grid)	
-	r, θ = PolarGrid(grid, x₀)
+	r, θ = PolarGrid(x, y, x₀)
 
 	# Calculate ψ and q using analytic result
 
@@ -619,7 +619,7 @@ function CreateLRD(grid, U::Number=1, ℓ::Number=1, R::Number=1, β::Number=0, 
 		# Create Cartesian and polar grids
 	
 		x, y = CartesianGrid(grid)	
-		r, θ = PolarGrid(grid, x₀)
+		r, θ = PolarGrid(x, y, x₀)
 
 		# Calculate ψ and q using analytic result
 		
@@ -875,15 +875,15 @@ function CartesianGrid(grid)
 end
 
 """
-Function: `PolarGrid(grid, x₀)`
+Function: `PolarGrid(x, y, x₀)`
 
-Calculates the polar coordinates from `grid` as two-dimensional Array centred on `x₀`
+Calculates the polar coordinates from (`x`, `y`) as two-dimensional Array centred on `x₀`
 
 Arguments:
- - `grid`: grid structure containing kr and l
+ - `x`, `y`: 2D Arrays for x and y, created using `CartesianGrid`
  - `x₀`: Vector
 """
-function PolarGrid(grid, x₀::Vector=[0])
+function PolarGrid(x, y, x₀::Vector=[0])
 
 	r = @. sqrt((x-x₀[1])^2 + (y-x₀[2])^2)
 	θ = @. atan(y-x₀[2], x-x₀[1])

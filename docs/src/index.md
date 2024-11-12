@@ -243,7 +243,7 @@ Full descriptions can be found on the [List of Functions](https://mncrowe.github
 | `Eval_w_SQG` | `src/create_modon.jl` | Function | Evaluates w at (non-surface) depths in the SQG model |
 | `Calc_∇` | `src/create_modon.jl` | Function | Calculates the x and y derivatives of a given field |
 | `CartesianGrid` | `src/create_modon.jl` | Function | Outputs 2D (x, y) Arrays from `grid` |
-| `PolarGrid` | `src/create_modon.jl` | Function | Outputs 2D (r, θ) Arrays from `grid` |
+| `PolarGrid` | `src/create_modon.jl` | Function | Outputs 2D (r, θ) Arrays created from `CartesianGrid` outputs |
 
 
 [^1]: [Johnson, E. R., and M. N. Crowe, 2023, Oceanic dipoles in a surface quasigeostrophic model, J. Fluid Mech., 958, R2](https://doi.org/10.1017/jfm.2023.87).
