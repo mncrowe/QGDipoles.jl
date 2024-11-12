@@ -42,7 +42,7 @@ using Plots
 heatmap(grid.x, grid.y, transpose(ψ[:, :, 2]);
 	colormap = :balance,
 	aspect_ratio = 1,
-	xlims = (-Lx/2, Lx/2),
-	ylims = (-Ly/2, Ly/2),
+	xlims = Lx,
+	ylims = Ly,
 	xlabel = "x",
 	ylabel = "y")

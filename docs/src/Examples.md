@@ -402,21 +402,20 @@ We can plot our initial condition and solution at ``t = 10.0`` using:
 ```julia
 using Plots
 
-heatmap(prob.grid.x, prob.grid.y, device_array(CPU())(transpose(q₀));
-    colormap = :balance,
-    aspect_ratio=1,
-    xlims = (-Lx/2, Lx/2),
-    ylims = (-Ly/2, Ly/2),
-    xlabel = "x",
-    ylabel = "y")
-
-heatmap(prob.grid.x, prob.grid.y, device_array(CPU())(transpose(prob.vars.q));
-    colormap = :balance,
-    aspect_ratio=1,
-    xlims = (-Lx/2, Lx/2),
-    ylims = (-Ly/2, Ly/2),
-    xlabel = "x",
-    ylabel = "y")
+plot(heatmap(prob.grid.x, prob.grid.y, device_array(CPU())(transpose(q₀));
+	colormap = :balance,
+	aspect_ratio=1,
+	xlims= (-Lx/2, Lx/2),
+	ylims = (-Ly/2, Ly/2),
+	xlabel = "x",
+	ylabel = "y"),
+     heatmap(prob.grid.x, prob.grid.y, device_array(CPU())(transpose(prob.vars.q));
+	colormap = :balance,
+	aspect_ratio=1,
+	xlims= (-Lx/2, Lx/2),
+	ylims = (-Ly/2, Ly/2),
+	xlabel = "x",
+	ylabel = "y"))
 
 ```
 
@@ -425,7 +424,7 @@ The two plots are shown below and are approximately identical.
 Therefore, we observe that the vortex remains centred at the origin.
 Over long times, numerical error will result in the vortex moving at a slightly different speed to `U` and hence moving away from the origin.
 
-![image](Ex_5a.png)![image](Ex_5b.png)
+![image](Ex_5.png)
 
 See the `GeophyiscalFlows.jl` documentation [here](https://fourierflows.github.io/GeophysicalFlowsDocumentation/stable/) for more details on how to run QG simulations.
 
