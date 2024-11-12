@@ -6,29 +6,55 @@ See `examples/` for example scripts and [here](https://mncrowe.github.io/QGDipol
 """
 module QGDipoles
 
-# load required packages
+# Load required packages
 
-using Jacobi
-using FFTW
-using LinearAlgebra
-using SpecialFunctions
-using QuadGK
-using NLsolve
-using CUDA
+using
+	Jacobi,
+	FFTW,
+	LinearAlgebra,
+	SpecialFunctions,
+	QuadGK,
+	NLsolve,
+	CUDA
 
-# export and define functions to calculate the numerical integrals required to build matrices
+# Export names for all functions and types
 
-export A_func, B_func, JJ_int
+export
+	# JJ_integ.jl
+	A_func,
+	B_func,
+	JJ_int,
+
+	# lin_sys.jl
+	BuildLinSys,
+	ApplyPassiveLayers,
+	IncludePassiveLayers,
+	SolveInhomEVP,
+	InhomEVP_F!,
+	OrthogSpace,
+
+	# create_modon.jl
+	ZernikeR,
+	GridStruct,
+	CreateGrid,
+	Calc_ψq,
+	Calc_ψb,
+	Calc_uv,
+	ΔNCalc,
+	CreateModonLQG,
+	CreateModonSQG,
+	CreateLCD,
+	CreateLRD,
+	Eval_ψ_SQG,
+	Eval_q_SQG,
+	Eval_b_SQG,
+	Eval_w_SQG,
+	Calc_∇
+
+# Include all function and type definitions
+
 include("JJ_integ.jl")
-
-# export and define functions for building and solving the inhomogeneous eigenvalue problem
-
-export BuildLinSys, ApplyPassiveLayers, IncludePassiveLayers, SolveInhomEVP, InhomEVP_F!, OrthogSpace 
 include("lin_sys.jl")
-
-# export and define functions to create the modon solution
-
-export ZernikeR, GridStruct, CreateGrid, Calc_ψq, Calc_ψb, Calc_uv, ΔNCalc, CreateModonLQG, CreateModonSQG, CreateLCD, CreateLRD, Eval_ψ_SQG, Eval_q_SQG, Eval_b_SQG, Eval_w_SQG, Calc_∇
 include("create_modon.jl")
 
 end
