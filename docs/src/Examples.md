@@ -424,7 +424,7 @@ The two plots are shown below and are approximately identical.
 Therefore, we observe that the vortex remains centred at the origin.
 Over long times, numerical error will result in the vortex moving at a slightly different speed to `U` and hence moving away from the origin.
 
-![image](Ex_5.png)
+![image](Ex_5.svg)
 
 See the `GeophyiscalFlows.jl` documentation [here](https://fourierflows.github.io/GeophysicalFlowsDocumentation/stable/) for more details on how to run QG simulations.
 
