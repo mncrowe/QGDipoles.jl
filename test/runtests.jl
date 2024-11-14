@@ -1,12 +1,13 @@
 """
 Tests for QGDipoles.jl
 
-The tests are split across three seperate files. Each file contains testing
-functions for a particular part of the code. The three files are:
+The tests are split across four seperate files. Each file contains testing
+functions for a particular part of the code. The four files are:
 
 - LQG_tests.jl
 - SQG_tests.jl
 - Wrapper_tests.jl
+- Energetics_tests.jl
 
 """
 
@@ -105,6 +106,30 @@ end
 
 		@test TestLRD(0.95, 0.975, 1.25, 0.45; cuda=cuda_active)
 
+	end
+
+end
+
+# Energetics tests
+
+@testset "Energetics" begin
+
+	include("Energetics_tests.jl")
+
+	for cuda_active in use_cuda
+
+		# Test 1-layer LQG energy calculation
+	
+		@test TestLQGEnergy1Layer(cuda_active)
+
+		# Test 2-layer LQG energy calculation
+
+		@test TestLQGEnergy2Layer(cuda_active)
+
+		# Test SQG energy calculation
+
+		@test TestSQGEnergy(cuda_active)
+	
 	end
 
 end

@@ -108,11 +108,12 @@ Arguments:
  - `grid`: grid structure containing Krsq
  - `ψ`: surface streamfunction, Array or CuArray
  - `b`: surface buoyancy, , Array or CuArray
+ - `R′`: reduced barotropic Rossby radius, Number (default: `Inf`)
 
 Note: the surface potential energy is sometimes referred to as the generalised
 enstrophy or the buoyancy variance.
 """
-function EnergySQG(grid, ψ::Union{CuArray,Array}, b::Union{CuArray,Array}, R′)
+function EnergySQG(grid, ψ::Union{CuArray,Array}, b::Union{CuArray,Array}, R′::Number=Inf)
 
 	ψh = rfft(ψ)
 	bh = rfft(b)
