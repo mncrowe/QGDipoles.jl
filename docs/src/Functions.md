@@ -52,6 +52,15 @@ Base.summary
 Base.show
 ```
 
+## `energetics.jl`
+
+```@docs
+EnergyLQG
+EnstrophyLQG
+EnergySQG
+AreaInteg2
+```
+
 ## `monopoles.jl`
 
 ```@docs

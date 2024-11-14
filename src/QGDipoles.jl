@@ -52,6 +52,12 @@ export
 	Calc_∇,
 	CartesianGrid,
 	PolarGrid,
+
+	# energetics.jl
+	EnergyLQG,
+	EnstrophyLQG,
+	EnergySQG,
+	AreaInteg2,
 	
 	# monopoles.jl
 	CreateRankine,
@@ -63,6 +69,7 @@ export
 include("JJ_integ.jl")
 include("lin_sys.jl")
 include("create_modon.jl")
+include("energetics.jl")
 include("monopoles.jl")
 
 end
