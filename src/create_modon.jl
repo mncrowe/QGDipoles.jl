@@ -434,7 +434,7 @@ function ΔNCalc(K²::Union{CuArray,Array}, R::Union{Number,Vector}, β::Union{N
 end
 
 """
-Function: `CreateModonLQG(grid, M, U=1, ℓ=1, R=1, β=0, ActiveLayers=1, x₀=[0, 0], α=0; K₀=Nothing, a₀=Nothing, tol=1e-6)`
+Function: `CreateModonLQG(grid, M, U=1, ℓ=1, R=1, β=0, ActiveLayers=1, x₀=[0, 0], α=0; K₀=nothing, a₀=nothing, tol=1e-6)`
 
 High level wrapper function for calculating ψ and q for the Layered QG model using given parameters
 
@@ -446,13 +446,14 @@ Arguments:
  - `ActiveLayers`: vector of 1s or 0s where 1 denotes an active layer, Number or Vector, (default: `[1,..,1]`)
  - `x₀`: position of vortex center, vector (default: `[0, 0]`)
  - `α`: initial angle of vortex, Number (default: 0)
- - `K₀`, `a₀`: initial guesses for K and a, Arrays or Nothings (default: `Nothing`)
+ - `K₀`, `a₀`: initial guesses for K and a, Arrays or nothings (default: `nothing`)
  - `tol`: error tolerance passed to `QuadGK` and `NLSolve` functions, Number (default: `1e-6`)
 
 Note: provide values of K₀ and a₀ for active layers ONLY.
 """
 function CreateModonLQG(grid, M::Int=8, U::Number=1, ℓ::Number=1, R::Union{Number,Vector}=1, β::Union{Number,Vector}=0,
-	ActiveLayers::Union{Number,Vector}=1, x₀::Vector=[0, 0], α::Number=0; K₀=Nothing, a₀=Nothing, tol=1e-6)
+	ActiveLayers::Union{Number,Vector}=1, x₀::Vector=[0, 0], α::Number=0; K₀::Union{Number,Array,Nothing}=nothing,
+	a₀::Union{Array,Nothing}=nothing, tol=1e-6)
 	
 	# If ActiveLayers size does not match size of R, assume all layers are active
 
@@ -485,7 +486,7 @@ function CreateModonLQG(grid, M::Int=8, U::Number=1, ℓ::Number=1, R::Union{Num
 end
 
 """
-Function: `CreateModonSQG(grid, M, U=1, ℓ=1, R=[Inf, Inf], β=0, x₀=[0, 0], α=0; K₀=Nothing, a₀=Nothing, tol=1e-6)`
+Function: `CreateModonSQG(grid, M, U=1, ℓ=1, R=[Inf, Inf], β=0, x₀=[0, 0], α=0; K₀=nothing, a₀=nothing, tol=1e-6)`
 
 High level wrapper function for calculating ψ and b for the SQG model using given parameters
 
@@ -497,14 +498,15 @@ Arguments:
  - `β`: beta-plane (y) PV gradient, Number (default: `0`)
  - `x₀`: position of vortex center, vector (default: `[0, 0]`)
  - `α`: initial angle of vortex, Number (default: `0`)
- - `K₀`, `a₀`: initial guesses for K and a, Arrays or Nothings (default: `Nothing`)
+ - `K₀`, `a₀`: initial guesses for K and a, Arrays or nothings (default: `nothing`)
  - `tol`: error tolerance passed to `QuadGK` and `NLSolve` functions, Number (default: `1e-6`)
 
 Note: Here R is the baroclinic Rossby radius, R = NH/f, and R' = R₀²/R where R₀ is
 the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = g/(fN).
 """
 function CreateModonSQG(grid, M::Int=12, U::Number=1, ℓ::Number=1, R::Vector=[Inf, Inf], β::Number=0,
-	x₀::Vector=[0, 0], α::Number=0; K₀=Nothing, a₀=Nothing, tol=1e-6)
+	x₀::Vector=[0, 0], α::Number=0; K₀::Union{Number,Array,Nothing}=nothing,
+	a₀::Union{Array,Nothing}=nothing, tol=1e-6)
 	
 	# Define intermediate variables
 
