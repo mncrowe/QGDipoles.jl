@@ -902,7 +902,6 @@ end
 
 """
 Base.summary function for custom type `GridStruct`
-
 """
 function Base.summary(g::GridStruct)
 
@@ -919,7 +918,6 @@ end
 
 """
 Base.show function for custom type `GridStruct`
-
 """
 function Base.show(io::IO, g::GridStruct)
  
@@ -934,11 +932,11 @@ function Base.show(io::IO, g::GridStruct)
 	end
 
 	return print(io, "GridStruct\n",
-               "  ├───────────────── Device: ", dev, "\n",
-               "  ├────────── size (Lx, Ly): ", (Lx, Ly), "\n",
-               "  ├──── resolution (Nx, Ny): ", (Nx, Ny), "\n",
-               "  ├── grid spacing (Δx, Δy): ", (Δx, Δy), "\n",
-               "  └───────────────── domain: x ∈ [$(g.x[1]), $(g.x[end])]", "\n",
-               "                             y ∈ [$(g.y[1]), $(g.y[end])]")    
+               "  ├────────────────────── device: ", dev, "\n",
+               "  ├─────────────── size (Lx, Ly): ", (Lx, Ly), "\n",
+               "  ├───────── resolution (Nx, Ny): ", (Nx, Ny), "\n",
+               "  ├─────── grid spacing (Δx, Δy): ", (Δx, Δy), "\n",
+               "  └────────────────────── domain: x ∈ [$(g.x[1]), $(g.x[end])]", "\n",
+               "                                  y ∈ [$(g.y[1]), $(g.y[end])]")
 
 end
