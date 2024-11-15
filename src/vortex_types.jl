@@ -359,7 +359,7 @@ Defines an LQGVortex solution structure using the given inputs
 
 Arguments:
  - `grid`: grid structure
- - `params`: vortex paramters, LQGParams structure
+ - `params`: vortex parameters, LQGParams structure
 """
 function DefLQGVortex(grid, params::LQGParams)
 
@@ -375,7 +375,7 @@ Defines an SQGVortex solution structure using the given inputs
 
 Arguments:
  - `grid`: grid structure
- - `params`: vortex paramters, LQGParams structure
+ - `params`: vortex parameters, LQGParams structure
 """
 function DefSQGVortex(grid, params::SQGParams)
 
