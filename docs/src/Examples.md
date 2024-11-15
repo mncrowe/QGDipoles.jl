@@ -241,7 +241,7 @@ x₀ = [0, 0]			# position of vortex center
 M = 8				# number of coefficients in Zernike expansion
 tol = 1e-8			# maximum error in solution evaluation
 cuda = false			# use CuArrays for grid
-K₀, a₀ = [4, 4], Nothing	# guesses for K and a
+K₀, a₀ = [4, 4], nothing	# guesses for K and a
 
 # create grid
 
@@ -283,7 +283,7 @@ x₀ = [0, 0]			# position of vortex center
 M = 20				# number of coefficients in Zernike expansion
 tol = 1e-6			# maximum error in solution evaluation
 cuda = false			# use CuArrays for grid
-K₀, a₀ = 8, Nothing		# guesses for K and a
+K₀, a₀ = 8, nothing		# guesses for K and a
 
 # Set grid parameters
 
