@@ -58,7 +58,17 @@ export
 	EnstrophyLQG,
 	EnergySQG,
 	AreaInteg2,
-	
+
+	# vortex_types.jl
+	LQGParams,
+	SQGParams,
+	LQGVortex,
+	SQGVortex,
+	DefLQGParams,
+	DefSQGParams,
+	DefLQGVortex,
+	DefSQGVortex,	
+
 	# monopoles.jl
 	CreateRankine,
 	CreateMonopole,
@@ -70,6 +80,7 @@ include("JJ_integ.jl")
 include("lin_sys.jl")
 include("create_modon.jl")
 include("energetics.jl")
+include("vortex_types.jl")
 include("monopoles.jl")
 
 end

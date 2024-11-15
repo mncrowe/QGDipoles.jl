@@ -240,13 +240,13 @@ function IncludePassiveLayers(K::Array, a::Array, ActiveLayers::Union{Number,Vec
 end
 
 """
-Function: `SolveInhomEVP(A, B, c, d; K₀=Nothing, a₀=Nothing, tol=1e-6, method=0, m=2, sqg=false, warn=true)`
+Function: `SolveInhomEVP(A, B, c, d; K₀=nothing, a₀=nothing, tol=1e-6, method=0, m=2, sqg=false, warn=true)`
 
 Solves the inhomogeneous eigenvalue problem using nonlinear root finding
 
 Arguments:
  - `A`, `B`, `c`, `d`: inhomogeneous eigenvalue problem terms, Arrays
- - `K₀`, `a₀`: initial guesses for K and a, Arrays or Nothings (default: `Nothing`)
+ - `K₀`, `a₀`: initial guesses for K and a, Arrays or nothings (default: `nothing`)
  - `tol`: error tolerance for `nlsolve`, Number (default: `1e-6`)
  - `method`: `0` - eigensolve for N = 1 and `nlsolve` for N > 1, `1` - `nlsolve` (default: `0`)
  - `m`: exponent of K in eignevalue problem (default: `2`)
@@ -257,8 +257,9 @@ Note: setting `sqg=true` overwrites the value of `m` and is equivalent to settin
 The option to set both is included for consistency with `BuildLinSys` and more generality
 with the value of `m`.
 """
-function SolveInhomEVP(A::Array, B::Array, c::Array, d::Array; K₀=Nothing, a₀=Nothing,
-		tol::Number=1e-6, method::Int=0, m::Int=2, sqg::Bool=false, warn::Bool=true)
+function SolveInhomEVP(A::Array, B::Array, c::Array, d::Array; K₀::Union{Number,Array,Nothing}=nothing,
+		a₀::Union{Array,Nothing}=nothing, tol::Number=1e-6, method::Int=0, m::Int=2,
+		sqg::Bool=false, warn::Bool=true)
 	
 	# Ensure that m is set correctly for SQG case
 
@@ -295,7 +296,7 @@ function SolveInhomEVP(A::Array, B::Array, c::Array, d::Array; K₀=Nothing, a�
 
 		# Set K₀ value if none given
 		
-		if K₀ == Nothing
+		if K₀ isa Nothing
 			
 			K₀ = [4]
 			
@@ -346,7 +347,7 @@ function SolveInhomEVP(A::Array, B::Array, c::Array, d::Array; K₀=Nothing, a�
 
 		# Define a₀ if none given and reshape if given
 	
-		if a₀ == Nothing
+		if a₀ isa Nothing
 			
 			a₀ = vcat(-10*ones(N, 1), zeros(N*(M-1), 1))
 			
@@ -358,7 +359,7 @@ function SolveInhomEVP(A::Array, B::Array, c::Array, d::Array; K₀=Nothing, a�
 
 		# Define K₀ if none given and reshape if given
 
-		if K₀ == Nothing
+		if K₀ isa Nothing
 			
 			K₀ = 5*ones(N, 1)
 			
