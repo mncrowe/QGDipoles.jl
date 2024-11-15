@@ -61,6 +61,19 @@ EnergySQG
 AreaInteg2
 ```
 
+## vortex_types.jl
+
+```@docs
+LQGParams
+SQGParams
+LQGVortex
+SQGVortex
+DefLQGParams
+DefSQGParams
+DefLQGVortex
+DefSQGVortex
+```
+
 ## `monopoles.jl`
 
 ```@docs
