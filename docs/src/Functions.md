@@ -48,8 +48,6 @@ Eval_w_SQG
 Calc_∇
 CartesianGrid
 PolarGrid
-Base.summary
-Base.show
 ```
 
 ## `energetics.jl`
@@ -61,7 +59,7 @@ EnergySQG
 AreaInteg2
 ```
 
-## vortex_types.jl
+## `vortex_types.jl`
 
 ```@docs
 LQGParams
@@ -80,4 +78,11 @@ DefSQGVortex
 CreateRankine
 CreateMonopole
 InvertVorticity1LQG
+```
+
+## `Base`
+
+```@docs
+Base.summary
+Base.show
 ```
