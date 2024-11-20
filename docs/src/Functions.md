@@ -76,8 +76,10 @@ DefSQGVortex
 
 ```@docs
 CreateRankine
-CreateMonopole
+Create1LMonopole
 InvertVorticity1LQG
+CreateLQGMonopole
+InvertVorticityLQG
 ```
 
 ## `Base`
