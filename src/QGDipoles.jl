@@ -52,6 +52,7 @@ export
 	Calc_∇,
 	CartesianGrid,
 	PolarGrid,
+	Calc_ζ,
 
 	# energetics.jl
 	EnergyLQG,
@@ -71,8 +72,10 @@ export
 
 	# monopoles.jl
 	CreateRankine,
-	CreateMonopole,
-	InvertVorticity1LQG
+	Create1LMonopole,
+	InvertVorticity1LQG,
+	CreateLQGMonopole,
+	InvertVorticityLQG
 
 # Include all function and type definitions
 

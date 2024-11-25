@@ -901,6 +901,45 @@ function PolarGrid(x, y, x₀::Vector=[0])
 end
 
 """
+Function: `Calc_ζ(ψ, grid)`
+
+Calculate the vertical vorticity using ζ = ∂v/∂x - ∂u/∂y = ∇²ψ
+
+Arguments:
+ - `ψ`: streamfunction, Array
+ - `grid`: grid structure containing Krsq
+"""
+function Calc_ζ(ψ::Union{CuArray,Array}, grid)
+	
+	Nd = ndims(ψ)
+	Nx, Ny = size(ψ)
+	N = Int(length(ψ) / (Nx * Ny))
+
+	# Fourier transform ψ
+
+	ψh = rfft(reshape(ψ, Nx, Ny, N), [1, 2])
+
+	# Calculate ζ in Fourier space using ζ = ∇²ψ
+
+	ζh = - grid.Krsq .* ψh
+
+	# Transform back to real space
+	
+	ζ = irfft(ζh, Nx, [1, 2])
+
+	# Output array as 2D in SQG case for consistency
+
+	if Nd == 2
+		
+		ζ = reshape(ζ, Nx, Ny)
+		
+	end
+
+	return ζ
+
+end
+
+"""
 Base.summary function for custom type `GridStruct`
 """
 function Base.summary(g::GridStruct)

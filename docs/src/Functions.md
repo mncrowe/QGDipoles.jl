@@ -48,6 +48,7 @@ Eval_w_SQG
 Calc_∇
 CartesianGrid
 PolarGrid
+Calc_ζ
 ```
 
 ## `energetics.jl`
@@ -76,8 +77,10 @@ DefSQGVortex
 
 ```@docs
 CreateRankine
-CreateMonopole
+Create1LMonopole
 InvertVorticity1LQG
+CreateLQGMonopole
+InvertVorticityLQG
 ```
 
 ## `Base`

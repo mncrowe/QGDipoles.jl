@@ -2,6 +2,9 @@
 While primarily intended for creating dipolar vortex solutions, this package contains
 additional functions which can be used to generate some simple monopolar vortex solutions
 too. These functions are included in this file.
+
+An additional use of these functions is to build 'riders' as discussed by Kizner et. al.
+2003 which are monopolar vortices superimposed on our dipole solutions.
 """
 
 """
@@ -51,7 +54,7 @@ function CreateRankine(grid, ℓ::Number=1, Γ::Number=2π, x₀::Vector=[0, 0])
 end
 
 """
-Function: `CreateMonopole(grid, ℓ=1, Γ=2π, R=Inf, x₀=[0, 0])`
+Function: `Create1LMonopole(grid, ℓ=1, Γ=2π, R=Inf, x₀=[0, 0])`
 
 Calculates a monopolar vortex satisfying a Long's model assumption q = F(ψ)
 where q = [∇²-1/R²]ψ. We take F(z) = -(K²+1/R²)(z-z₀) for r < ℓ and F(z) = 0
@@ -68,7 +71,7 @@ Note: This vortex has a continuous vorticity distribution so calculating (u, v)
 from ψ with Fourier transforms will work. This function outputs (u, v) from the
 analytical expressions for consistency with `CreateRankine`.
 """
-function CreateMonopole(grid, ℓ::Number=1, Γ::Number=2π, R::Number=Inf, x₀::Vector=[0, 0])
+function Create1LMonopole(grid, ℓ::Number=1, Γ::Number=2π, R::Number=Inf, x₀::Vector=[0, 0])
 
 	# Define Bessel functions and derivatives
 
@@ -176,3 +179,96 @@ function InvertVorticity1LQG(grid, q::Union{CuArray,Array}, R::Number=Inf)
 	return ψ
 
 end
+
+"""
+Function: `CreateLQGMonopole(grid, ℓ=1, E=1, R=Inf, x₀=[0, 0])`
+
+Calculates a monopolar vortex in the LQG model using a numerical approach.
+We assume that qⱼ + βⱼ = Fⱼ(ψⱼ + Uy) and write Fⱼ(z) = -Kⱼ² z + Eⱼ. Expanding
+the expression gives qⱼ + βⱼ = -Kⱼ²(ψⱼ + Uy) + Eⱼ which by linearity can be
+split into a dipole equation qⱼ + βⱼ = -Kⱼ²(ψⱼ + Uy) and a monopole equation
+qⱼ = Eⱼ. Outside the vortex, we take qⱼ = 0.
+
+Arguments:
+ - `grid`: grid structure containing x, y, and Krsq
+ - `ℓ`: vortex speed and radius, Numbers (default: `1`)
+ - `E`: vector of Eⱼ values, Number or Vector (default: `[1, ... , 1]`)
+ - `R`: Rossby radius (default: `Inf`)
+ - `x₀`: position of vortex center, vector (default: `[0, 0]`)
+
+"""
+function CreateLQGMonopole(grid, ℓ::Number=1, E::Union{Vector,Number}=1,
+				R::Union{Vector,Number}=Inf, x₀::Vector=[0, 0])
+
+	# Get coordinates
+
+	x, y = CartesianGrid(grid)	
+	r, _ = PolarGrid(x, y, x₀)
+
+	# Get size variables based on inputs
+
+	Nx, Ny = length(x), length(y)
+	N = length(R)
+
+	# Set PV in each layer
+
+	q = (r .<= ℓ) .* reshape(E, 1, 1, :)
+
+	if grid.Krsq isa CuArray
+		
+		q = CuArray(q)
+		
+	end
+
+	# calculate ψ
+
+	ψ = InvertVorticityLQG(grid, q, R)
+	
+	return ψ, q
+
+end
+
+"""
+Function: `InvertVorticityLQG(grid, q, R=Inf)`
+
+This function inverts the potential vorticity relation q = ΔN ψ for the LQG model
+
+Arguments:
+ - `grid`: grid structure containing x, y, and Krsq
+ - `q`: potential vorticity field, Array
+ - `R`: Rossby radius, Number or Vector (default: `Inf`)
+
+"""
+function InvertVorticityLQG(grid, q::Union{CuArray,Array}, R::Union{Vector,Number}=Inf)
+
+	Nx, Ny = size(q)
+	N = Int(length(q) / (Nx * Ny))
+
+	# Define ΔN operator, where ΔN ψ = q
+	
+	ΔN = ΔNCalc(grid.Krsq, R, 0)
+
+	# Invert ΔN
+
+	ΔN_i = stack(inv, eachslice(ΔN, dims=(3,4)))
+	CUDA.@allowscalar(ΔN_i[:, :, 1, 1] .= 0)
+
+	# Calculate qh and define ψh
+
+	qh = rfft(q, [1, 2])
+	ψh = 0 .* qh
+
+	# Calculate ψh from qh in Fourier space
+
+	for n in 1:N
+		for j in 1:N
+			ψh[:, :, n] .+= ΔN_i[n, j, :, :] .* qh[:, :, j]
+		end
+	end
+
+	ψ = irfft(ψh, Nx, [1, 2])
+
+	return ψ
+
+end
+

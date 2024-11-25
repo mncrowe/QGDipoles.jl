@@ -26,6 +26,7 @@ Arguments:
  - `a₀`: initial guess for coefficients
  - `UseAnalytic`: use analytic solution (1-layer only)
  - `CalcVelocity`: flag to determine if velocity is calculated
+ - `CalcVorticity`: flag to determine if vorticity is calculated
  - `CalcEnergy`: flag to determine if energy is calculated
  - `CalcEnstrophy`: flag to determine if enstrophy is calculated
 """
@@ -44,6 +45,7 @@ struct LQGParams
 	a₀::Union{Array,Nothing}
 	UseAnalytic::Bool
 	CalcVelocity::Bool
+	CalcVorticity::Bool
 	CalcEnergy::Bool
 	CalcEnstrophy::Bool
 end
@@ -65,6 +67,7 @@ Arguments:
  - `K₀`: initial guess for eigenvalue
  - `a₀`: initial guess for coefficients
  - `CalcVelocity`: flag to determine if velocity is calculated
+ - `CalcVorticity`: flag to determine if vorticity is calculated
  - `CalcEnergy`: flag to determine if energy is calculated
  
 """
@@ -80,6 +83,7 @@ struct SQGParams
 	K₀::Union{Number,Array,Nothing}
 	a₀::Union{Array,Nothing}
 	CalcVelocity::Bool
+	CalcVorticity::Bool
 	CalcEnergy::Bool
 end
 
@@ -96,6 +100,7 @@ Arguments:
  - `a`: coefficient matrix
  - `u`: x velocity
  - `v`: y velocity
+ - `ζ`: vertical vorticity
  - `KE`: kinetic energy
  - `PE`: potential energy
  - `EN`: enstrophy 
@@ -108,6 +113,7 @@ struct LQGVortex
 	a::Union{Array,Nothing}
 	u::Union{CuArray,Array,Nothing}
 	v::Union{CuArray,Array,Nothing}
+	ζ::Union{CuArray,Array,Nothing}
 	KE::Union{Vector,Nothing}
 	PE::Union{Vector,Nothing}
 	EN::Union{Vector,Nothing}
@@ -126,6 +132,7 @@ Arguments:
  - `a`: coefficient matrix
  - `u`: x velocity
  - `v`: y velocity
+ - `ζ`: vertical vorticity
  - `E`: domain integrated energy
  - `SPE`: surface potential energy
 """
@@ -137,6 +144,7 @@ struct SQGVortex
 	a::Array
 	u::Union{CuArray,Array,Nothing}
 	v::Union{CuArray,Array,Nothing}
+	ζ::Union{CuArray,Array,Nothing}
 	E::Union{Vector, Nothing}
 	SPE::Union{Vector, Nothing}
 end
@@ -161,6 +169,7 @@ Arguments:
  - `a₀`: initial guess for coefficients
  - `UseAnalytic`: use analytic solution (1-layer only)
  - `CalcVelocity`: flag to determine if velocity is calculated
+ - `CalcVorticity`: flag to determine if vorticity is calculated
  - `CalcEnergy`: flag to determine if energy is calculated
  - `CalcEnstrophy`: flag to determine if enstrophy is calculated
 """
@@ -178,11 +187,12 @@ function DefLQGParams(U::Number=1,
 		     a₀::Union{Array,Nothing}=nothing,
 	    UseAnalytic::Bool=false,
 	   CalcVelocity::Bool=false,
+	  CalcVorticity::Bool=false,
              CalcEnergy::Bool=false,
 	  CalcEnstrophy::Bool=false)
 	
-	return LQGParams(U, ℓ, R, β, ActiveLayers, H, x₀, α, M,
-		tol, K₀, a₀, UseAnalytic, CalcVelocity, CalcEnergy, CalcEnstrophy)
+	return LQGParams(U, ℓ, R, β, ActiveLayers, H, x₀, α, M, tol, K₀, a₀, 
+		UseAnalytic, CalcVelocity, CalcVorticity, CalcEnergy, CalcEnstrophy)
 end
 
 """
@@ -202,6 +212,7 @@ Arguments:
  - `K₀`: initial guess for eigenvalue
  - `a₀`: initial guess for coefficients
  - `CalcVelocity`: flag to determine if velocity is calculated
+ - `CalcVorticity`: flag to determine if vorticity is calculated
  - `CalcEnergy`: flag to determine if energy is calculated
 """
 function DefSQGParams(U::Number=1,
@@ -215,9 +226,11 @@ function DefSQGParams(U::Number=1,
 		     K₀::Union{Number,Array,Nothing}=nothing,
 		     a₀::Union{Array,Nothing}=nothing,
 	   CalcVelocity::Bool=false,
+	  CalcVorticity::Bool=false,
              CalcEnergy::Bool=false)
 
-	return SQGParams(U, ℓ, R, β, x₀, α, M, tol, K₀, a₀, CalcVelocity, CalcEnergy)
+	return SQGParams(U, ℓ, R, β, x₀, α, M, tol, K₀, a₀,
+				CalcVelocity, CalcVorticity, CalcEnergy)
 end
 
 """
@@ -241,6 +254,7 @@ Arguments:
  - `a₀`: initial guess for coefficients
  - `UseAnalytic`: use analytic solution (1-layer only)
  - `CalcVelocity`: flag to determine if velocity is calculated
+ - `CalcVorticity`: flag to determine if vorticity is calculated
  - `CalcEnergy`: flag to determine if energy is calculated
  - `CalcEnstrophy`: flag to determine if enstrophy is calculated
 """
@@ -259,11 +273,12 @@ function DefLQGVortex(grid,
 		     a₀::Union{Array,Nothing}=nothing,
 	    UseAnalytic::Bool=false,
 	   CalcVelocity::Bool=false,
+	  CalcVorticity::Bool=false,
              CalcEnergy::Bool=false,
 	  CalcEnstrophy::Bool=false)
 
 	params = DefLQGParams(U, ℓ, R, β, ActiveLayers, H, x₀, α, M;
-			tol, K₀, a₀, UseAnalytic, CalcVelocity, CalcEnergy, CalcEnstrophy)
+		tol, K₀, a₀, UseAnalytic, CalcVelocity, CalcVorticity, CalcEnergy, CalcEnstrophy)
 
 	N = length(R)
 
@@ -284,6 +299,12 @@ function DefLQGVortex(grid,
 		u, v = nothing, nothing
 	end
 
+	if CalcVorticity
+		ζ = Calc_ζ(ψ, grid)
+	else
+		ζ = nothing
+	end
+
 	if CalcEnergy
 		KE, PE = EnergyLQG(grid, ψ, R, H)
 	else
@@ -296,7 +317,7 @@ function DefLQGVortex(grid,
 		EN = nothing
 	end
 
-	return LQGVortex(params, ψ, q, K, a, u, v, KE, PE, EN)
+	return LQGVortex(params, ψ, q, K, a, u, v, ζ, KE, PE, EN)
 end
 
 """
@@ -317,6 +338,7 @@ Arguments:
  - `K₀`: initial guess for eigenvalue
  - `a₀`: initial guess for coefficients
  - `CalcVelocity`: flag to determine if velocity is calculated
+ - `CalcVorticity`: flag to determine if vorticity is calculated
  - `CalcEnergy`: flag to determine if energy is calculated
 """
 function DefSQGVortex(grid,
@@ -331,9 +353,10 @@ function DefSQGVortex(grid,
 		     K₀::Union{Number,Array,Nothing}=nothing,
 		     a₀::Union{Number,Array,Nothing}=nothing,
 	   CalcVelocity::Bool=false,
+	  CalcVorticity::Bool=false,
              CalcEnergy::Bool=false)
 
-	params = DefSQGParams(U, ℓ, R, β, x₀, α, M; tol, K₀, a₀, CalcVelocity, CalcEnergy)
+	params = DefSQGParams(U, ℓ, R, β, x₀, α, M; tol, K₀, a₀, CalcVelocity, CalcVorticity, CalcEnergy)
 
 	ψ, b, K, a = CreateModonSQG(grid, M, U, ℓ, R, β, x₀, α; K₀, a₀, tol)
 
@@ -343,13 +366,19 @@ function DefSQGVortex(grid,
 		u, v = nothing, nothing
 	end
 
+	if CalcVorticity
+		ζ = Calc_ζ(ψ, grid)
+	else
+		ζ = nothing
+	end
+
 	if CalcEnergy
 		E, SPE = EnergySQG(grid, ψ, b, R[2])
 	else
 		E, SPE = nothing, nothing
 	end
 
-	return SQGVortex(params, ψ, b, K, a, u, v, E, SPE)
+	return SQGVortex(params, ψ, b, K, a, u, v, ζ, E, SPE)
 end
 
 """
@@ -365,7 +394,7 @@ function DefLQGVortex(grid, params::LQGParams)
 
 	return DefLQGVortex(grid, params.U, params.ℓ, params.R, params.β, params.ActiveLayers, params.H,
 			params.x₀, params.α, params.M; params.tol, params.K₀, params.a₀, params.UseAnalytic,
-			params.CalcVelocity, params.CalcEnergy, params.CalcEnstrophy)
+			params.CalcVelocity, params.CalcVorticity, params.CalcEnergy, params.CalcEnstrophy)
 end
 
 """
@@ -379,8 +408,9 @@ Arguments:
 """
 function DefSQGVortex(grid, params::SQGParams)
 
-	return DefSQGVortex(grid, params.U, params.ℓ, params.R, params.β, params.x₀, params.α, params.M;
-			params.tol, params.K₀, params.a₀, params.CalcVelocity, params.CalcEnergy)
+	return DefSQGVortex(grid, params.U, params.ℓ, params.R, params.β, params.x₀, params.α,
+			params.M; params.tol, params.K₀, params.a₀, params.CalcVelocity,
+			params.CalcVorticity, params.CalcEnergy)
 end
 
 """
@@ -439,6 +469,7 @@ function Base.show(io::IO, p::LQGParams)
                "  ├── guess for coeffs (a₀) given: ", a₀_given, "\n",
                "  ├──────── use analytic solution: ", p.UseAnalytic, "\n",
                "  ├─────────── calculate velocity: ", p.CalcVelocity, "\n",
+               "  ├────────── calculate vorticity: ", p.CalcVorticity, "\n",
                "  ├───────────── calculate energy: ", p.CalcEnergy, "\n",
                "  └────────── calculate enstrophy: ", p.CalcEnstrophy)    
 
@@ -463,6 +494,7 @@ function Base.show(io::IO, p::SQGParams)
                "  ├──── guess for eigenvalue (K₀): ", p.K₀, "\n",
                "  ├── guess for coeffs (a₀) given: ", a₀_given, "\n",
                "  ├─────────── calculate velocity: ", p.CalcVelocity, "\n",
+               "  ├────────── calculate vorticity: ", p.CalcVorticity, "\n",
                "  └───────────── calculate energy: ", p.CalcEnergy)    
 
 end
@@ -474,6 +506,7 @@ function Base.show(io::IO, p::LQGVortex)
 
 	contains_a = ~(p.a isa Nothing)
 	contains_vel = ~(p.u isa Nothing)
+	contains_vor = ~(p.ζ isa Nothing)
 	contains_ener = ~(p.KE isa Nothing)
 	contains_enst = ~(p.EN isa Nothing)
 
@@ -492,6 +525,7 @@ function Base.show(io::IO, p::LQGVortex)
                "  ├────────── contains ψ, q and K: ", true, "\n",
                "  ├─────────────────── contains a: ", contains_a, "\n",
                "  ├────────── contains velocities: ", contains_vel, "\n",
+               "  ├─────────── contains vorticity: ", contains_vor, "\n",
                "  ├──────────── contains energies: ", contains_ener, "\n",
                "  └─────────── contains enstrophy: ", contains_enst)    
 
@@ -503,6 +537,7 @@ Base.show function for custom type `SQGVortex`
 function Base.show(io::IO, p::SQGVortex)
 
 	contains_vel = ~(p.u isa Nothing)
+	contains_vor = ~(p.ζ isa Nothing)
 	contains_ener = ~(p.E isa Nothing)
 
 	if p.ψ isa CuArray
@@ -516,6 +551,7 @@ function Base.show(io::IO, p::SQGVortex)
                "  ├─────────────────────── device: ", dev, "\n",
                "  ├─────── contains ψ, b, K and a: ", true, "\n",
                "  ├────────── contains velocities: ", contains_vel, "\n",
+               "  ├─────────── contains vorticity: ", contains_vor, "\n",
                "  └──────────── contains energies: ", contains_ener)    
 
 end

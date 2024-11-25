@@ -210,47 +210,6 @@ Note: this package returns ``b/N`` rather than ``b``. When working with dimensio
 | ``f`` | Coriolis parameters | - |
 | ``H`` | layer depth | - |
 
-## Index of Functions
-
-This list contains all Functions and Structures from the QGDipoles.jl package.
-Full descriptions can be found on the [List of Functions](https://mncrowe.github.io/QGDipoles.jl/dev/Functions/) page.
-
-| Name | Location | Type | Description |
-| :--| :-- | :-- | :-- |
-| `A_func` | `src/JJ_integ.jl` | Function | Evaluates a function required to calculate the matrix ``\textbf{A}`` in the LQG case |
-| `B_func` | `src/JJ_integ.jl` | Function | Evaluates a function required to calculate the matrix ``\textbf{B}`` in the LQG case |
-| `JJ_int` | `src/JJ_integ.jl` | Function | Calculates a double Bessel function integral required to calculate ``\textbf{A}`` and ``\textbf{B}`` |
-| `BuildLinSys` | `src/lin_sys.jl` | Function | Builds the terms in the inhomogeneous eigenvalue problem; ``\textbf{A}``, ``\textbf{B}``, ``\textbf{c}`` and ``\textbf{d}`` |
-| `ApplyPassiveLayers` | `src/lin_sys.jl` | Function | Removes rows and columns corresponding to passive layers from the linear system |
-|`IncludePassiveLayers` | `src/lin_sys.jl` | Function | Includes columns corresponding to passive layers in the eigenvalue and coefficient arrays |
-| `SolveInhomEVP` | `src/lin_sys.jl` | Function | Solves the inhomogeneous eigenvalue problem using nonlinear root finding (``N > 1``) or standard eigenvalue methods for quadratic problems (``N = 1``) |
-| `InhomEVP_F!` | `src/lin_sys.jl` | Function | Calculates the function required for `SolveInhomEVP` and it's derivatives |
-| `OrthogSpace ` | `src/lin_sys.jl` | Function | Extends the input to an orthonormal basis over ``R^n`` using the Gram-Schmidt method, required for `SolveInhomEVP` |
-| `ZernikeR` | `src/create_modon.jl` | Function | Define the Zernike radial function using the `jacobi` function from `SpecialFunctions.jl` |
-| `GridStruct` | `src/create_modon.jl` | Structure | A structure that stores the grid variables in physical and Fourier space |
-| `CreateGrid` | `src/create_modon.jl` | Function | Define the numerical grid in the form of a `GridStruct` structure |
-| `Calc_ψq` | `src/create_modon.jl` | Function | Calculate ``\psi`` and ``q`` in a layered QG model using coefficients and vortex parameters |
-| `Calc_ψb` | `src/create_modon.jl` | Function | Calculate ``\psi`` and ``b`` in the SQG model using coefficients and vortex parameters |
-| `Calc_uv` | `src/create_modon.jl` | Function | Calculate the velocity fields from ``\psi`` using ``(u, v) = (-\partial\psi/\partial y, \partial\psi/\partial x)`` |
-| `ΔNCalc` | `src/create_modon.jl` | Function | Defines a matrix used to invert for ``\psi`` and ``q`` in Fourier space |
-| `CreateModonLQG` | `src/create_modon.jl` | Function | High level wrapper function for calculating ``\psi``, ``q``, ``K`` and ``\textbf{a}`` for the Layered QG model using given parameters |
-| `CreateModonSQG` | `src/create_modon.jl` | Function | High level wrapper function for calculating ``\psi``, ``b``, ``K`` and ``\textbf{a}`` for the SQG model using given parameters |
-| `CreateLCD` | `src/create_modon.jl` | Function | High level wrapper function for calculating ``\psi``, ``q`` and ``K`` for the Lamb-Chaplygin dipole using given parameters |
-| `CreateLRD` | `src/create_modon.jl` | Function | High level wrapper function for calculating ``\psi``, ``q`` and ``K`` for the Larichev-Reznik dipole using given parameters |
-| `Eval_ψ_SQG` | `src/create_modon.jl` | Function | Evaluates ψ at specified depths in the SQG model |
-| `Eval_q_SQG` | `src/create_modon.jl` | Function | Evaluates q at specified depths in the SQG model |
-| `Eval_b_SQG` | `src/create_modon.jl` | Function | Evaluates b at specified depths in the SQG model |
-| `Eval_w_SQG` | `src/create_modon.jl` | Function | Evaluates w at (non-surface) depths in the SQG model |
-| `Calc_∇` | `src/create_modon.jl` | Function | Calculates the x and y derivatives of a given field |
-| `CartesianGrid` | `src/create_modon.jl` | Function | Outputs 2D (x, y) Arrays from `grid` |
-| `PolarGrid` | `src/create_modon.jl` | Function | Outputs 2D (r, θ) Arrays created from `CartesianGrid` outputs |
-| `EnergyLQG` | `src/energetics.jl` | Function | Calculates the kinetic and potential energy for the LQG model |
-| `EnstrophyLQG` | `src/energetics.jl` | Function | Calculates the enstrophy for the LQG model |
-| `EnergySQG` | `src/energetics.jl` | Function | Calculates domain-integrated energy and surface potential energy for the SQG model |
-| `AreaInteg2` | `src/energetics.jl` | Function | Performs area integration in Fourier space |
-| `CreateRankine` | `src/monopoles.jl` | Function | High level wrapper function for calculating ``\psi``, ``q``, ``u`` and ``v`` for the Rankine vortex using given parameters |
-| `CreateMonopole` | `src/monopoles.jl` | Function | High level wrapper function for calculating ``\psi``, ``q``, ``u`` and ``v`` for a monopolar QG vortex using given parameters |
-| `InvertVorticity1LQG` | `src/monopoles.jl` | Function | Calculates ``\psi`` from ``q`` for the 1-layer QG model on the f-plane |
 
 [^1]: [Johnson, E. R., and M. N. Crowe, 2023, Oceanic dipoles in a surface quasigeostrophic model, J. Fluid Mech., 958, R2](https://doi.org/10.1017/jfm.2023.87).
 [^2]: [Crowe, M. N., and E. R. Johnson, 2023, The evolution of surface quasi-geostrophic modons on sloping topography, J. Fluid. Mech., 970, A10](https://doi.org/10.1017/jfm.2023.607).
