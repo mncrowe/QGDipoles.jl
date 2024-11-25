@@ -48,6 +48,7 @@ Eval_w_SQG
 Calc_∇
 CartesianGrid
 PolarGrid
+Calc_ζ
 ```
 
 ## `energetics.jl`

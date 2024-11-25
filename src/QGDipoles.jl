@@ -52,6 +52,7 @@ export
 	Calc_∇,
 	CartesianGrid,
 	PolarGrid,
+	Calc_ζ,
 
 	# energetics.jl
 	EnergyLQG,
