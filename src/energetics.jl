@@ -141,7 +141,7 @@ Arguments:
 Note: f can be entered in real space or Fourier space, we use the rfft function
 to calculate the Fourier transform so array sizes can distinguish the two.
 """
-function AreaInteg2(f::Union{CuArray,Array}, grid::GridStruct, exponent::Int=1)
+function AreaInteg2(f::Union{CuArray,Array}, grid::GridStruct)
 
 	# Get grid parameters
 

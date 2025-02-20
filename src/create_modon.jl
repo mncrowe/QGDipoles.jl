@@ -802,9 +802,6 @@ Note: this function is not accurate at the surface as ∇b is discontinuous ther
 Instead use w = -U∂η/∂x where η = fψ/g is the surface elevation, or w = 0 if R' = ∞.
 """
 function Eval_w_SQG(grid, ψ::Union{CuArray,Array}, z::Vector=[0], U::Number=1, R::Vector=[Inf, Inf], β::Number=0)
-
-	Nx = length(grid.x)
-
 	# Calculate ψ and b at given depth
 
 	ψ₃ = Eval_ψ_SQG(grid, ψ, z, U, R, β)

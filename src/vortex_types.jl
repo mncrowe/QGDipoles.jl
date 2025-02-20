@@ -416,7 +416,7 @@ end
 """
 Base.summary function for custom type `LQGParams`
 """
-function Base.summary(g::LQGParams)
+function Base.summary(::LQGParams)
 	return string("Parameter set structure for an LQG vortex solution (LQGParams)")
 end
 
@@ -424,7 +424,7 @@ end
 """
 Base.summary function for custom type `SQGParams`
 """
-function Base.summary(g::SQGParams)
+function Base.summary(::SQGParams)
 	return string("Parameter set structure for an SQG vortex solution (SQGParams)")
 end
 
@@ -432,7 +432,7 @@ end
 """
 Base.summary function for custom type `LQGVortex`
 """
-function Base.summary(g::LQGVortex)
+function Base.summary(::LQGVortex)
 	return string("Vortex solution structure for an LQG model (LQGVortex)")
 end
 
@@ -440,7 +440,7 @@ end
 """
 Base.summary function for custom type `SQGVortex`
 """
-function Base.summary(g::SQGVortex)
+function Base.summary(::SQGVortex)
 	return string("Vortex solution structure for an SQG model (SQGVortex)")
 end
 
