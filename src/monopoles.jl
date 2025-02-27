@@ -157,7 +157,7 @@ and is only valid on an f-plane (β = 0).
 """
 function InvertVorticity1LQG(grid, q::Union{CuArray,Array}, R::Number=Inf)
 
-	Nx, _ = size(q)
+	Nx = size(q, 1)
 
 	# Fourier transform q
 
@@ -204,11 +204,6 @@ function CreateLQGMonopole(grid, ℓ::Number=1, E::Union{Vector,Number}=1,
 
 	x, y = CartesianGrid(grid)	
 	r, _ = PolarGrid(x, y, x₀)
-
-	# Get size variables based on inputs
-
-	Nx, Ny = length(x), length(y)
-	N = length(R)
 
 	# Set PV in each layer
 

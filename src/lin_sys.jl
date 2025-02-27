@@ -185,7 +185,6 @@ function ApplyPassiveLayers(A::Array, B::Array, c::Array, d::Array, ActiveLayers
 	# Define arrays of true/false flags for active and passive layers
 
 	i₁ = BitArray{1}(kron(ones(M), ActiveLayers))	# grid index of active layers
-	i₂ = BitArray{1}(1 .- ActiveLayers)		# index of passive layers
 	i₃ = BitArray{1}(ActiveLayers)			# index of active layers
 	i₄ = BitArray{1}(vcat(1, ActiveLayers))		# extended index of active layers
 	

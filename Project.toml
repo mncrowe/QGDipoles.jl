@@ -1,7 +1,7 @@
 name = "QGDipoles"
 uuid = "192f05a4-068c-458e-9e9e-a50cd96b7215"
 authors = ["Matthew Crowe"]
-version = "1.0.0"
+version = "1.0.1"
 
 [deps]
 CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
