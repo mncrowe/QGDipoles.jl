@@ -1,6 +1,6 @@
 # QGDipoles
 
-[![Build Status](https://github.com/mncrowe/QGDipoles.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/mncrowe/QGDipoles.jl/actions/workflows/CI.yml?query=branch%3Amain)
+[![Build Status](https://github.com/mncrowe/QGDipoles.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/mncrowe/QGDipoles.jl/actions/workflows/CI.yml?query=branch%3Amain) [![ColPrac: Contributor's Guide on Collaborative Practices for Community Packages](https://img.shields.io/badge/ColPrac-Contributor's%20Guide-blueviolet)](https://github.com/SciML/ColPrac)
 
 ## About
 
@@ -55,11 +55,37 @@ For those interested in the original (layered QG only) implementation, it can be
 
 ## Contributing
 
-Users are welcome to open issues or pull requests.
+We follow the [ColPrac guide for collaborative practices](https://github.com/SciML/ColPrac). New contributors should make sure to read that guide. Below are some additional practices we follow.
+
+### Editing
+
+The source files are stored in `src/`. It is recommended to open Julia with the `QGDipoles` project active by running `julia --project=.` from the root directory. Be careful not to add unnecessary packages to `Project.toml`.
+
+### Formatting
 
 This codebase is formatted using `JuliaFormatter.jl`. Formatting can be done by entering the following into the Julia REPL from the root directory:
 ```julia
 import JuliaFormatter
 format(".")
 ```
-`JuliaFormatter.jl` should not be added to the package dependencies.
+`JuliaFormatter.jl` should not be added to the package dependencies of `QGDipoles.jl`.
+
+### Documentation
+
+The documentation is stored within `docs/` and can be built using `Documenter.jl` by running `docs/make.jl`. Full instructions for using `Documenter.jl` are available [here](https://documenter.juliadocs.org/stable/man/guide/). The documentation can be re-built by opening Julia using `julia --project=docs/` then entering the following into the REPL:
+```julia
+Pkg.develop(".")
+include("docs/make.jl")
+```
+The newly built documentation will be available in `docs/build` and can be viewed by opening `docs/build/index.html` with a web browser. `Documenter.jl` should not be added to the package dependencies of `QGDipoles.jl`.
+
+### Tests
+
+Tests are stored in `tests/` and can be run using either
+```julia
+include("tests/runtests.jl")
+```
+or by activating the package manager by entering `]` at the Julia REPL then entering `test`.
+
+
+
