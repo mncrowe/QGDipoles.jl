@@ -31,7 +31,7 @@ As such, numerical simulations have become an important tool for both the modell
 Large scale processes---which generally occur on spatial scales of $>10$km in the ocean and $>100$km in the atmosphere---are dominated by the Earth's rotation and exist in a state close to 'geostrophic balance'; a balance between the Coriolis force and horizontal pressure gradients.
 Such systems can be well described by the so-called 'quasi-geostrophic' equations, in which a vorticity-like quantity, known as 'potential vorticity' (PV) is advected around by the flow.
 The system is closed since the flow-field is related to the PV through 'PV inversion', in which a Laplace-like equation is solved to determine a streamfunction.
-QG systems are commonly used for idealised studies of large-scale ocean dynamics and are also some of the first equation sets studied by students in Geophyiscal Fluid dynamics courses across the world.
+QG systems are commonly used for idealised studies of large-scale ocean dynamics and are also some of the first equation sets studied by students in Geophysical Fluid dynamics courses across the world.
 
 QG dynamics break down when studying small-scale flows and in the presence of features that change the leading order force balance, such as coastal boundaries or steep topographic slopes.
 Therefore, realistic ocean-atmosphere modelling typically use 'primitive equation' models which solve variants of the Boussinesq Navier-Stokes equations.
@@ -58,7 +58,7 @@ Some packages which partially address this problem are:
 - `GeophysicalFlows.jl` [@GeophysicalFlows] (Julia)
 
   The Julia QG solver `GeophysicalFlows.jl` contains the function `lambdipole` within `src/utils.jl`.
-  This function calclates the simplest example of a 1-layer QG dipolar vortex using the known analytical solution.
+  This function calculates the simplest example of a 1-layer QG dipolar vortex using the known analytical solution.
   However, no functions are available for other vortex solutions where an analytical solution does not necessarily exist.
 
 - `Dedalus` [@Dedalus] (Python)
@@ -74,8 +74,8 @@ Some packages which partially address this problem are:
 
 # Methodology
 
-This package uses a method originally presented in [Johnson_Crowe_23] and later generalised for the SQG case in [Crowe_Johnson_23] and the LQG case in [Crowe_Johnson_2024].
-Using a Hankel transform, the steady PDE corresponding to dipolar vortex in a QG system can be analytically transformed into a multi-parameter, inhomogeneous eigenvalue problem.
+This package uses a method originally presented in [@Johnson_Crowe_23] and later generalised for the SQG case in [@Crowe_Johnson_23] and the LQG case in [@Crowe_Johnson_2024].
+Using a Hankel transform, the steady PDE corresponding to a dipolar vortex in a QG system can be analytically transformed into a multi-parameter, inhomogeneous eigenvalue problem.
 This resulting linear algebra problem may be solved for a set of coefficients which correspond to an expansion of the solution in a basis of orthogonal polynomials.
 The error in this solution may be controlled by setting the number of coefficients to solve for and prescribing the maximum error in the numerical evaluation of the matrices and vectors in the problem.
 Once the coefficients are found---using either eigenvalue or root-finding methods---the vortex solution may be evaluated on a given grid by summing over the set of orthogonal polynomials.
