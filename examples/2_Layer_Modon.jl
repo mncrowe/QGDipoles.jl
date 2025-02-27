@@ -30,4 +30,21 @@ K, a = SolveInhomEVP(A, B, c, d; tol)
 grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 ψ, q = Calc_ψq(a, U, ℓ, R, β, grid)
 
-Nothing
+# Plot streamfunction ψ in both layers
+
+using Plots
+
+plot(heatmap(grid.x, grid.y, transpose(ψ[:, :, 1]);
+	colormap = :balance,
+	aspect_ratio = 1,
+	xlims = (-Lx/2, Lx/2),
+	ylims = (-Ly/2, Ly/2),
+	xlabel = "x",
+	ylabel = "y"),
+     heatmap(grid.x, grid.y, transpose(ψ[:, :, 2]);
+	colormap = :balance,
+	aspect_ratio = 1,
+	xlims = (-Lx/2, Lx/2),
+	ylims = (-Ly/2, Ly/2),
+	xlabel = "x",
+	ylabel = "y"))

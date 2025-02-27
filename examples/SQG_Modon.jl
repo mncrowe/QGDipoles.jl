@@ -36,4 +36,14 @@ grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 ψ, b = Calc_ψb(a, U, ℓ, R, β, grid)
 u, v = Calc_uv(ψ, grid)
 
-Nothing
+# Plot surface bouyancy b
+
+using Plots
+
+heatmap(grid.x, grid.y, transpose(b);
+	colormap = :balance,
+	aspect_ratio = 1,
+	xlims = (-Lx/2, Lx/2),
+	ylims = (-Ly/2, Ly/2),
+	xlabel = "x",
+	ylabel = "y")

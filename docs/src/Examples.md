@@ -69,7 +69,9 @@ heatmap(grid.x, grid.y, transpose(ψ[:,:,1]);
     colormap = :balance,
     aspect_ratio=1,
     xlims = (-Lx/2, Lx/2),
-    ylims = (-Ly/2, Ly/2))
+    ylims = (-Ly/2, Ly/2),
+    xlabel = "x",
+    ylabel = "y")
 
 ```
 
@@ -239,7 +241,7 @@ x₀ = [0, 0]			# position of vortex center
 M = 8				# number of coefficients in Zernike expansion
 tol = 1e-8			# maximum error in solution evaluation
 cuda = false			# use CuArrays for grid
-K₀, a₀ = [4, 4], Nothing	# guesses for K and a
+K₀, a₀ = [4, 4], nothing	# guesses for K and a
 
 # create grid
 
@@ -281,7 +283,7 @@ x₀ = [0, 0]			# position of vortex center
 M = 20				# number of coefficients in Zernike expansion
 tol = 1e-6			# maximum error in solution evaluation
 cuda = false			# use CuArrays for grid
-K₀, a₀ = 8, Nothing		# guesses for K and a
+K₀, a₀ = 8, nothing		# guesses for K and a
 
 # Set grid parameters
 
@@ -312,7 +314,9 @@ heatmap(grid.x, grid.y, transpose(ψ);
     colormap = :balance,
     aspect_ratio=1,
     xlims = (-Lx/2, Lx/2),
-    ylims = (-Ly/2, Ly/2))
+    ylims = (-Ly/2, Ly/2),
+    xlabel = "x",
+    ylabel = "y")
 ```
 
 If we look at ``K``, we find that ``K \approx 7.34205`` which is not the value we'd expect for the usual dipole solution.
@@ -398,17 +402,20 @@ We can plot our initial condition and solution at ``t = 10.0`` using:
 ```julia
 using Plots
 
-heatmap(prob.grid.x, prob.grid.y, device_array(CPU())(transpose(q₀));
-		colormap = :balance,
-		aspect_ratio=1,
-		xlims = (-Lx/2, Lx/2),
-		ylims = (-Ly/2, Ly/2))
-
-heatmap(prob.grid.x, prob.grid.y, device_array(CPU())(transpose(prob.vars.q));
-		colormap = :balance,
-		aspect_ratio=1,
-		xlims = (-Lx/2, Lx/2),
-		ylims = (-Ly/2, Ly/2))
+plot(heatmap(prob.grid.x, prob.grid.y, device_array(CPU())(transpose(q₀));
+	colormap = :balance,
+	aspect_ratio=1,
+	xlims= (-Lx/2, Lx/2),
+	ylims = (-Ly/2, Ly/2),
+	xlabel = "x",
+	ylabel = "y"),
+     heatmap(prob.grid.x, prob.grid.y, device_array(CPU())(transpose(prob.vars.q));
+	colormap = :balance,
+	aspect_ratio=1,
+	xlims= (-Lx/2, Lx/2),
+	ylims = (-Ly/2, Ly/2),
+	xlabel = "x",
+	ylabel = "y"))
 
 ```
 
@@ -417,7 +424,7 @@ The two plots are shown below and are approximately identical.
 Therefore, we observe that the vortex remains centred at the origin.
 Over long times, numerical error will result in the vortex moving at a slightly different speed to `U` and hence moving away from the origin.
 
-![image](Ex_5a.png)![image](Ex_5b.png)
+![image](Ex_5.svg)
 
 See the `GeophyiscalFlows.jl` documentation [here](https://fourierflows.github.io/GeophysicalFlowsDocumentation/stable/) for more details on how to run QG simulations.
 

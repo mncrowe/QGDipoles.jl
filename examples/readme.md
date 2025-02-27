@@ -8,6 +8,10 @@ The available example scripts are:
 
 * 2_Layer_Modon.jl: Constructs a dipolar vortex solution in a 2-layer QG model.
 
+* Energy_LQG.jl: Constructs a 2-layer dipolar vortex solution and calculates the kinetic energy, potential energy and enstrophy
+
+* Energy_SQG.jl: Constructs an SQG dipolar vortex solution and calculates the domain integrated energy and the surface potential energy
+
 * 3_Layer_Modon.jl: Constructs a dipolar vortex solution in a 3-layer QG model (corresponds to Example 2 [here](https://mncrowe.github.io/QGDipoles.jl/dev/Examples/)).
 
 * GeophysicalFlows_Example.jl: Demostrates how to used `QGDipoles.jl` to generate initial conditions for `GeophysicalFlows.jl` (corresponds to Example 5 [here](https://mncrowe.github.io/QGDipoles.jl/dev/Examples/)).

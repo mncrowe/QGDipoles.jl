@@ -30,4 +30,14 @@ grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 ψ, q, K, a = CreateModonLQG(grid, M, U, ℓ, R, β, ActiveLayers, x₀; K₀, a₀, tol)
 # ψ, q = CreateModonLQG(grid, M, U, ℓ, R, β, ActiveLayers, x₀; K₀, a₀, tol) # fields only
 
-Nothing
+# Plot streamfunction ψ in layer 1
+
+using Plots
+
+heatmap(grid.x, grid.y, transpose(ψ[:, :, 1]);
+	colormap = :balance,
+	aspect_ratio = 1,
+	xlims = (-Lx/2, Lx/2),
+	ylims = (-Ly/2, Ly/2),
+	xlabel = "x",
+	ylabel = "y")

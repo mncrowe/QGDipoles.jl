@@ -46,4 +46,46 @@ Eval_q_SQG
 Eval_b_SQG
 Eval_w_SQG
 Calc_∇
+CartesianGrid
+PolarGrid
+Calc_ζ
+```
+
+## `energetics.jl`
+
+```@docs
+EnergyLQG
+EnstrophyLQG
+EnergySQG
+AreaInteg2
+```
+
+## `vortex_types.jl`
+
+```@docs
+LQGParams
+SQGParams
+LQGVortex
+SQGVortex
+DefLQGParams
+DefSQGParams
+DefLQGVortex
+DefSQGVortex
+```
+
+## `monopoles.jl`
+
+```@docs
+CreateRankine
+Create1LMonopole
+InvertVorticity1LQG
+CreateLQGMonopole
+InvertVorticityLQG
+```
+
+## `Base`
+
+```@docs
+Base.summary
+Base.show
 ```

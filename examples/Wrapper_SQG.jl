@@ -29,4 +29,14 @@ grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 ψ, b, K, a = CreateModonSQG(grid, M, U, ℓ, R, β, x₀; K₀, a₀, tol)
 # ψ, b = CreateModonSQG(grid, M, U, ℓ, R, β, x₀; K₀, a₀, tol) # fields only
 
-Nothing
+# Plot surface streamfunction ψ
+
+using Plots
+
+heatmap(grid.x, grid.y, transpose(ψ);
+	colormap = :balance,
+	aspect_ratio = 1,
+	xlims = (-Lx/2, Lx/2),
+	ylims = (-Ly/2, Ly/2),
+	xlabel = "x",
+	ylabel = "y")
