@@ -107,7 +107,7 @@ function CreateGrid(Nx::Int, Ny::Int, Lx::Union{Number,Vector}, Ly::Union{Number
 	if length(Lx) == 2
 
 		x₀ = Lx[1]
-		Lx = Lx[2]
+		Lx = Lx[2] - Lx[1]
 
 	else
 
@@ -118,7 +118,7 @@ function CreateGrid(Nx::Int, Ny::Int, Lx::Union{Number,Vector}, Ly::Union{Number
 	if length(Ly) == 2
 	
 		y₀ = Ly[1]
-		Ly = Ly[2]
+		Ly = Ly[2] - Ly[1]
 
 	else
 
