@@ -53,4 +53,13 @@ An overview of this method is discussed in the [full documentation](https://mncr
 This code contains a Julia implementation of the MATLAB code included as supplementary material with [Crowe & Johnson 2024](https://doi.org/10.1017/jfm.2024.619) and also includes a version of the previously unrealeased SQG version discussed in [Johnson & Crowe 2023](https://doi.org/10.1017/jfm.2023.87) and [Crowe & Johnson 2023](https://doi.org/10.1017/jfm.2023.607).
 For those interested in the original (layered QG only) implementation, it can be found [here](https://github.com/mncrowe/QGDipoles.m). 
 
- 
+## Contributing
+
+Users are welcome to open issues or pull requests.
+
+This codebase is formatted using `JuliaFormatter.jl`. Formatting can be done by entering the following into the Julia REPL from the root directory:
+```julia
+import JuliaFormatter
+format(".")
+```
+`JuliaFormatter.jl` should not be added to the package dependencies.
