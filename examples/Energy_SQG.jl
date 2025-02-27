@@ -4,13 +4,13 @@ using QGDipoles
 
 # Set problem parameters
 
-U, ℓ = 1, 1	# vortex speed and radius
-R = [Inf, Inf]	# Baroclinic and Barotropic Rossby radii
-β = 0		# background PV gradient in the interior
+U, ℓ = 1, 1# vortex speed and radius
+R = [Inf, Inf]# Baroclinic and Barotropic Rossby radii
+β = 0# background PV gradient in the interior
 
-M = 20		# number of coefficients in Zernike expansion
-tol = 1e-6	# maximum error in solution evaluation
-cuda = false	# use CuArrays for grid
+M = 20# number of coefficients in Zernike expansion
+tol = 1e-6# maximum error in solution evaluation
+cuda = false# use CuArrays for grid
 
 # Set grid parameters
 

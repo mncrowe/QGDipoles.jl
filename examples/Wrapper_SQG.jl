@@ -5,15 +5,15 @@ using QGDipoles
 
 # Set problem parameters
 
-U, ℓ = 1, 1			# vortex speed and radius
-R = [Inf, Inf]			# Baroclinic and Barotropic Rossby radii
-β = 0				# background PV gradient in the interior
-x₀ = [0, 0]			# position of vortex center
+U, ℓ = 1, 1# vortex speed and radius
+R = [Inf, Inf]# Baroclinic and Barotropic Rossby radii
+β = 0# background PV gradient in the interior
+x₀ = [0, 0]# position of vortex center
 
-M = 20				# number of coefficients in Zernike expansion
-tol = 1e-6			# maximum error in solution evaluation
-cuda = false			# use CuArrays for grid
-K₀, a₀ = 4, Nothing		# guesses for K and a
+M = 20# number of coefficients in Zernike expansion
+tol = 1e-6# maximum error in solution evaluation
+cuda = false# use CuArrays for grid
+K₀, a₀ = 4, Nothing# guesses for K and a
 
 # Set grid parameters
 
@@ -33,10 +33,14 @@ grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 
 using Plots
 
-heatmap(grid.x, grid.y, transpose(ψ);
-	colormap = :balance,
-	aspect_ratio = 1,
-	xlims = (-Lx/2, Lx/2),
-	ylims = (-Ly/2, Ly/2),
-	xlabel = "x",
-	ylabel = "y")
+heatmap(
+    grid.x,
+    grid.y,
+    transpose(ψ);
+    colormap = :balance,
+    aspect_ratio = 1,
+    xlims = (-Lx / 2, Lx / 2),
+    ylims = (-Ly / 2, Ly / 2),
+    xlabel = "x",
+    ylabel = "y",
+)

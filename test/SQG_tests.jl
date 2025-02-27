@@ -11,27 +11,27 @@ Tests the value of K for an SQG vortex against known values.
 """
 function TestSQG_K()
 
-	# Define parameters
+    # Define parameters
 
-	M = 13
-	tol = 1e-6
-	K₀ = 4
-	method = 1
-	sqg = true
+    M = 13
+    tol = 1e-6
+    K₀ = 4
+    method = 1
+    sqg = true
 
-	U, ℓ = 1, 1
-	R = [Inf, Inf]
-	β = 0
-	
-	λ = ℓ ./ R
-	μ = β * ℓ^2/U
+    U, ℓ = 1, 1
+    R = [Inf, Inf]
+    β = 0
 
-	# Solve linear system
+    λ = ℓ ./ R
+    μ = β * ℓ^2 / U
 
-	A, B, c, d = BuildLinSys(M, λ, μ; tol, sqg)
-	K, a = SolveInhomEVP(A, B, c, d; K₀, tol, method, sqg)
+    # Solve linear system
 
-	return  abs(K[1] - 4.12126) < 1e-5
+    A, B, c, d = BuildLinSys(M, λ, μ; tol, sqg)
+    K, a = SolveInhomEVP(A, B, c, d; K₀, tol, method, sqg)
+
+    return abs(K[1] - 4.12126) < 1e-5
 
 end
 
@@ -44,39 +44,38 @@ This function tests the velocity calculation on the CPU and GPU grids.
 """
 function TestSQG_v(cuda)
 
-	# Define parameters
+    # Define parameters
 
-	M = 13
-	tol = 1e-6
-	K₀ = 4
-	method = 1
-	sqg = true
+    M = 13
+    tol = 1e-6
+    K₀ = 4
+    method = 1
+    sqg = true
 
-	U, ℓ = 1, 1
-	R = [Inf, Inf]
-	β = 0
-	
-	λ = ℓ ./ R
-	μ = β * ℓ^2/U
+    U, ℓ = 1, 1
+    R = [Inf, Inf]
+    β = 0
 
-	Nx, Ny = 128, 128
-	Lx, Ly = 10, 10
+    λ = ℓ ./ R
+    μ = β * ℓ^2 / U
 
-	# Solve linear system
+    Nx, Ny = 128, 128
+    Lx, Ly = 10, 10
 
-	A, B, c, d = BuildLinSys(M, λ, μ; tol, sqg)
-	K, a = SolveInhomEVP(A, B, c, d; K₀, tol, method, sqg)
+    # Solve linear system
 
-	# Create solution
+    A, B, c, d = BuildLinSys(M, λ, μ; tol, sqg)
+    K, a = SolveInhomEVP(A, B, c, d; K₀, tol, method, sqg)
 
-	grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
-	ψ, b = Calc_ψb(a, U, ℓ, R, β, grid)
+    # Create solution
 
-	# Calculate velocities	
+    grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
+    ψ, b = Calc_ψb(a, U, ℓ, R, β, grid)
 
-	u, v = Calc_uv(ψ, grid)
+    # Calculate velocities	
 
-	return  abs(maximum(v) - 3.54912) < 1e-5
+    u, v = Calc_uv(ψ, grid)
+
+    return abs(maximum(v) - 3.54912) < 1e-5
 
 end
-

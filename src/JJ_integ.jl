@@ -31,34 +31,37 @@ Arguments:
  - `μ`: nondimensional (y) vorticity gradient in each layer, Number or Vector
 """
 function A_func(ξ::Number, λ::Union{Vector,Number}, μ::Union{Vector,Number})
-	
-	N = length(μ)
-	
-	if N == 1
 
-		# Calculate A in 1-layer case
-		
-		K = @. ξ^2 + λ^2
+    N = length(μ)
 
-		A = @. K / (K + μ) / ξ
+    if N == 1
 
-	else
+        # Calculate A in 1-layer case
 
-		# Calculate A in N-layer case (N > 1)
-		
-		diagonal_elements       = [λ[1]^2; 2*λ[2:end-1].^2; λ[end]^2]
-		above_diagonal_elements = -λ[1:end-1].^2
-		below_diagonal_elements = -λ[2:end].^2
+        K = @. ξ^2 + λ^2
 
-		K = I(N) * ξ^2 + diagm(0 => diagonal_elements,
-				       1 => above_diagonal_elements,
-				      -1 => below_diagonal_elements)
+        A = @. K / (K + μ) / ξ
 
-		A = (K / (K .+ diagm(μ))) / ξ
+    else
 
-	end	
+        # Calculate A in N-layer case (N > 1)
 
-	return A
+        diagonal_elements = [λ[1]^2; 2 * λ[2:end-1] .^ 2; λ[end]^2]
+        above_diagonal_elements = -λ[1:end-1] .^ 2
+        below_diagonal_elements = -λ[2:end] .^ 2
+
+        K =
+            I(N) * ξ^2 + diagm(
+                0 => diagonal_elements,
+                1 => above_diagonal_elements,
+                -1 => below_diagonal_elements,
+            )
+
+        A = (K / (K .+ diagm(μ))) / ξ
+
+    end
+
+    return A
 
 end
 
@@ -73,34 +76,37 @@ Arguments:
  - `μ`: nondimensional (y) vorticity gradient in each layer, Number or Vector
 """
 function B_func(ξ::Number, λ::Union{Vector,Number}, μ::Union{Vector,Number})
-	
-	N = length(μ)
 
-	if N == 1
+    N = length(μ)
 
-		# Calculate B in 1-layer case
+    if N == 1
 
-		K = @. ξ^2 + λ^2
+        # Calculate B in 1-layer case
 
-		B = @. 1 / (K + μ) / ξ
+        K = @. ξ^2 + λ^2
 
-	else
+        B = @. 1 / (K + μ) / ξ
 
-		# Calculate B in N-layer case (N > 1)
-		
-		diagonal_elements       = [λ[1]^2; 2*λ[2:end-1].^2; λ[end]^2]
-		above_diagonal_elements = -λ[1:end-1].^2
-		below_diagonal_elements = -λ[2:end].^2
+    else
 
-		K = I(N) * ξ^2 + diagm(0 => diagonal_elements,
-				       1 => above_diagonal_elements,
-				      -1 => below_diagonal_elements)
+        # Calculate B in N-layer case (N > 1)
 
-		B = inv(K .+ diagm(μ)) / ξ
+        diagonal_elements = [λ[1]^2; 2 * λ[2:end-1] .^ 2; λ[end]^2]
+        above_diagonal_elements = -λ[1:end-1] .^ 2
+        below_diagonal_elements = -λ[2:end] .^ 2
 
-	end
+        K =
+            I(N) * ξ^2 + diagm(
+                0 => diagonal_elements,
+                1 => above_diagonal_elements,
+                -1 => below_diagonal_elements,
+            )
 
-	return B
+        B = inv(K .+ diagm(μ)) / ξ
+
+    end
+
+    return B
 
 end
 
@@ -118,45 +124,45 @@ Arguments:
 Note: This integral is performed by deforming the contour of integration into the complex plane
 where the Bessel function decays exponentially in the imaginary direction.
 """
-function JJ_int(F::Function, j::Int, k::Int, tol::Number=1e-6)
-	
-	# Define parameters for numerical integration
+function JJ_int(F::Function, j::Int, k::Int, tol::Number = 1e-6)
 
-	d, D = 1e3, 100		# splitting parameter and domain limit for exp term
-	atol = 1e-4*tol		# absolute error tolerance for quadgk
+    # Define parameters for numerical integration
 
-	# Define Bessel functions
-	
-	J(n, x) = besselj(n, x)
-	Y(n, x) = bessely(n, x)
-	H₁(n, x) = hankelh1(n, x)
-	H₂(n, x) = hankelh2(n, x)
+    d, D = 1e3, 100# splitting parameter and domain limit for exp term
+    atol = 1e-4 * tol# absolute error tolerance for quadgk
 
-	# Define products of Bessel functions
-	
-	HH₁₂(m,n,x) = @. 2*(J(m, x) * J(n, x) + Y(m, x) * Y(n, x))
-	ϕ₁₁(m,n,x) = @. H₁(m, x) * H₁(n, x) / exp(2*im*x)
-	ϕ₂₂(m,n,x) = @. H₂(m, x) * H₂(n, x) / exp(-2*im*x)
+    # Define Bessel functions
 
-	# Define integrands for each of the 4 contour segments
-	
-	F₁(x) = F(x) .* J(2*j+2,x) * J(2*k+2,x)
-	F₂(x) = F(x) .* HH₁₂(2*j+2, 2*k+2, x)/4
-	F₃(x) = F(d + im*x) .* (ϕ₁₁(2*j+2, 2*k+2, d + im*x) * exp(-2*x))
-	F₄(x) = F(d - im*x) .* (ϕ₂₂(2*j+2, 2*k+2, d - im*x) * exp(-2*x))
+    J(n, x) = besselj(n, x)
+    Y(n, x) = bessely(n, x)
+    H₁(n, x) = hankelh1(n, x)
+    H₂(n, x) = hankelh2(n, x)
 
-	# Integrate along each contour segment
-	
-	I₁ = quadgk(F₁ ,0, d, rtol=tol, atol=atol)
-	I₂ = quadgk(F₂, d, Inf, rtol=tol, atol=atol)
-	I₃ = quadgk(F₃, 0, D, rtol=tol, atol=atol)
-	I₄ = quadgk(F₄, 0, D, rtol=tol, atol=atol)
+    # Define products of Bessel functions
 
-	# Define integral I and total error ϵ
-	
-	I = I₁[1] + I₂[1] - imag(exp(2*im*d)*I₃[1] - exp(-2*im*d)*I₄[1])/4
-	ϵ = I₁[2] + I₂[2] + I₃[2] + I₄[2]
+    HH₁₂(m, n, x) = @. 2 * (J(m, x) * J(n, x) + Y(m, x) * Y(n, x))
+    ϕ₁₁(m, n, x) = @. H₁(m, x) * H₁(n, x) / exp(2 * im * x)
+    ϕ₂₂(m, n, x) = @. H₂(m, x) * H₂(n, x) / exp(-2 * im * x)
 
-	return I, ϵ
+    # Define integrands for each of the 4 contour segments
+
+    F₁(x) = F(x) .* J(2 * j + 2, x) * J(2 * k + 2, x)
+    F₂(x) = F(x) .* HH₁₂(2 * j + 2, 2 * k + 2, x) / 4
+    F₃(x) = F(d + im * x) .* (ϕ₁₁(2 * j + 2, 2 * k + 2, d + im * x) * exp(-2 * x))
+    F₄(x) = F(d - im * x) .* (ϕ₂₂(2 * j + 2, 2 * k + 2, d - im * x) * exp(-2 * x))
+
+    # Integrate along each contour segment
+
+    I₁ = quadgk(F₁, 0, d, rtol = tol, atol = atol)
+    I₂ = quadgk(F₂, d, Inf, rtol = tol, atol = atol)
+    I₃ = quadgk(F₃, 0, D, rtol = tol, atol = atol)
+    I₄ = quadgk(F₄, 0, D, rtol = tol, atol = atol)
+
+    # Define integral I and total error ϵ
+
+    I = I₁[1] + I₂[1] - imag(exp(2 * im * d) * I₃[1] - exp(-2 * im * d) * I₄[1]) / 4
+    ϵ = I₁[2] + I₂[2] + I₃[2] + I₄[2]
+
+    return I, ϵ
 
 end

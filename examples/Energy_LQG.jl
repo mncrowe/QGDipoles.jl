@@ -4,13 +4,13 @@ using QGDipoles
 
 # Set problem parameters
 
-U, ℓ = 1, 1	# vortex speed and radius
-R = [1, 1]	# Rossby radius in each layer
-β = [0, 1]	# background PV gradient in each layer
+U, ℓ = 1, 1# vortex speed and radius
+R = [1, 1]# Rossby radius in each layer
+β = [0, 1]# background PV gradient in each layer
 
-M = 8		# number of coefficients in Zernike expansion
-tol = 1e-8	# maximum error in solution evaluation
-cuda = false	# use CuArrays for grid
+M = 8# number of coefficients in Zernike expansion
+tol = 1e-8# maximum error in solution evaluation
+cuda = false# use CuArrays for grid
 
 # Set grid parameters
 
@@ -25,9 +25,8 @@ grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 # Calculate kinetic and potential energy, we've used layer depth 
 # H = R (assuming g'/f^2 = 1 in nondimensional units)
 
-KE, PE = EnergyLQG(grid, ψ, R, R.^2)
+KE, PE = EnergyLQG(grid, ψ, R, R .^ 2)
 
 # Calculate the enstrophy
 
-Q = EnstrophyLQG(grid, q, R.^2)
-
+Q = EnstrophyLQG(grid, q, R .^ 2)
