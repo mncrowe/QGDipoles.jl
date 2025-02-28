@@ -24,32 +24,32 @@ Note: This function outputs (u, v) directly since the solution has discontinuous
 the vortex boundary, r = ℓ, so derivatives evaluated with Fourier transforms exhibit Gibbs
 phenomenon.
 """
-function CreateRankine(grid, ℓ::Number=1, Γ::Number=2π, x₀::Vector=[0, 0])
+function CreateRankine(grid, ℓ::Number = 1, Γ::Number = 2π, x₀::Vector = [0, 0])
 
-	# Create Cartesian and polar grids
+    # Create Cartesian and polar grids
 
-	x, y = CartesianGrid(grid)	
-	r, θ = PolarGrid(x, y, x₀)
+    x, y = CartesianGrid(grid)
+    r, θ = PolarGrid(x, y, x₀)
 
-	# Calculate ψ and q using analytic result
+    # Calculate ψ and q using analytic result
 
-	ψ = @.   Γ / (2π) * (log(r / ℓ) * (r >= ℓ) + 1/2 * (r^2 / ℓ^2 - 1) * (r < ℓ))
-	q = @.   Γ / (2π) * (2 / ℓ^2) * (r < ℓ)
-	u = @. - Γ / (2π) * (1 / r * (r >= ℓ) + r / ℓ^2  * (r < ℓ)) * sin(θ)
-	v = @.   Γ / (2π) * (1 / r * (r >= ℓ) + r / ℓ^2  * (r < ℓ)) * cos(θ)
+    ψ = @. Γ / (2π) * (log(r / ℓ) * (r >= ℓ) + 1 / 2 * (r^2 / ℓ^2 - 1) * (r < ℓ))
+    q = @. Γ / (2π) * (2 / ℓ^2) * (r < ℓ)
+    u = @. -Γ / (2π) * (1 / r * (r >= ℓ) + r / ℓ^2 * (r < ℓ)) * sin(θ)
+    v = @. Γ / (2π) * (1 / r * (r >= ℓ) + r / ℓ^2 * (r < ℓ)) * cos(θ)
 
-	# Move result to GPU if `cuda=true` in grid
+    # Move result to GPU if `cuda=true` in grid
 
-	if grid.Krsq isa CuArray
-		
-		ψ = CuArray(ψ)
-		q = CuArray(q)
-		u = CuArray(u)
-		v = CuArray(v)
-		
-	end
-	
-	return ψ, q, u, v
+    if grid.Krsq isa CuArray
+
+        ψ = CuArray(ψ)
+        q = CuArray(q)
+        u = CuArray(u)
+        v = CuArray(v)
+
+    end
+
+    return ψ, q, u, v
 
 end
 
@@ -71,73 +71,80 @@ Note: This vortex has a continuous vorticity distribution so calculating (u, v)
 from ψ with Fourier transforms will work. This function outputs (u, v) from the
 analytical expressions for consistency with `CreateRankine`.
 """
-function Create1LMonopole(grid, ℓ::Number=1, Γ::Number=2π, R::Number=Inf, x₀::Vector=[0, 0])
+function Create1LMonopole(
+    grid,
+    ℓ::Number = 1,
+    Γ::Number = 2π,
+    R::Number = Inf,
+    x₀::Vector = [0, 0],
+)
 
-	# Define Bessel functions and derivatives
+    # Define Bessel functions and derivatives
 
-	J0(x)  =  besselj(0, x)
-	J0p(x) = -besselj(1, x)
-	K0(x)  =  besselk(0, x)
-	K0p(x) = -besselk(1, x)
+    J0(x) = besselj(0, x)
+    J0p(x) = -besselj(1, x)
+    K0(x) = besselk(0, x)
+    K0p(x) = -besselk(1, x)
 
-	if R == Inf
+    if R == Inf
 
-		# Use analytic results for coefficients
+        # Use analytic results for coefficients
 
-		K = 2.40482555769577 / ℓ
-		B = Γ / (2π)
-		A = B / (J0p(K * ℓ) * ℓ)
+        K = 2.40482555769577 / ℓ
+        B = Γ / (2π)
+        A = B / (J0p(K * ℓ) * ℓ)
 
-		# Create Cartesian and polar grids
+        # Create Cartesian and polar grids
 
-		x, y = CartesianGrid(grid)	
-		r, θ = PolarGrid(x, y, x₀)
+        x, y = CartesianGrid(grid)
+        r, θ = PolarGrid(x, y, x₀)
 
-		# Calculate ψ and q using analytic result
+        # Calculate ψ and q using analytic result
 
-		ψ = @. A * J0(K * r) * (r < ℓ) + B * log(r / ℓ) * (r >= ℓ)
-		q = @. -K^2 * A * J0(K * r) * (r < ℓ)
-		u = @. - (A * K * J0p(K * r) * (r < ℓ) + B / r * (r >= ℓ)) * sin(θ)
-		v = @.   (A * K * J0p(K * r) * (r < ℓ) + B / r * (r >= ℓ)) * cos(θ)
+        ψ = @. A * J0(K * r) * (r < ℓ) + B * log(r / ℓ) * (r >= ℓ)
+        q = @. -K^2 * A * J0(K * r) * (r < ℓ)
+        u = @. -(A * K * J0p(K * r) * (r < ℓ) + B / r * (r >= ℓ)) * sin(θ)
+        v = @. (A * K * J0p(K * r) * (r < ℓ) + B / r * (r >= ℓ)) * cos(θ)
 
-	else
+    else
 
-		# Define a function f(x), K is given by the zeros of f
+        # Define a function f(x), K is given by the zeros of f
 
-		f(x) = @. J0p(x) * K0(ℓ / R) + x * (R / ℓ) * J0(x) * K0p(ℓ / R)
+        f(x) = @. J0p(x) * K0(ℓ / R) + x * (R / ℓ) * J0(x) * K0p(ℓ / R)
 
-		# Solve f(x) = 0 for x = Kℓ and set coefficients
+        # Solve f(x) = 0 for x = Kℓ and set coefficients
 
-		K = nlsolve(f, [2.40482555769577]).zero[1] / ℓ
-		B = Γ / (2π)
-		A = - B * K0(ℓ / R) / (K^2 * R^2 * J0(K * ℓ))
+        K = nlsolve(f, [2.40482555769577]).zero[1] / ℓ
+        B = Γ / (2π)
+        A = -B * K0(ℓ / R) / (K^2 * R^2 * J0(K * ℓ))
 
-		# Create Cartesian and polar grids
+        # Create Cartesian and polar grids
 
-		x, y = CartesianGrid(grid)	
-		r, θ = PolarGrid(x, y, x₀)
+        x, y = CartesianGrid(grid)
+        r, θ = PolarGrid(x, y, x₀)
 
-		# Calculate ψ and q using analytic result
+        # Calculate ψ and q using analytic result
 
-		ψ = @. (A * J0(K * r) + B * (1 + 1/(K^2 * R^2)) *K0(ℓ / R)) * (r < ℓ) + B * K0(r / R) * (r >= ℓ)
-		q = @. -(K^2 + 1/R^2) * (A * J0(K * r) + B / (K^2 * R^2) *K0(ℓ / R)) * (r < ℓ)
-		u = @. - (A * K * J0p(K * r) * (r < ℓ) + B / R * K0p(r / R) * (r >= ℓ)) * sin(θ)
-		v = @.   (A * K * J0p(K * r) * (r < ℓ) + B / R * K0p(r / R) * (r >= ℓ)) * cos(θ)
+        ψ = @. (A * J0(K * r) + B * (1 + 1 / (K^2 * R^2)) * K0(ℓ / R)) * (r < ℓ) +
+           B * K0(r / R) * (r >= ℓ)
+        q = @. -(K^2 + 1 / R^2) * (A * J0(K * r) + B / (K^2 * R^2) * K0(ℓ / R)) * (r < ℓ)
+        u = @. -(A * K * J0p(K * r) * (r < ℓ) + B / R * K0p(r / R) * (r >= ℓ)) * sin(θ)
+        v = @. (A * K * J0p(K * r) * (r < ℓ) + B / R * K0p(r / R) * (r >= ℓ)) * cos(θ)
 
-	end
+    end
 
-	# Move result to GPU if `cuda=true` in grid
+    # Move result to GPU if `cuda=true` in grid
 
-	if grid.Krsq isa CuArray
-		
-		ψ = CuArray(ψ)
-		q = CuArray(q)
-		u = CuArray(u)
-		v = CuArray(v)
-		
-	end
-	
-	return ψ, q, u, v
+    if grid.Krsq isa CuArray
+
+        ψ = CuArray(ψ)
+        q = CuArray(q)
+        u = CuArray(u)
+        v = CuArray(v)
+
+    end
+
+    return ψ, q, u, v
 
 end
 
@@ -155,28 +162,28 @@ Note: This function is designed to be used for creating periodic streamfunctions
 the vorticity fields generated by `CreateMonopole`. It does not support multi-layer QG
 and is only valid on an f-plane (β = 0).
 """
-function InvertVorticity1LQG(grid, q::Union{CuArray,Array}, R::Number=Inf)
+function InvertVorticity1LQG(grid, q::Union{CuArray,Array}, R::Number = Inf)
 
-	Nx = size(q, 1)
+    Nx = size(q, 1)
 
-	# Fourier transform q
+    # Fourier transform q
 
-	qh = rfft(q)
+    qh = rfft(q)
 
-	# If R = Inf we must zero the (0, 0) mode to prevent div by 0 errors
+    # If R = Inf we must zero the (0, 0) mode to prevent div by 0 errors
 
-	if R == Inf
-	
-		CUDA.@allowscalar(qh[1, 1] = 0)
+    if R == Inf
 
-	end
+        CUDA.@allowscalar(qh[1, 1] = 0)
 
-	# Calculate ψ in Fourier space and transform back to real space
+    end
 
-	ψh = @. - qh / (grid.Krsq + 1/R^2)
-	ψ = irfft(ψh, Nx)
+    # Calculate ψ in Fourier space and transform back to real space
 
-	return ψ
+    ψh = @. -qh / (grid.Krsq + 1 / R^2)
+    ψ = irfft(ψh, Nx)
+
+    return ψ
 
 end
 
@@ -197,29 +204,34 @@ Arguments:
  - `x₀`: position of vortex center, vector (default: `[0, 0]`)
 
 """
-function CreateLQGMonopole(grid, ℓ::Number=1, E::Union{Vector,Number}=1,
-				R::Union{Vector,Number}=Inf, x₀::Vector=[0, 0])
+function CreateLQGMonopole(
+    grid,
+    ℓ::Number = 1,
+    E::Union{Vector,Number} = 1,
+    R::Union{Vector,Number} = Inf,
+    x₀::Vector = [0, 0],
+)
 
-	# Get coordinates
+    # Get coordinates
 
-	x, y = CartesianGrid(grid)	
-	r, _ = PolarGrid(x, y, x₀)
+    x, y = CartesianGrid(grid)
+    r, _ = PolarGrid(x, y, x₀)
 
-	# Set PV in each layer
+    # Set PV in each layer
 
-	q = (r .<= ℓ) .* reshape(E, 1, 1, :)
+    q = (r .<= ℓ) .* reshape(E, 1, 1, :)
 
-	if grid.Krsq isa CuArray
-		
-		q = CuArray(q)
-		
-	end
+    if grid.Krsq isa CuArray
 
-	# calculate ψ
+        q = CuArray(q)
 
-	ψ = InvertVorticityLQG(grid, q, R)
-	
-	return ψ, q
+    end
+
+    # calculate ψ
+
+    ψ = InvertVorticityLQG(grid, q, R)
+
+    return ψ, q
 
 end
 
@@ -234,36 +246,36 @@ Arguments:
  - `R`: Rossby radius, Number or Vector (default: `Inf`)
 
 """
-function InvertVorticityLQG(grid, q::Union{CuArray,Array}, R::Union{Vector,Number}=Inf)
+function InvertVorticityLQG(grid, q::Union{CuArray,Array}, R::Union{Vector,Number} = Inf)
 
-	Nx, Ny = size(q)
-	N = Int(length(q) / (Nx * Ny))
+    Nx, Ny = size(q)
+    N = Int(length(q) / (Nx * Ny))
 
-	# Define ΔN operator, where ΔN ψ = q
-	
-	ΔN = ΔNCalc(grid.Krsq, R, 0)
+    # Define ΔN operator, where ΔN ψ = q
 
-	# Invert ΔN
+    ΔN = ΔNCalc(grid.Krsq, R, 0)
 
-	ΔN_i = stack(inv, eachslice(ΔN, dims=(3,4)))
-	CUDA.@allowscalar(ΔN_i[:, :, 1, 1] .= 0)
+    # Invert ΔN
 
-	# Calculate qh and define ψh
+    ΔN_i = stack(inv, eachslice(ΔN, dims = (3, 4)))
+    CUDA.@allowscalar(ΔN_i[:, :, 1, 1] .= 0)
 
-	qh = rfft(q, [1, 2])
-	ψh = 0 .* qh
+    # Calculate qh and define ψh
 
-	# Calculate ψh from qh in Fourier space
+    qh = rfft(q, [1, 2])
+    ψh = 0 .* qh
 
-	for n in 1:N
-		for j in 1:N
-			ψh[:, :, n] .+= ΔN_i[n, j, :, :] .* qh[:, :, j]
-		end
-	end
+    # Calculate ψh from qh in Fourier space
 
-	ψ = irfft(ψh, Nx, [1, 2])
+    for n = 1:N
+        for j = 1:N
+            ψh[:, :, n] .+= ΔN_i[n, j, :, :] .* qh[:, :, j]
+        end
+    end
 
-	return ψ
+    ψ = irfft(ψh, Nx, [1, 2])
+
+    return ψ
 
 end
 

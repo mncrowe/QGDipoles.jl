@@ -68,94 +68,102 @@ Arguments:
  - `tol`: error tolerance for QuadGK via `JJ_int`, Number (default: `1e-6`)
  - `sqg`: `false`; creates layered QG system, `true`; creates SQG system (default: `false`)
 """
-function BuildLinSys(M::Int, λ::Union{Vector,Number}, μ::Union{Vector,Number}; tol::Number=1e-6, sqg::Bool=false)
+function BuildLinSys(
+    M::Int,
+    λ::Union{Vector,Number},
+    μ::Union{Vector,Number};
+    tol::Number = 1e-6,
+    sqg::Bool = false,
+)
 
-	if sqg
+    if sqg
 
-		# Define A, B, c, d for the SQG system, B is temporary here
+        # Define A, B, c, d for the SQG system, B is temporary here
 
-		A = diagm(1 ./(1:M)/4)
-		B = zeros(M, M)
-		c = hcat(zeros(M, 1), vcat(1/4, zeros(M-1, 1)))
-		d = reshape((-1).^(0:M-1), M, 1)
+        A = diagm(1 ./ (1:M) / 4)
+        B = zeros(M, M)
+        c = hcat(zeros(M, 1), vcat(1 / 4, zeros(M - 1, 1)))
+        d = reshape((-1) .^ (0:M-1), M, 1)
 
-		# Set values of B depending on cases
-		
-		if (μ == 0) & (λ == [0, 0])
+        # Set values of B depending on cases
 
-			# When analytic solution exists, use that
-			
-			B₀(j, k) = 4*(-1)^(j-k+1)/((2j-2k-1)*(2j-2k+1)*(2j+2k+3)*(2j+2k+5))/π
+        if (μ == 0) & (λ == [0, 0])
 
-			for j = 0:M-1
+            # When analytic solution exists, use that
 
-				for k = 0:M-1
+            B₀(j, k) =
+                4 * (-1)^(j - k + 1) /
+                ((2j - 2k - 1) * (2j - 2k + 1) * (2j + 2k + 3) * (2j + 2k + 5)) / π
 
-					B[j+1, k+1] = B₀(j, k)
+            for j = 0:M-1
 
-				end
-			end
-			
-		else
+                for k = 0:M-1
 
-			# When analytic solution does not exists, use numerical integration
-			
-			D_func(ξ) = @. sqrt(ξ^2 + μ) * tanh(sqrt(ξ^2 + μ) / λ[1]) + λ[2]	# SQG kernel function
+                    B[j+1, k+1] = B₀(j, k)
 
-			for j = 0:M-1
+                end
+            end
 
-				for k = 0:M-1
+        else
 
-					B[j+1, k+1] = JJ_int(x -> 1 ./(D_func(x).*x), j, k, tol)[1]
-				end
-			end
-			
-		end
+            # When analytic solution does not exists, use numerical integration
 
-	else
-		
-		# Get number of layers from input size
+            D_func(ξ) = @. sqrt(ξ^2 + μ) * tanh(sqrt(ξ^2 + μ) / λ[1]) + λ[2]# SQG kernel function
 
-		N = length(μ)
+            for j = 0:M-1
 
-		# Set temporary values for A, B, c, d for LQG case
+                for k = 0:M-1
 
-		A  = zeros(N*M, N*M)
-		B₀ = zeros(N*M, N*M) 
-		B  = zeros(N*M, N*M, N)
-		c  = zeros(N*M, N+1)
-		d  = zeros(N*M, N)
-		c₀ = vcat(ones(N), zeros((M-1)*N))
+                    B[j+1, k+1] = JJ_int(x -> 1 ./ (D_func(x) .* x), j, k, tol)[1]
+                end
+            end
 
-		# Set A and temporary B values using numerical integration
+        end
 
-		for j = 0:M-1
+    else
 
-			for k = 0:M-1
+        # Get number of layers from input size
 
-				 A[j*N.+(1:N), k*N.+(1:N)] .= JJ_int(x -> A_func(x, λ, μ), j, k, tol)[1]
-				B₀[j*N.+(1:N), k*N.+(1:N)] .= JJ_int(x -> B_func(x, λ, μ), j, k, tol)[1]
+        N = length(μ)
 
-			end
-		
-		end
+        # Set temporary values for A, B, c, d for LQG case
 
-		# Set B, c, d values using existing quantities
-	
-		for n in 1:N
-			
-			K = kron(I(M), diagm((1:N).==n))
+        A = zeros(N * M, N * M)
+        B₀ = zeros(N * M, N * M)
+        B = zeros(N * M, N * M, N)
+        c = zeros(N * M, N + 1)
+        d = zeros(N * M, N)
+        c₀ = vcat(ones(N), zeros((M - 1) * N))
 
-			B[:, :, n] = K * B₀
-			c[:, 1]    = c[:, 1] + μ[n] * (K * c₀) / 4
-			c[:, n+1]  = (K * c₀) / 4
-			d[:, n]    = kron((-1).^(0:M-1), (1:N).==n)
-			
-		end
+        # Set A and temporary B values using numerical integration
 
-	end
+        for j = 0:M-1
 
-	return A, B, c, d
+            for k = 0:M-1
+
+                A[j*N.+(1:N), k*N.+(1:N)] .= JJ_int(x -> A_func(x, λ, μ), j, k, tol)[1]
+                B₀[j*N.+(1:N), k*N.+(1:N)] .= JJ_int(x -> B_func(x, λ, μ), j, k, tol)[1]
+
+            end
+
+        end
+
+        # Set B, c, d values using existing quantities
+
+        for n = 1:N
+
+            K = kron(I(M), diagm((1:N) .== n))
+
+            B[:, :, n] = K * B₀
+            c[:, 1] = c[:, 1] + μ[n] * (K * c₀) / 4
+            c[:, n+1] = (K * c₀) / 4
+            d[:, n] = kron((-1) .^ (0:M-1), (1:N) .== n)
+
+        end
+
+    end
+
+    return A, B, c, d
 
 end
 
@@ -168,35 +176,41 @@ Arguments:
  - `A`, `B`, `c`, `d`: inhomogeneous eigenvalue problem terms, Arrays
  - `ActiveLayers`: vector of 1s or 0s where 1 denotes an active layer, Number or Vector
 """
-function ApplyPassiveLayers(A::Array, B::Array, c::Array, d::Array, ActiveLayers::Union{Number,Vector})
+function ApplyPassiveLayers(
+    A::Array,
+    B::Array,
+    c::Array,
+    d::Array,
+    ActiveLayers::Union{Number,Vector},
+)
 
-	# Ensure ActiveLayers is a Vector
+    # Ensure ActiveLayers is a Vector
 
-	if ActiveLayers isa Number
-		
-		ActiveLayers = [ActiveLayers]
-		
-	end
+    if ActiveLayers isa Number
 
-	# Calculate number of coefficients from size of input
+        ActiveLayers = [ActiveLayers]
 
-	M = Int(size(d)[1]/size(d)[2])			# problem size
+    end
 
-	# Define arrays of true/false flags for active and passive layers
+    # Calculate number of coefficients from size of input
 
-	i₁ = BitArray{1}(kron(ones(M), ActiveLayers))	# grid index of active layers
-	i₃ = BitArray{1}(ActiveLayers)			# index of active layers
-	i₄ = BitArray{1}(vcat(1, ActiveLayers))		# extended index of active layers
-	
-	# Define new system by removing rows/columns corresponding to passive layers
+    M = Int(size(d)[1] / size(d)[2])# problem size
 
-	A = A[i₁, i₁]
-	B = B[i₁, i₁, i₃]
-	c = c[i₁, i₄]
-	d = d[i₁, i₃]
-	
-	return A, B, c, d
-	
+    # Define arrays of true/false flags for active and passive layers
+
+    i₁ = BitArray{1}(kron(ones(M), ActiveLayers))# grid index of active layers
+    i₃ = BitArray{1}(ActiveLayers)# index of active layers
+    i₄ = BitArray{1}(vcat(1, ActiveLayers))# extended index of active layers
+
+    # Define new system by removing rows/columns corresponding to passive layers
+
+    A = A[i₁, i₁]
+    B = B[i₁, i₁, i₃]
+    c = c[i₁, i₄]
+    d = d[i₁, i₃]
+
+    return A, B, c, d
+
 end
 
 """
@@ -210,31 +224,31 @@ Arguments:
 """
 function IncludePassiveLayers(K::Array, a::Array, ActiveLayers::Union{Number,Vector})
 
-	# Ensure ActiveLayers is a Vector
+    # Ensure ActiveLayers is a Vector
 
-	if ActiveLayers isa Number
-		
-		ActiveLayers = [ActiveLayers]
-		
-	end
+    if ActiveLayers isa Number
 
-	# Get numbers of coefficients and layers using input size
+        ActiveLayers = [ActiveLayers]
 
-	M = size(a)[1]
-	N = length(ActiveLayers)
+    end
 
-	# Define variables for (K, a) corresponding to full system size
+    # Get numbers of coefficients and layers using input size
 
-	K₁, a₁ = zeros(1, N), zeros(M, N)
-	
-	# Set (K, a) values in active layers, passive layers retain values of 0
+    M = size(a)[1]
+    N = length(ActiveLayers)
 
-	i = BitArray{1}(ActiveLayers)
+    # Define variables for (K, a) corresponding to full system size
 
-	K₁[:, i] .= K
-	a₁[:, i] .= a
-	
-	return K₁, a₁
+    K₁, a₁ = zeros(1, N), zeros(M, N)
+
+    # Set (K, a) values in active layers, passive layers retain values of 0
+
+    i = BitArray{1}(ActiveLayers)
+
+    K₁[:, i] .= K
+    a₁[:, i] .= a
+
+    return K₁, a₁
 
 end
 
@@ -256,158 +270,168 @@ Note: setting `sqg=true` overwrites the value of `m` and is equivalent to settin
 The option to set both is included for consistency with `BuildLinSys` and more generality
 with the value of `m`.
 """
-function SolveInhomEVP(A::Array, B::Array, c::Array, d::Array; K₀::Union{Number,Array,Nothing}=nothing,
-		a₀::Union{Array,Nothing}=nothing, tol::Number=1e-6, method::Int=0, m::Int=2,
-		sqg::Bool=false, warn::Bool=true)
-	
-	# Ensure that m is set correctly for SQG case
+function SolveInhomEVP(
+    A::Array,
+    B::Array,
+    c::Array,
+    d::Array;
+    K₀::Union{Number,Array,Nothing} = nothing,
+    a₀::Union{Array,Nothing} = nothing,
+    tol::Number = 1e-6,
+    method::Int = 0,
+    m::Int = 2,
+    sqg::Bool = false,
+    warn::Bool = true,
+)
 
-	if sqg
-		
-		m = 1
-		
-	end
+    # Ensure that m is set correctly for SQG case
 
-	# Ensure K₀ is a Vector
+    if sqg
 
-	if K₀ isa Number
-		
-		K₀ = [K₀]
-		
-	end
+        m = 1
 
-	# Determine number of layers and number of coefficients from input
-	
-	N = size(d)[2]
-	M = Int(size(d)[1]/N)
+    end
 
-	# Use root finding method for multi-layer systems
+    # Ensure K₀ is a Vector
 
-	if N > 1
-		
-		method = 1
-		
-	end
+    if K₀ isa Number
 
-	if method == 0
-	
-		# Use analytical solution if method = 0
+        K₀ = [K₀]
 
-		# Set K₀ value if none given
-		
-		if K₀ isa Nothing
-			
-			K₀ = [4]
-			
-		end
+    end
 
-		# Reformat inputs as arrays with correct shape
+    # Determine number of layers and number of coefficients from input
 
-		B  = reshape(B, M, M)
-		O  = zeros(M, M)
-		dᵀ = permutedims(d)
-		c₀ = c[:, 1]
-		c₁ = c[:, 2]
+    N = size(d)[2]
+    M = Int(size(d)[1] / N)
 
-		# Build intermediate matrices for quadratic eigenvalue problems
-		
-		D₀ = (dᵀ * (A \ c₀)) .* A
-		D₁ = (dᵀ * (A \ c₁)) .* A - (dᵀ * (A \ c₀)) .* B + (c₀ * dᵀ) * (A \ B)
-		D₂ = -(dᵀ * (A \ c₁)) .* B + (c₁ * dᵀ) * (A \ B)
+    # Use root finding method for multi-layer systems
 
-		# Convert quadratic system to canonical form
-		
-		D₃ = [D₀ O; O I(M)]
-		D₄ = [-D₁ -D₂; I(M) O]
+    if N > 1
 
-		# Solve for eigenvalues of quadratic eigenvalue problem
+        method = 1
 
-		λ = eigvals(D₃, D₄)
+    end
 
-		# Identify eigenvalue closest to K₀^m
+    if method == 0
 
-		v = abs.((λ .- K₀.^m).^2)
-		i = argmin(v[.!isnan.(v)])
+        # Use analytical solution if method = 0
 
-		# Define K as requested eigenvalue and invert system for a
+        # Set K₀ value if none given
 
-		K = reshape([λ[i]], 1, 1).^(1/m)
-		a = reshape((A - K.^m .* B) \ (c₀ + K.^m .* c₁), M, 1)
+        if K₀ isa Nothing
 
-	end
+            K₀ = [4]
 
-	if method == 1
+        end
 
-		# Use root finding method if method = 1
+        # Reformat inputs as arrays with correct shape
 
-		# Calculate basis vectors spanning the space orthogonal to the d vectors
-	
-		e, V, iₑ = OrthogSpace(d)
+        B = reshape(B, M, M)
+        O = zeros(M, M)
+        dᵀ = permutedims(d)
+        c₀ = c[:, 1]
+        c₁ = c[:, 2]
 
-		# Define a₀ if none given and reshape if given
-	
-		if a₀ isa Nothing
-			
-			a₀ = vcat(-10*ones(N, 1), zeros(N*(M-1), 1))
-			
-		else
-			
-			a₀ = reshape(permutedims(a₀), N*M, 1)
-			
-		end
+        # Build intermediate matrices for quadratic eigenvalue problems
 
-		# Define K₀ if none given and reshape if given
+        D₀ = (dᵀ * (A \ c₀)) .* A
+        D₁ = (dᵀ * (A \ c₁)) .* A - (dᵀ * (A \ c₀)) .* B + (c₀ * dᵀ) * (A \ B)
+        D₂ = -(dᵀ * (A \ c₁)) .* B + (c₁ * dᵀ) * (A \ B)
 
-		if K₀ isa Nothing
-			
-			K₀ = 5*ones(N, 1)
-			
-		else
-			
-			K₀ = reshape(K₀, N, 1)
-			
-		end
+        # Convert quadratic system to canonical form
 
-		# Calculate x₀ by projecting a₀ onto the new space
+        D₃ = [D₀ O; O I(M)]
+        D₄ = [-D₁ -D₂; I(M) O]
 
-		x₀ = V \ a₀
+        # Solve for eigenvalues of quadratic eigenvalue problem
 
-		# Define x₀ as vector of K values and a₀ values in the new space
+        λ = eigvals(D₃, D₄)
 
-		x₀ = vcat(K₀.^m, x₀[iₑ])
+        # Identify eigenvalue closest to K₀^m
 
-		# Define function and derivative for root finding
+        v = abs.((λ .- K₀ .^ m) .^ 2)
+        i = argmin(v[.!isnan.(v)])
 
-		fj! = (F, J, x) -> InhomEVP_F!(F, J, x, A, B, c, e)
+        # Define K as requested eigenvalue and invert system for a
 
-		# Solve for F(x) = 0
+        K = reshape([λ[i]], 1, 1) .^ (1 / m)
+        a = reshape((A - K .^ m .* B) \ (c₀ + K .^ m .* c₁), M, 1)
 
-		x = nlsolve(only_fj!(fj!), x₀, ftol=tol).zero
+    end
 
-		# Extract K values from first few entries of x
+    if method == 1
 
-		K = (complex(reshape(x[1:N], 1, N))).^(1/m)
+        # Use root finding method if method = 1
 
-		# Calculate a values by projecting x back to original space
+        # Calculate basis vectors spanning the space orthogonal to the d vectors
 
-		a = permutedims(reshape(e * x[N+1:N*M], N, M))
+        e, V, iₑ = OrthogSpace(d)
 
-	end
+        # Define a₀ if none given and reshape if given
 
-	# Raise warning if root finding has converged to (possibly) wrong solution unless suppressed
+        if a₀ isa Nothing
 
-	if (imag(K) != zeros(1, N)) & warn
-		
-		@warn "Solution has complex K, generally corresponding passive layers."
-		
-	end
+            a₀ = vcat(-10 * ones(N, 1), zeros(N * (M - 1), 1))
 
-	# Remove any imaginary parts of K and ignore coefficients less than `tol` value
+        else
 
-	K = real(K)
-	a[abs.(a) .< tol] .= 0
+            a₀ = reshape(permutedims(a₀), N * M, 1)
 
-	return K, a
+        end
+
+        # Define K₀ if none given and reshape if given
+
+        if K₀ isa Nothing
+
+            K₀ = 5 * ones(N, 1)
+
+        else
+
+            K₀ = reshape(K₀, N, 1)
+
+        end
+
+        # Calculate x₀ by projecting a₀ onto the new space
+
+        x₀ = V \ a₀
+
+        # Define x₀ as vector of K values and a₀ values in the new space
+
+        x₀ = vcat(K₀ .^ m, x₀[iₑ])
+
+        # Define function and derivative for root finding
+
+        fj! = (F, J, x) -> InhomEVP_F!(F, J, x, A, B, c, e)
+
+        # Solve for F(x) = 0
+
+        x = nlsolve(only_fj!(fj!), x₀, ftol = tol).zero
+
+        # Extract K values from first few entries of x
+
+        K = (complex(reshape(x[1:N], 1, N))) .^ (1 / m)
+
+        # Calculate a values by projecting x back to original space
+
+        a = permutedims(reshape(e * x[N+1:N*M], N, M))
+
+    end
+
+    # Raise warning if root finding has converged to (possibly) wrong solution unless suppressed
+
+    if (imag(K) != zeros(1, N)) & warn
+
+        @warn "Solution has complex K, generally corresponding passive layers."
+
+    end
+
+    # Remove any imaginary parts of K and ignore coefficients less than `tol` value
+
+    K = real(K)
+    a[abs.(a).<tol] .= 0
+
+    return K, a
 
 end
 
@@ -424,47 +448,47 @@ Arguments:
 """
 function InhomEVP_F!(F, J, x::Array, A::Array, B::Array, c::Array, e::Array)
 
-	# Get problem size from inputs
+    # Get problem size from inputs
 
-	N, j = size(e)
+    N, j = size(e)
 
-	# Calculate a by projecting x into original space
+    # Calculate a by projecting x into original space
 
-	a = e * x[N-j+1:N]
+    a = e * x[N-j+1:N]
 
-	# Build matrix and RHS vector for F(x)
+    # Build matrix and RHS vector for F(x)
 
-	M = A
-	v = c[:, 1]
-		
-	for i in 1:N-j
-		
-		M = M - x[i] * B[:, :, i]
-		v = v + x[i] * c[:, i + 1]
-		
-	end
+    M = A
+    v = c[:, 1]
 
-	# Calculate and update Jacobian matrix of derivatives
+    for i = 1:N-j
 
-	if !(J == nothing)
+        M = M - x[i] * B[:, :, i]
+        v = v + x[i] * c[:, i+1]
 
-		for i in 1:N-j
-			
-			J[:, i] = -B[:, :, i] * a - c[:, i + 1]
-			
-		end
+    end
 
-		J[:, N-j+1:end] .= M * e
-		
-	end
+    # Calculate and update Jacobian matrix of derivatives
 
-	# Calculate and update function value
-	
-	if !(F == nothing)
-		
-		F[:] .= M * a - v
+    if !(J == nothing)
 
-	end
+        for i = 1:N-j
+
+            J[:, i] = -B[:, :, i] * a - c[:, i+1]
+
+        end
+
+        J[:, N-j+1:end] .= M * e
+
+    end
+
+    # Calculate and update function value
+
+    if !(F == nothing)
+
+        F[:] .= M * a - v
+
+    end
 
 end
 
@@ -478,76 +502,76 @@ Arguments:
 """
 function OrthogSpace(v)
 
-	# Get problem size from size of imputs
-	
-	N = size(v)[1]
-	
-	if length(size(v)) > 1
-		
-		k = size(v)[2]
-		
-	else
-		
-		k = 1
-		
-	end
+    # Get problem size from size of imputs
 
-	# Set orthononality threshold for determining linear independence
+    N = size(v)[1]
 
-	ϵ = 1e-6
+    if length(size(v)) > 1
 
-	# Set temporary values of basis vectors, B, and new vector indices
+        k = size(v)[2]
 
-	B = Matrix{Float64}(I, N, N)
-	iₑ = 1:N
+    else
 
-	# Perform the Gram-Schmidt algorithm to extend v to a full basis of R^N
+        k = 1
 
-	for i in 1:k
-		
-		j = 1
-		
-		while length(iₑ) > N - i
-			
-			if j > length(iₑ)
-				
-				@error "The v must be linerly independent."
-				
-			end
-			
-			if dot(v[:, i], B[:, iₑ[j]]) > ϵ
-				
-				B[:, iₑ[j]] = v[:, i]
-				iₑ = setdiff(iₑ, iₑ[j])
-				
-			end
-			
-			j = j + 1
-			
-		end
-		
-	end
+    end
 
-	# Orthogonalise full basis
+    # Set orthononality threshold for determining linear independence
 
-	for j in 1:N
-		
-		for i in 1:j-1
-			
-			B[:, j] = B[:, j] - B[:, i] * dot(B[:, i], B[:, j]) / norm(B[:, i])^2
-			
-		end
-		
-	end
+    ϵ = 1e-6
 
-	# Normalise all vectors
-	
-	B = B ./ sqrt.(sum(abs2, B, dims=1))
+    # Set temporary values of basis vectors, B, and new vector indices
 
-	# Define e as the new vectors added to the basis (B is the full basis)
+    B = Matrix{Float64}(I, N, N)
+    iₑ = 1:N
 
-	e = B[:, iₑ]
-	
-	return e, B, iₑ
+    # Perform the Gram-Schmidt algorithm to extend v to a full basis of R^N
+
+    for i = 1:k
+
+        j = 1
+
+        while length(iₑ) > N - i
+
+            if j > length(iₑ)
+
+                @error "The v must be linerly independent."
+
+            end
+
+            if dot(v[:, i], B[:, iₑ[j]]) > ϵ
+
+                B[:, iₑ[j]] = v[:, i]
+                iₑ = setdiff(iₑ, iₑ[j])
+
+            end
+
+            j = j + 1
+
+        end
+
+    end
+
+    # Orthogonalise full basis
+
+    for j = 1:N
+
+        for i = 1:j-1
+
+            B[:, j] = B[:, j] - B[:, i] * dot(B[:, i], B[:, j]) / norm(B[:, i])^2
+
+        end
+
+    end
+
+    # Normalise all vectors
+
+    B = B ./ sqrt.(sum(abs2, B, dims = 1))
+
+    # Define e as the new vectors added to the basis (B is the full basis)
+
+    e = B[:, iₑ]
+
+    return e, B, iₑ
 
 end

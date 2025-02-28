@@ -4,13 +4,13 @@ using QGDipoles
 
 # Set problem parameters
 
-U, ℓ = 1, 1	# vortex speed and radius
-R = [1, 1]	# Rossby radius in each layer
-β = [0, 1]	# background PV gradient in each layer
+U, ℓ = 1, 1# vortex speed and radius
+R = [1, 1]# Rossby radius in each layer
+β = [0, 1]# background PV gradient in each layer
 
-M = 8		# number of coefficients in Zernike expansion
-tol = 1e-8	# maximum error in solution evaluation
-cuda = false	# use CuArrays for grid
+M = 8# number of coefficients in Zernike expansion
+tol = 1e-8# maximum error in solution evaluation
+cuda = false# use CuArrays for grid
 
 # Set grid parameters
 
@@ -20,7 +20,7 @@ Lx, Ly = 10, 10
 # Build and solve linear system for coefficients
 
 λ = ℓ ./ R
-μ = β * ℓ^2/U
+μ = β * ℓ^2 / U
 
 A, B, c, d = BuildLinSys(M, λ, μ; tol)
 K, a = SolveInhomEVP(A, B, c, d; tol)
@@ -34,17 +34,27 @@ grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 
 using Plots
 
-plot(heatmap(grid.x, grid.y, transpose(ψ[:, :, 1]);
-	colormap = :balance,
-	aspect_ratio = 1,
-	xlims = (-Lx/2, Lx/2),
-	ylims = (-Ly/2, Ly/2),
-	xlabel = "x",
-	ylabel = "y"),
-     heatmap(grid.x, grid.y, transpose(ψ[:, :, 2]);
-	colormap = :balance,
-	aspect_ratio = 1,
-	xlims = (-Lx/2, Lx/2),
-	ylims = (-Ly/2, Ly/2),
-	xlabel = "x",
-	ylabel = "y"))
+plot(
+    heatmap(
+        grid.x,
+        grid.y,
+        transpose(ψ[:, :, 1]);
+        colormap = :balance,
+        aspect_ratio = 1,
+        xlims = (-Lx / 2, Lx / 2),
+        ylims = (-Ly / 2, Ly / 2),
+        xlabel = "x",
+        ylabel = "y",
+    ),
+    heatmap(
+        grid.x,
+        grid.y,
+        transpose(ψ[:, :, 2]);
+        colormap = :balance,
+        aspect_ratio = 1,
+        xlims = (-Lx / 2, Lx / 2),
+        ylims = (-Ly / 2, Ly / 2),
+        xlabel = "x",
+        ylabel = "y",
+    ),
+)

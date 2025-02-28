@@ -25,36 +25,36 @@ use_cuda = CUDA.functional() ? (false, true) : (false,)
 
 @testset "LQG_Vortices" begin
 
-	include("LQG_tests.jl")
+    include("LQG_tests.jl")
 
-	# Test K matches theoretical prediction for 1-layer LCD
+    # Test K matches theoretical prediction for 1-layer LCD
 
-	@test Test1QG_K(1, 1, Inf, 0)
-	
-	# Test K matches semi-analytical prediction for 1-layer LRD
-	
-	@test Test1QG_K(1, 1, 1, 1)
+    @test Test1QG_K(1, 1, Inf, 0)
 
-	# Test K matches known numerical result for a 2-layer dipole
+    # Test K matches semi-analytical prediction for 1-layer LRD
 
-	@test Test2QG_K()
+    @test Test1QG_K(1, 1, 1, 1)
 
-	# Test active and passive layers are correctly applied and results match
-	# when layers are inculded in system or removed
-	
-	@test TestLQG_ActiveLayers()
+    # Test K matches known numerical result for a 2-layer dipole
 
-	for cuda_active in use_cuda	#  run for CPU & GPU if available
+    @test Test2QG_K()
 
-		# Test ψ matches known numerical result for LCD
+    # Test active and passive layers are correctly applied and results match
+    # when layers are inculded in system or removed
 
-		@test Test1QG_ψ(cuda_active)
+    @test TestLQG_ActiveLayers()
 
-		# Test if multi-layer PV inversion arrays are built correctly
+    for cuda_active in use_cuda#  run for CPU & GPU if available
 
-		@test Test2QG_PVinv(cuda_active)
+        # Test ψ matches known numerical result for LCD
 
-	end
+        @test Test1QG_ψ(cuda_active)
+
+        # Test if multi-layer PV inversion arrays are built correctly
+
+        @test Test2QG_PVinv(cuda_active)
+
+    end
 
 end
 
@@ -62,19 +62,19 @@ end
 
 @testset "SQG_Vortices" begin
 
-	include("SQG_tests.jl")
+    include("SQG_tests.jl")
 
-	# Test K matches known numerical result for an SQG dipole
+    # Test K matches known numerical result for an SQG dipole
 
-	@test TestSQG_K()
-	
-	for cuda_active in use_cuda	#  run for CPU & GPU if available
+    @test TestSQG_K()
 
-		# Test maximum(v) matches known numerical solution for SQG dipole
+    for cuda_active in use_cuda#  run for CPU & GPU if available
 
-		@test TestSQG_v(cuda_active)
+        # Test maximum(v) matches known numerical solution for SQG dipole
 
-	end
+        @test TestSQG_v(cuda_active)
+
+    end
 
 end
 
@@ -82,31 +82,31 @@ end
 
 @testset "Wrappers" begin
 
-	include("Wrapper_tests.jl")
+    include("Wrapper_tests.jl")
 
-	for cuda_active in use_cuda
+    for cuda_active in use_cuda
 
-		# Test wrapper for LQG, 1-layer
-	
-		@test TestWrapperLQG(1.05, 1.1, 2, 0.5; cuda=cuda_active)
+        # Test wrapper for LQG, 1-layer
 
-		# Test wrapper for LQG, 2-layer
-	
-		@test TestWrapperLQG(0.8, 0.95, [1, 1], [0, 0.5]; cuda=cuda_active)
+        @test TestWrapperLQG(1.05, 1.1, 2, 0.5; cuda = cuda_active)
 
-		# Test wrapper for SQG
-	
-		@test TestWrapperSQG(0.9, 1.1, [1, Inf], 1; cuda=cuda_active)
+        # Test wrapper for LQG, 2-layer
 
-		# Test LCD function
+        @test TestWrapperLQG(0.8, 0.95, [1, 1], [0, 0.5]; cuda = cuda_active)
 
-		@test TestLCD(0.85, 1.05; cuda=cuda_active)
+        # Test wrapper for SQG
 
-		# Test LRD function
+        @test TestWrapperSQG(0.9, 1.1, [1, Inf], 1; cuda = cuda_active)
 
-		@test TestLRD(0.95, 0.975, 1.25, 0.45; cuda=cuda_active)
+        # Test LCD function
 
-	end
+        @test TestLCD(0.85, 1.05; cuda = cuda_active)
+
+        # Test LRD function
+
+        @test TestLRD(0.95, 0.975, 1.25, 0.45; cuda = cuda_active)
+
+    end
 
 end
 
@@ -114,22 +114,22 @@ end
 
 @testset "Energetics" begin
 
-	include("Energetics_tests.jl")
+    include("Energetics_tests.jl")
 
-	for cuda_active in use_cuda
+    for cuda_active in use_cuda
 
-		# Test 1-layer LQG energy calculation
-	
-		@test TestLQGEnergy1Layer(cuda_active)
+        # Test 1-layer LQG energy calculation
 
-		# Test 2-layer LQG energy calculation
+        @test TestLQGEnergy1Layer(cuda_active)
 
-		@test TestLQGEnergy2Layer(cuda_active)
+        # Test 2-layer LQG energy calculation
 
-		# Test SQG energy calculation
+        @test TestLQGEnergy2Layer(cuda_active)
 
-		@test TestSQGEnergy(cuda_active)
-	
-	end
+        # Test SQG energy calculation
+
+        @test TestSQGEnergy(cuda_active)
+
+    end
 
 end

@@ -36,38 +36,43 @@ Arguments:
  - `R`: Rossby radius in each layer, Number or Vector
  - `H`: Thickness of each layer, Number or Vector
 """
-function EnergyLQG(grid, ψ::Union{CuArray,Array}, R::Union{Number,Vector}, H::Union{Number,Vector}=[1])
-	
-	Nx, Ny = size(ψ)[1:2]
-	N = Int(length(ψ) / (Nx * Ny))
-	
-	if N == 1
+function EnergyLQG(
+    grid,
+    ψ::Union{CuArray,Array},
+    R::Union{Number,Vector},
+    H::Union{Number,Vector} = [1],
+)
 
-		ψh = rfft(ψ, [1, 2])
-		eh = sqrt.(grid.Krsq) .* ψh
+    Nx, Ny = size(ψ)[1:2]
+    N = Int(length(ψ) / (Nx * Ny))
 
-		KE = [AreaInteg2(eh, grid) / 2]
-		PE = [AreaInteg2(ψh, grid) ./ R .^ 2 / 2]
+    if N == 1
 
-	else
-		
-		D = sum(H)
-		KE, PE = zeros(N), zeros(N-1)
+        ψh = rfft(ψ, [1, 2])
+        eh = sqrt.(grid.Krsq) .* ψh
 
-		ψh = rfft(ψ, [1, 2])
-		eh = sqrt.(grid.Krsq) .* ψh
-		
-		for i in 1:N
-			KE[i] = H[i] / (2 * D) * AreaInteg2(eh[:, :, i], grid)
-		end
+        KE = [AreaInteg2(eh, grid) / 2]
+        PE = [AreaInteg2(ψh, grid) ./ R .^ 2 / 2]
 
-		for i = 1:N-1
-			PE[i] = H[i] / (2 * D * R[i]^2) * AreaInteg2(ψh[:, :, i] - ψh[:, :, i+1], grid)
-		end		
+    else
 
-	end
+        D = sum(H)
+        KE, PE = zeros(N), zeros(N - 1)
 
-	return KE, PE
+        ψh = rfft(ψ, [1, 2])
+        eh = sqrt.(grid.Krsq) .* ψh
+
+        for i = 1:N
+            KE[i] = H[i] / (2 * D) * AreaInteg2(eh[:, :, i], grid)
+        end
+
+        for i = 1:N-1
+            PE[i] = H[i] / (2 * D * R[i]^2) * AreaInteg2(ψh[:, :, i] - ψh[:, :, i+1], grid)
+        end
+
+    end
+
+    return KE, PE
 
 end
 
@@ -81,20 +86,20 @@ Arguments:
  - `q`: potential vorticity anomaly in each layer, Array or CuArray
  - `H`: Thickness of each layer, Number or Vector
 """
-function EnstrophyLQG(grid, q::Union{CuArray,Array}, H::Union{Number,Vector}=[1])
+function EnstrophyLQG(grid, q::Union{CuArray,Array}, H::Union{Number,Vector} = [1])
 
-	Nx, Ny = size(q)[1:2]
-	N = Int(length(q) / (Nx * Ny))
+    Nx, Ny = size(q)[1:2]
+    N = Int(length(q) / (Nx * Ny))
 
-	D = sum(H)
+    D = sum(H)
 
-	EN = zeros(N)
+    EN = zeros(N)
 
-	for i = 1:N
-		EN[i] = H[i] / (2 * D) * AreaInteg2(q[:, :, i], grid)
-	end
+    for i = 1:N
+        EN[i] = H[i] / (2 * D) * AreaInteg2(q[:, :, i], grid)
+    end
 
-	return EN
+    return EN
 
 end
 
@@ -113,18 +118,18 @@ Arguments:
 Note: the surface potential energy is sometimes referred to as the generalised
 enstrophy or the buoyancy variance.
 """
-function EnergySQG(grid, ψ::Union{CuArray,Array}, b::Union{CuArray,Array}, R′::Number=Inf)
+function EnergySQG(grid, ψ::Union{CuArray,Array}, b::Union{CuArray,Array}, R′::Number = Inf)
 
-	ψh = rfft(ψ)
-	bh = rfft(b)
+    ψh = rfft(ψ)
+    bh = rfft(b)
 
-	eh = sqrt.(ψh .* bh)
-	sh = bh + ψh / R′
+    eh = sqrt.(ψh .* bh)
+    sh = bh + ψh / R′
 
-	E   = [AreaInteg2(eh, grid) / 2]
-	SPE = [AreaInteg2(sh, grid) / 2]
+    E = [AreaInteg2(eh, grid) / 2]
+    SPE = [AreaInteg2(sh, grid) / 2]
 
-	return E, SPE
+    return E, SPE
 
 end
 
@@ -143,33 +148,33 @@ to calculate the Fourier transform so array sizes can distinguish the two.
 """
 function AreaInteg2(f::Union{CuArray,Array}, grid::GridStruct)
 
-	# Get grid parameters
+    # Get grid parameters
 
-	Nkr = length(grid.kr)
-	Nx, Ny = length(grid.x), length(grid.y)
-	Δx, Δy = grid.x[2] - grid.x[1], grid.y[2] - grid.y[1]
+    Nkr = length(grid.kr)
+    Nx, Ny = length(grid.x), length(grid.y)
+    Δx, Δy = grid.x[2] - grid.x[1], grid.y[2] - grid.y[1]
 
-	# If input array is in real space, apply Fourier transform
+    # If input array is in real space, apply Fourier transform
 
-	if size(f)[1:2] == (Nx, Ny)
+    if size(f)[1:2] == (Nx, Ny)
 
-		fh = rfft(f, [1, 2])
+        fh = rfft(f, [1, 2])
 
-	else
+    else
 
-		fh = f
+        fh = f
 
-	end
+    end
 
-	# Add up components in Fourier space, non-edge elements are counted twice for an rfft
+    # Add up components in Fourier space, non-edge elements are counted twice for an rfft
 
-	I =   sum(abs2, fh[1, :]) +             # kr = 0 (edge)
-	      sum(abs2, fh[Nkr , :]) +         	# kr = Nx/2 (edge)
-	    2*sum(abs2, fh[2:Nkr-1, :])  	# sum twice for non-edge modes (as using rfft)
+    I =
+        sum(abs2, fh[1, :]) +             # kr = 0 (edge)
+        sum(abs2, fh[Nkr, :]) +         # kr = Nx/2 (edge)
+        2 * sum(abs2, fh[2:Nkr-1, :])  # sum twice for non-edge modes (as using rfft)
 
-  	I = I * (Δx * Δy) / (Nx * Ny) 		# normalization factor for fft
+    I = I * (Δx * Δy) / (Nx * Ny) # normalization factor for fft
 
-  return I
+    return I
 
 end
-

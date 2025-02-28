@@ -10,34 +10,40 @@ Function: `TestWrapperLQG(U, ℓ, R, β; cuda)`
 Tests the LQG wrapper by comparing against the results without a wrapper.
 
 """
-function TestWrapperLQG(U::Number, ℓ::Number, R::Union{Number,Vector}, β::Union{Number,Vector}; cuda::Bool)
+function TestWrapperLQG(
+    U::Number,
+    ℓ::Number,
+    R::Union{Number,Vector},
+    β::Union{Number,Vector};
+    cuda::Bool,
+)
 
-	# Set numerical parameters
+    # Set numerical parameters
 
-	M = 8
-	tol = 1e-8
-	
-	# Create grid
+    M = 8
+    tol = 1e-8
 
-	Nx, Ny = 256, 256
-	Lx, Ly = 20, 20
+    # Create grid
 
-	grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
+    Nx, Ny = 256, 256
+    Lx, Ly = 20, 20
 
-	# Calculate solution without wrapper
+    grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 
-	λ = ℓ ./ R
-	μ = β * ℓ^2/U
+    # Calculate solution without wrapper
 
-	A, B, c, d = BuildLinSys(M, λ, μ; tol)
-	K, a = SolveInhomEVP(A, B, c, d; tol)
-	ψ₁, _ = Calc_ψq(a, U, ℓ, R, β, grid)
+    λ = ℓ ./ R
+    μ = β * ℓ^2 / U
 
-	# Calculate solution with wrapper
+    A, B, c, d = BuildLinSys(M, λ, μ; tol)
+    K, a = SolveInhomEVP(A, B, c, d; tol)
+    ψ₁, _ = Calc_ψq(a, U, ℓ, R, β, grid)
 
-	ψ₂, _, _, _ = CreateModonLQG(grid, M, U, ℓ, R, β; tol)
+    # Calculate solution with wrapper
 
-	return maximum(abs.(ψ₁ - ψ₂)) < 1e-10
+    ψ₂, _, _, _ = CreateModonLQG(grid, M, U, ℓ, R, β; tol)
+
+    return maximum(abs.(ψ₁ - ψ₂)) < 1e-10
 
 end
 
@@ -49,33 +55,33 @@ Tests the SQG wrapper by comparing against the results without a wrapper.
 """
 function TestWrapperSQG(U::Number, ℓ::Number, R::Vector, β::Number; cuda::Bool)
 
-	# Set numerical parameters
+    # Set numerical parameters
 
-	M = 8
-	tol = 1e-8
-	sqg = true
-	
-	# Create grid
+    M = 8
+    tol = 1e-8
+    sqg = true
 
-	Nx, Ny = 256, 256
-	Lx, Ly = 20, 20
+    # Create grid
 
-	grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
+    Nx, Ny = 256, 256
+    Lx, Ly = 20, 20
 
-	# Calculate solution without wrapper
+    grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 
-	λ = ℓ ./ R
-	μ = β * ℓ^2/U
+    # Calculate solution without wrapper
 
-	A, B, c, d = BuildLinSys(M, λ, μ; tol, sqg)
-	K, a = SolveInhomEVP(A, B, c, d; tol, sqg)
-	ψ₁, _ = Calc_ψb(a, U, ℓ, R, β, grid)
+    λ = ℓ ./ R
+    μ = β * ℓ^2 / U
 
-	# Calculate solution with wrapper
+    A, B, c, d = BuildLinSys(M, λ, μ; tol, sqg)
+    K, a = SolveInhomEVP(A, B, c, d; tol, sqg)
+    ψ₁, _ = Calc_ψb(a, U, ℓ, R, β, grid)
 
-	ψ₂, _, _, _ = CreateModonSQG(grid, M, U, ℓ, R, β; tol)
+    # Calculate solution with wrapper
 
-	return maximum(abs.(ψ₁ - ψ₂)) < 1e-10
+    ψ₂, _, _, _ = CreateModonSQG(grid, M, U, ℓ, R, β; tol)
+
+    return maximum(abs.(ψ₁ - ψ₂)) < 1e-10
 
 end
 
@@ -90,27 +96,27 @@ analytical result decays as 1/r so remains O(0.1) at y ~ 10.
 """
 function TestLCD(U::Number, ℓ::Number; cuda::Bool)
 
-	# Set numerical parameters
+    # Set numerical parameters
 
-	M = 8
-	tol = 1e-8
+    M = 8
+    tol = 1e-8
 
-	# Create grid
+    # Create grid
 
-	Nx, Ny = 256, 256
-	Lx, Ly = 20, 20
+    Nx, Ny = 256, 256
+    Lx, Ly = 20, 20
 
-	grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
+    grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 
-	# Create LCD using analytical result
+    # Create LCD using analytical result
 
-	ψ₁, _, _ = CreateLCD(grid, U, ℓ)
-	
-	# Create LCD using numerical method
+    ψ₁, _, _ = CreateLCD(grid, U, ℓ)
 
-	ψ₂, _, _, _ = CreateModonLQG(grid, M, U, ℓ, Inf, 0; tol)
+    # Create LCD using numerical method
 
-	return maximum(abs.(ψ₁ - ψ₂)) < U * ℓ * 1.5e-1
+    ψ₂, _, _, _ = CreateModonLQG(grid, M, U, ℓ, Inf, 0; tol)
+
+    return maximum(abs.(ψ₁ - ψ₂)) < U * ℓ * 1.5e-1
 
 end
 
@@ -124,26 +130,26 @@ Therefore we expect less difference between the two methods compared with the LC
 """
 function TestLRD(U::Number, ℓ::Number, R::Number, β::Number; cuda::Bool)
 
-	# Set numerical parameters
+    # Set numerical parameters
 
-	M = 8
-	tol = 1e-8
+    M = 8
+    tol = 1e-8
 
-	# Create grid
+    # Create grid
 
-	Nx, Ny = 256, 256
-	Lx, Ly = 20, 20
+    Nx, Ny = 256, 256
+    Lx, Ly = 20, 20
 
-	grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
+    grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 
-	# Create LRD using semi-analytical result
+    # Create LRD using semi-analytical result
 
-	ψ₁, _, _ = CreateLRD(grid, U, ℓ, R, β)
+    ψ₁, _, _ = CreateLRD(grid, U, ℓ, R, β)
 
-	# Create LRD using numerical method
+    # Create LRD using numerical method
 
-	ψ₂, _, _, _ = CreateModonLQG(grid, M, U, ℓ, R, β; tol)
+    ψ₂, _, _, _ = CreateModonLQG(grid, M, U, ℓ, R, β; tol)
 
-	return maximum(abs.(ψ₁ - ψ₂)) < U * ℓ * 2e-3
+    return maximum(abs.(ψ₁ - ψ₂)) < U * ℓ * 2e-3
 
 end
