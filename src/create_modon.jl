@@ -83,8 +83,8 @@ Arguments:
 """
 struct GridStruct
     # position ranges for x and y
-    x::Any
-    y::Any
+    x::AbstractVector
+    y::AbstractVector
     # wavenumber arrays in Fourier space
     kr::Union{Array{Float64},CuArray{Float64}}
     l::Union{Array{Float64},CuArray{Float64}}
