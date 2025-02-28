@@ -8,59 +8,31 @@ This page lists all Modules, Functions and Structures available in this package.
 QGDipoles
 ```
 
-## `JJ_integ.jl`
+## High-Level Functions
 
 ```@docs
-A_func
-B_func
-JJ_int
-```
-
-## `lin_sys.jl`
-
-```@docs
-BuildLinSys
-ApplyPassiveLayers
-IncludePassiveLayers
-SolveInhomEVP
-InhomEVP_F!
-OrthogSpace
-```
-
-## `create_modon.jl`
-
-```@docs
-ZernikeR
-GridStruct
-CreateGrid
-Calc_ψq
-Calc_ψb
-Calc_uv
-ΔNCalc
 CreateModonLQG
 CreateModonSQG
 CreateLCD
 CreateLRD
+```
+
+## Utilities
+
+```@docs
+CreateGrid
 Eval_ψ_SQG
 Eval_q_SQG
 Eval_b_SQG
 Eval_w_SQG
 Calc_∇
-CartesianGrid
-PolarGrid
 Calc_ζ
-```
-
-## `energetics.jl`
-
-```@docs
 EnergyLQG
 EnstrophyLQG
 EnergySQG
-AreaInteg2
 ```
 
-## `vortex_types.jl`
+## Vortex Types
 
 ```@docs
 LQGParams
@@ -73,17 +45,45 @@ DefLQGVortex
 DefSQGVortex
 ```
 
-## `monopoles.jl`
+## Low-Level Functions
+
+```@docs
+BuildLinSys
+ApplyPassiveLayers
+IncludePassiveLayers
+SolveInhomEVP
+Calc_ψq
+Calc_ψb
+Calc_uv
+```
+
+## Monopolar Vortices (`monopoles.jl`)
 
 ```@docs
 CreateRankine
 Create1LMonopole
-InvertVorticity1LQG
 CreateLQGMonopole
+InvertVorticity1LQG
 InvertVorticityLQG
 ```
 
-## `Base`
+## Internal
+
+```@docs
+QGDipoles.A_func
+QGDipoles.B_func
+QGDipoles.JJ_int
+QGDipoles.InhomEVP_F!
+QGDipoles.OrthogSpace
+QGDipoles.ZernikeR
+QGDipoles.GridStruct
+QGDipoles.ΔNCalc
+QGDipoles.CartesianGrid
+QGDipoles.PolarGrid
+QGDipoles.AreaInteg2
+```
+
+## Base
 
 ```@docs
 Base.summary

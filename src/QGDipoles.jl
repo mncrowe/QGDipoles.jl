@@ -14,26 +14,26 @@ using Jacobi, FFTW, LinearAlgebra, SpecialFunctions, QuadGK, NLsolve, CUDA
 
 export
     # JJ_integ.jl
-    A_func,
-    B_func,
-    JJ_int,
+    #A_func,
+    #B_func,
+    #JJ_int,
 
     # lin_sys.jl
     BuildLinSys,
     ApplyPassiveLayers,
     IncludePassiveLayers,
     SolveInhomEVP,
-    InhomEVP_F!,
-    OrthogSpace,
+    #InhomEVP_F!,
+    #OrthogSpace,
 
     # create_modon.jl
-    ZernikeR,
-    GridStruct,
+    #ZernikeR,
+    #GridStruct,
     CreateGrid,
     Calc_ψq,
     Calc_ψb,
     Calc_uv,
-    ΔNCalc,
+    #ΔNCalc,
     CreateModonLQG,
     CreateModonSQG,
     CreateLCD,
@@ -43,15 +43,15 @@ export
     Eval_b_SQG,
     Eval_w_SQG,
     Calc_∇,
-    CartesianGrid,
-    PolarGrid,
+    #CartesianGrid,
+    #PolarGrid,
     Calc_ζ,
 
     # energetics.jl
     EnergyLQG,
     EnstrophyLQG,
     EnergySQG,
-    AreaInteg2,
+    #AreaInteg2,
 
     # vortex_types.jl
     LQGParams,

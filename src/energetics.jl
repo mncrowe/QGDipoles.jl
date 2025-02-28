@@ -26,12 +26,12 @@ and the surface potential energy
 
 
 """
-Function: `EnergyLQG(grid, ψ, R, H=[1])`
+    EnergyLQG(grid, ψ, R, H=[1])
 
 Calculates the kinetic and potential energy for the LQG system
 
 Arguments:
- - `grid`: grid structure containing Krsq
+ - `grid`: grid structure containing `Krsq`
  - `ψ`: streamfunction in each layer, Array or CuArray
  - `R`: Rossby radius in each layer, Number or Vector
  - `H`: Thickness of each layer, Number or Vector
@@ -77,12 +77,12 @@ function EnergyLQG(
 end
 
 """
-Function: `EnstrophyLQG(grid, q, H=[1])`
+    EnstrophyLQG(grid, q, H=[1])
 
 Calculates the enstrophy for the LQG system
 
 Arguments:
- - `grid`: grid structure containing Krsq
+ - `grid`: grid structure containing `Krsq`
  - `q`: potential vorticity anomaly in each layer, Array or CuArray
  - `H`: Thickness of each layer, Number or Vector
 """
@@ -104,13 +104,13 @@ function EnstrophyLQG(grid, q::Union{CuArray,Array}, H::Union{Number,Vector} = [
 end
 
 """
-Function: `EnergySQG(grid, ψ, b, R′)`
+    EnergySQG(grid, ψ, b, R′)
 
 Calculates the energies for the SQG system; the total domain integrated energy
 and the surface potential energy
 
 Arguments:
- - `grid`: grid structure containing Krsq
+ - `grid`: grid structure containing `Krsq`
  - `ψ`: surface streamfunction, Array or CuArray
  - `b`: surface buoyancy, , Array or CuArray
  - `R′`: reduced barotropic Rossby radius, Number (default: `Inf`)
@@ -134,9 +134,9 @@ function EnergySQG(grid, ψ::Union{CuArray,Array}, b::Union{CuArray,Array}, R′
 end
 
 """
-Function: `AreaInteg2(f, grid)`
+    AreaInteg2(f, grid)
 
-Calculates the integral ``I = \\int_A f^2 \\mathrm{d}\\A`` where ``A``
+Calculates the integral ``I = ∫_A f^2 \\mathrm{d}A`` where ``A``
 is the 2D domain described by `grid`.
 
 Arguments:

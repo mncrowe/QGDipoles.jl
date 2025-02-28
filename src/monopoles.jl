@@ -8,20 +8,20 @@ An additional use of these functions is to build 'riders' as discussed by Kizner
 """
 
 """
-Function: `CreateRankine(grid, ℓ=1, Γ=2π, x₀=[0, 0])`
+    CreateRankine(grid, ℓ=1, Γ=2π, x₀=[0, 0])
 
 Calculates the Rankine vortex for a 1 layer system. This vortex appears as a
 point vortex in the far field but consists of solid body rotation within the
-region r < ℓ.
+region ``r < ℓ``.
 
-Arguments:
- - `grid`: grid structure containing x, y, and Krsq
+# Arguments:
+ - `grid`: grid structure containing `x`, `y`, and `Krsq`
  - `ℓ`: vortex speed and radius, Numbers (default: `1`)
  - `Γ`: vortex circulation (default: `2π`)
  - `x₀`: position of vortex center, vector (default: `[0, 0]`)
 
-Note: This function outputs (u, v) directly since the solution has discontinuous velocity at
-the vortex boundary, r = ℓ, so derivatives evaluated with Fourier transforms exhibit Gibbs
+Note: This function outputs ``(u, v)`` directly since the solution has discontinuous velocity at
+the vortex boundary, ``r = ℓ``, so derivatives evaluated with Fourier transforms exhibit Gibbs
 phenomenon.
 """
 function CreateRankine(grid, ℓ::Number = 1, Γ::Number = 2π, x₀::Vector = [0, 0])
@@ -54,14 +54,14 @@ function CreateRankine(grid, ℓ::Number = 1, Γ::Number = 2π, x₀::Vector = [
 end
 
 """
-Function: `Create1LMonopole(grid, ℓ=1, Γ=2π, R=Inf, x₀=[0, 0])`
+    Create1LMonopole(grid, ℓ=1, Γ=2π, R=Inf, x₀=[0, 0])
 
-Calculates a monopolar vortex satisfying a Long's model assumption q = F(ψ)
-where q = [∇²-1/R²]ψ. We take F(z) = -(K²+1/R²)(z-z₀) for r < ℓ and F(z) = 0
-for r > ℓ and z₀ = ψ(r=ℓ). These solutions exist only on an f-plane (β = 0).
+Calculates a monopolar vortex satisfying a Long's model assumption ``q = F(ψ)``
+where ``q = [∇²-1/R²]ψ``. We take ``F(z) = -(K²+1/R²)(z-z₀)`` for ``r < ℓ`` and ``F(z) = 0``
+for ``r > ℓ`` and ``z₀ = ψ(r=ℓ)``. These solutions exist only on an f-plane ``(β = 0)``.
 
-Arguments:
- - `grid`: grid structure containing x, y, and Krsq
+# Arguments:
+ - `grid`: grid structure containing `x`, `y`, and `Krsq`
  - `ℓ`: vortex speed and radius, Numbers (default: `1`)
  - `Γ`: vortex circulation (default: `2π`)
  - `R`: Rossby radius (default: `Inf`)
@@ -149,12 +149,12 @@ function Create1LMonopole(
 end
 
 """
-Function: `InvertVorticity1LQG(grid, q, R=Inf)`
+    InvertVorticity1LQG(grid, q, R=Inf)
 
-This function inverts the potential vorticity relation q = [∇²-1/R²]ψ for 1-layer QG
+This function inverts the potential vorticity relation ``q = [∇²-1/R²]ψ`` for 1-layer QG
 
-Arguments:
- - `grid`: grid structure containing x, y, and Krsq
+# Arguments:
+ - `grid`: grid structure containing `x`, `y`, and `Krsq`
  - `q`: potential vorticity field, Array
  - `R`: Rossby radius (default: `Inf`)
 
@@ -188,18 +188,18 @@ function InvertVorticity1LQG(grid, q::Union{CuArray,Array}, R::Number = Inf)
 end
 
 """
-Function: `CreateLQGMonopole(grid, ℓ=1, E=1, R=Inf, x₀=[0, 0])`
+    CreateLQGMonopole(grid, ℓ=1, E=1, R=Inf, x₀=[0, 0])
 
 Calculates a monopolar vortex in the LQG model using a numerical approach.
-We assume that qⱼ + βⱼ = Fⱼ(ψⱼ + Uy) and write Fⱼ(z) = -Kⱼ² z + Eⱼ. Expanding
-the expression gives qⱼ + βⱼ = -Kⱼ²(ψⱼ + Uy) + Eⱼ which by linearity can be
-split into a dipole equation qⱼ + βⱼ = -Kⱼ²(ψⱼ + Uy) and a monopole equation
-qⱼ = Eⱼ. Outside the vortex, we take qⱼ = 0.
+We assume that ``qⱼ + βⱼ = Fⱼ(ψⱼ + Uy)`` and write ``Fⱼ(z) = -Kⱼ² z + Eⱼ``. Expanding
+the expression gives ``qⱼ + βⱼ = -Kⱼ²(ψⱼ + Uy) + Eⱼ`` which by linearity can be
+split into a dipole equation ``qⱼ + βⱼ = -Kⱼ²(ψⱼ + Uy)`` and a monopole equation
+``qⱼ = Eⱼ``. Outside the vortex, we take ``qⱼ = 0``.
 
-Arguments:
- - `grid`: grid structure containing x, y, and Krsq
+# Arguments:
+ - `grid`: grid structure containing `x`, `y`, and `Krsq`
  - `ℓ`: vortex speed and radius, Numbers (default: `1`)
- - `E`: vector of Eⱼ values, Number or Vector (default: `[1, ... , 1]`)
+ - `E`: vector of ``Eⱼ`` values, Number or Vector (default: `[1, ... , 1]`)
  - `R`: Rossby radius (default: `Inf`)
  - `x₀`: position of vortex center, vector (default: `[0, 0]`)
 
@@ -236,12 +236,12 @@ function CreateLQGMonopole(
 end
 
 """
-Function: `InvertVorticityLQG(grid, q, R=Inf)`
+    InvertVorticityLQG(grid, q, R=Inf)
 
-This function inverts the potential vorticity relation q = ΔN ψ for the LQG model
+This function inverts the potential vorticity relation ``q = ΔN ψ`` for the LQG model
 
-Arguments:
- - `grid`: grid structure containing x, y, and Krsq
+# Arguments:
+ - `grid`: grid structure containing `x`, `y`, and `Krsq`
  - `q`: potential vorticity field, Array
  - `R`: Rossby radius, Number or Vector (default: `Inf`)
 

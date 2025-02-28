@@ -7,11 +7,11 @@ solution to be included in the same structure and allow parameters to be checked
 """
 
 """
-Structure: `LQGParams`
+    LQGParams
 
 Stores the parameters for an LQG dipolar vortex solution
 
-Arguments:
+# Arguments:
  - `U`: Vortex speed
  - `ℓ`: Vortex radius
  - `R`: Rossby radius
@@ -51,11 +51,11 @@ struct LQGParams
 end
 
 """
-Structure: `SQGParams`
+    SQGParams
 
 Stores the parameters for an SQG dipolar vortex solution
 
-Arguments:
+# Arguments:
  - `U`: Vortex speed
  - `ℓ`: Vortex radius
  - `R`: Rossby radius
@@ -88,11 +88,11 @@ struct SQGParams
 end
 
 """
-Structure: `LQGVortex`
+    LQGVortex
 
 Stores fields and diagnostics for an LQG dipolar vortex solution
 
-Arguments:
+# Arguments:
  - `params`: Vortex params
  - `ψ`: streamfunction
  - `q`: potential vorticity anomaly
@@ -120,11 +120,11 @@ struct LQGVortex
 end
 
 """
-Structure: `SQGVortex`
+    SQGVortex
 
 Stores fields and diagnostics for an SQG dipolar vortex solution
 
-Arguments:
+# Arguments:
  - `params`: Vortex params
  - `ψ`: surface streamfunction
  - `b`: surface buoyancy
@@ -150,11 +150,11 @@ struct SQGVortex
 end
 
 """
-Function: `DefLQGParams`
+    DefLQGParams(U=1, ℓ=1, R=Inf, β=0, ActiveLayers=1, H=1, x₀=[0,0], α=0, M=8; tol=1e-6, K₀=nothing, a₀=nothing, UseAnalytic=false, CalcVelocity=false, CalcVorticity=false, CalcEnergy=false, CalcEnstrophy=false)
 
-Defines an LQGParams structure using the given inputs
+Defines an `LQGParams` structure using the given inputs
 
-Arguments:
+# Arguments:
  - `U`: Vortex speed
  - `ℓ`: Vortex radius
  - `R`: Rossby radius
@@ -215,11 +215,11 @@ function DefLQGParams(
 end
 
 """
-Function: `DefSQGParams`
+    DefSQGParams(U=1, ℓ=1, R=[Inf,Inf], β=0, x₀=[0,0], α=0, M=12; tol=1e-6, K₀=nothing, a₀=nothing, CalcVelocity=false, CalcVorticity=false, CalcEnergy=false)
 
-Defines an SQGParams structure using the given inputs
+Defines an `SQGParams` structure using the given inputs
 
-Arguments:
+# Arguments:
  - `U`: Vortex speed
  - `ℓ`: Vortex radius
  - `R`: Rossby radius
@@ -268,11 +268,12 @@ function DefSQGParams(
 end
 
 """
-Function: `DefLQGVortex`
+    DefLQGVortex(grid, U=1, ℓ=1, R=Inf, β=0, ActiveLayers=1, H=1, x₀=[0,0], α=0, M=8; tol=1e-6, K₀=nothing, a₀=nothing, UseAnalytic=false, CalcVelocity=false, CalcVorticity=false, CalcEnergy=false, CalcEnstrophy=false)
 
-Defines an LQGVortex solution structure using the given inputs
 
-Arguments:
+Defines an `LQGVortex` solution structure using the given inputs
+
+# Arguments:
  - `grid`: grid structure
  - `U`: Vortex speed
  - `ℓ`: Vortex radius
@@ -374,11 +375,11 @@ function DefLQGVortex(
 end
 
 """
-Function: `DefSQGVortex`
+    DefSQGVortex(grid, U=1, ℓ=1, R=[Inf,Inf], β=0, x₀=[0,0], α=0, M=12; tol=1e-6, K₀=nothing, a₀=nothing, CalcVelocity=false, CalcVorticity=false, CalcEnergy=false)
 
-Defines an SQGVortex solution structure using the given inputs
+Defines an `SQGVortex` solution structure using the given inputs
 
-Arguments:
+# Arguments:
  - `grid`: grid structure
  - `U`: Vortex speed
  - `ℓ`: Vortex radius
@@ -451,11 +452,11 @@ function DefSQGVortex(
 end
 
 """
-Function: `DefLQGVortex`
+    DefLQGVortex(grid, params)
 
-Defines an LQGVortex solution structure using the given inputs
+Defines an `LQGVortex` solution structure using the given inputs
 
-Arguments:
+# Arguments:
  - `grid`: grid structure
  - `params`: vortex parameters, LQGParams structure
 """
@@ -484,13 +485,13 @@ function DefLQGVortex(grid, params::LQGParams)
 end
 
 """
-Function: `DefSQGVortex`
+    DefSQGVortex(grid, params)
 
-Defines an SQGVortex solution structure using the given inputs
+Defines an `SQGVortex` solution structure using the given inputs
 
-Arguments:
+# Arguments:
  - `grid`: grid structure
- - `params`: vortex parameters, LQGParams structure
+ - `params`: vortex parameters, `LQGParams` structure
 """
 function DefSQGVortex(grid, params::SQGParams)
 
@@ -513,7 +514,9 @@ function DefSQGVortex(grid, params::SQGParams)
 end
 
 """
-Base.summary function for custom type `LQGParams`
+    Base.summary
+
+Summary method for custom type `LQGParams`
 """
 function Base.summary(::LQGParams)
     return string("Parameter set structure for an LQG vortex solution (LQGParams)")
@@ -521,7 +524,9 @@ end
 
 
 """
-Base.summary function for custom type `SQGParams`
+    Base.summary
+
+Summary method for custom type `SQGParams`
 """
 function Base.summary(::SQGParams)
     return string("Parameter set structure for an SQG vortex solution (SQGParams)")
@@ -529,7 +534,9 @@ end
 
 
 """
-Base.summary function for custom type `LQGVortex`
+    Base.summary
+
+Summary method for custom type `LQGVortex`
 """
 function Base.summary(::LQGVortex)
     return string("Vortex solution structure for an LQG model (LQGVortex)")
@@ -537,14 +544,18 @@ end
 
 
 """
-Base.summary function for custom type `SQGVortex`
+    Base.summary
+
+Summary method for custom type `SQGVortex`
 """
 function Base.summary(::SQGVortex)
     return string("Vortex solution structure for an SQG model (SQGVortex)")
 end
 
 """
-Base.show function for custom type `LQGParams`
+    Base.show
+
+Show method for custom type `LQGParams`
 """
 function Base.show(io::IO, p::LQGParams)
 
@@ -613,7 +624,9 @@ function Base.show(io::IO, p::LQGParams)
 end
 
 """
-Base.show function for custom type `SQGParams`
+    Base.show
+
+Show method for custom type `SQGParams`
 """
 function Base.show(io::IO, p::SQGParams)
 
@@ -665,7 +678,9 @@ function Base.show(io::IO, p::SQGParams)
 end
 
 """
-Base.show function for custom type `LQGVortex`
+    Base.show
+
+Show method for custom type `LQGVortex`
 """
 function Base.show(io::IO, p::LQGVortex)
 
@@ -715,7 +730,9 @@ function Base.show(io::IO, p::LQGVortex)
 end
 
 """
-Base.show function for custom type `SQGVortex`
+    Base.show
+
+Show method for custom type `SQGVortex`
 """
 function Base.show(io::IO, p::SQGVortex)
 

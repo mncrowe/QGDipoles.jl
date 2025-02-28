@@ -21,12 +21,12 @@ required for building A and B. The function `JJ_int` below is still used in the 
 
 
 """
-Function: `A_func(ξ, λ, μ)`
+    A_func(ξ, λ, μ)
 
-Evaluates the matrix function A(ξ, λ, μ) = K(ξ) [K(ξ) + D(μ)]⁻¹ ξ⁻¹
+Evaluates the matrix function ``A(ξ, λ, μ) = K(ξ) [K(ξ) + D(μ)]⁻¹ ξ⁻¹``
 
-Arguments:
- - `ξ`: point in [0, ∞), Number
+# Arguments:
+ - `ξ`: point in ``[0, ∞)``, Number
  - `λ`: ratio of vortex radius to Rossby radius in each layer, Number or Vector
  - `μ`: nondimensional (y) vorticity gradient in each layer, Number or Vector
 """
@@ -66,12 +66,12 @@ function A_func(ξ::Number, λ::Union{Vector,Number}, μ::Union{Vector,Number})
 end
 
 """
-Function: `B_func(ξ, λ, μ)`
+    B_func(ξ, λ, μ)
 
-Evaluates the matrix function B(ξ, λ, μ) = [K(ξ) + D(μ)]⁻¹ ξ⁻¹
+Evaluates the matrix function ``B(ξ, λ, μ) = [K(ξ) + D(μ)]⁻¹ ξ⁻¹``
 
-Arguments:
- - `ξ`: point in [0, ∞), Number
+# Arguments:
+ - `ξ`: point in ``[0, ∞)``, Number
  - `λ`: ratio of vortex radius to Rossby radius in each layer, Number or Vector
  - `μ`: nondimensional (y) vorticity gradient in each layer, Number or Vector
 """
@@ -111,11 +111,11 @@ function B_func(ξ::Number, λ::Union{Vector,Number}, μ::Union{Vector,Number})
 end
 
 """
-Function: `JJ_int(F, j, k, tol=1e-6)`
+    JJ_int(F, j, k, tol=1e-6)
 
-Evaluates the integral ``I = \\int_0^\\infty F(\\xi) J_{2j+2}(\\xi) J_{2k+2}(\\xi) \\mathrm{d}\\xi``
+Evaluates the integral ``I = ∫_0^∞ F(ξ) J_{2j+2}(ξ) J_{2k+2}(ξ) \\mathrm{d}ξ``
 
-Arguments:
+# Arguments:
  - `F`: function to integrate, typically `A_func` or `B_func`, Function
  - `j`: first Bessel function index, Integer
  - `k`: second Bessel function index, Integer

@@ -54,15 +54,15 @@ GeophysicalFlows.jl so will also work with this grid.
 
 
 """
-Function: `ZernikeR(n, x)`
+    ZernikeR(n, x)
 
 Define the Zernike radial function using the `jacobi` function from SpecialFunctions
 
-Arguments:
+# Arguments:
  - `n`: order, Integer
  - `x`: evaluation point, Number or Array
 
-Note: this function is defined on [-1, 1] and is set to 0 for |x| > 1
+Note: this function is defined on ``[-1, 1]`` and is set to ``0`` for ``|x| > 1``
 """
 function ZernikeR(n::Int, x::Union{Number,Array})
 
@@ -72,11 +72,11 @@ function ZernikeR(n::Int, x::Union{Number,Array})
 end
 
 """
-Structure: `GridStruct`
+    GridStruct
 
 Stores the grid variables in physical and Fourier space
 
-Arguments:
+# Arguments:
  - `x`, `y`: x and y points in physical space, Ranges
  - `kr`, `l`: x and y points in Fourier space, Arrays
  - `Krsq`: `kr²+l²` in Fourier space, Array
@@ -93,11 +93,11 @@ struct GridStruct
 end
 
 """
-Function: `CreateGrid(Nx, Ny, Lx, Ly; cuda=false)`
+    CreateGrid(Nx, Ny, Lx, Ly; cuda=false)
 
 Define the numerical grid as a `GridStruct`
 
-Arguments:
+# Arguments:
  - `Nx`, `Ny`: number of gridpoints in x and y directions, Integers
  - `Lx`, `Ly`: x and y domains, either vectors of endpoints or lengths, Vectors or Numbers
  - `cuda`: `true`; use CUDA CuArray for fields (default: `false`)
@@ -157,11 +157,11 @@ function CreateGrid(
 end
 
 """
-Function: `Calc_ψq(a, U, ℓ, R, β, grid, x₀=[0, 0], α=0)`
+    Calc_ψq(a, U, ℓ, R, β, grid, x₀=[0, 0], α=0)
 
-Calculate ψ and q in a layered QG model using coefficients and vortex parameters
+Calculate ``ψ`` and ``q`` in a layered QG model using coefficients and vortex parameters
 
-Arguments:
+# Arguments:
  - `a`: M x N array of coefficients, Array
  - (`U`, `ℓ`): vortex speed and radius, Numbers
  - (`R`, `β`): Rossby radii and (y) PV gradients in each layer, Numbers or Vectors
@@ -265,16 +265,16 @@ function Calc_ψq(
 end
 
 """
-Function: `Calc_ψb(a, U, ℓ, R, β, grid, x₀=[0, 0], α=0)`
+    Calc_ψb(a, U, ℓ, R, β, grid, x₀=[0, 0], α=0)
 
-Calculate SQG fields ψ and b using coefficients and vortex parameters
+Calculate SQG fields ``ψ`` and ``b`` using coefficients and vortex parameters
 
-Arguments:
+# Arguments:
  - `a`: M x 1 array of coefficients, Array
  - (`U`, `ℓ`): vortex speed and radius, Numbers
- - `R`: vector of [R, R'], Vector
+ - `R`: vector of ``[R, R']``, Vector
  - `β`: beta-plane (y) PV gradient, Number
- - `grid`: grid structure containing x, y, and Krsq
+ - `grid`: grid structure containing `x`, `y`, and `Krsq`
  - `x₀`: position of vortex center, vector (default: `[0, 0]`)
  - `α`: initial angle of vortex, Number (default: `0`)
 
@@ -346,13 +346,13 @@ function Calc_ψb(
 end
 
 """
-Function: `Calc_uv(ψ, grid)`
+    Calc_uv(ψ, grid)
 
-Calculate the velocity fields from ψ using (u, v) = (-∂ψ/∂y, ∂ψ/∂x)
+Calculate the velocity fields from ``ψ`` using ``(u, v) = (-∂ψ/∂y, ∂ψ/∂x)``
 
-Arguments:
+# Arguments:
  - `ψ`: streamfunction, Array
- - `grid`: grid structure containing kr and l
+ - `grid`: grid structure containing `kr` and `l`
 """
 function Calc_uv(ψ::Union{CuArray,Array}, grid)
 
@@ -388,12 +388,12 @@ function Calc_uv(ψ::Union{CuArray,Array}, grid)
 end
 
 """
-Function: `ΔNCalc(K², R, β, U=1)`
+    ΔNCalc(K², R, β, U=1)
 
-Defines the Δ_N(β) matrix used to invert for ψ and q
+Defines the ``Δ_N(β)`` matrix used to invert for ``ψ`` and ``q``
 
-Arguments:
- - `K²`: value of k²+l² in Fourier space, Array
+# Arguments:
+ - `K²`: value of ``k²+l²`` in Fourier space, Array
  - (`R`, `β`): Rossby radii and (y) PV gradients in each layer, Numbers or Vectors
  - `U`: vortex speed, Number (default: `1`)
 """
@@ -468,19 +468,19 @@ function ΔNCalc(
 end
 
 """
-Function: `CreateModonLQG(grid, M, U=1, ℓ=1, R=1, β=0, ActiveLayers=1, x₀=[0, 0], α=0; K₀=nothing, a₀=nothing, tol=1e-6)`
+    CreateModonLQG(grid, M, U=1, ℓ=1, R=1, β=0, ActiveLayers=1, x₀=[0, 0], α=0; K₀=nothing, a₀=nothing, tol=1e-6)
 
-High level wrapper function for calculating ψ and q for the Layered QG model using given parameters
+High level wrapper function for calculating ``ψ`` and ``q`` for the Layered QG model using given parameters
 
-Arguments:
- - `grid`: grid structure containing x, y, and Krsq
+# Arguments:
+ - `grid`: grid structure containing `x`, `y`, and `Krsq`
  - `M`: number of coefficient to solve for, Integer (default: `8`)
  - (`U`, `ℓ`): vortex speed and radius, Numbers (default: (`1`, `1`))
  - (`R`, `β`): Rossby radii and (y) PV gradients in each layer, Numbers or Vectors, (default: (`1`, `0`))
  - `ActiveLayers`: vector of 1s or 0s where 1 denotes an active layer, Number or Vector, (default: `[1,..,1]`)
  - `x₀`: position of vortex center, vector (default: `[0, 0]`)
  - `α`: initial angle of vortex, Number (default: 0)
- - `K₀`, `a₀`: initial guesses for K and a, Arrays or nothings (default: `nothing`)
+ - `K₀`, `a₀`: initial guesses for ``K`` and ``a``, Arrays or nothings (default: `nothing`)
  - `tol`: error tolerance passed to `QuadGK` and `NLSolve` functions, Number (default: `1e-6`)
 
 Note: provide values of K₀ and a₀ for active layers ONLY.
@@ -531,19 +531,19 @@ function CreateModonLQG(
 end
 
 """
-Function: `CreateModonSQG(grid, M, U=1, ℓ=1, R=[Inf, Inf], β=0, x₀=[0, 0], α=0; K₀=nothing, a₀=nothing, tol=1e-6)`
+    CreateModonSQG(grid, M, U=1, ℓ=1, R=[Inf, Inf], β=0, x₀=[0, 0], α=0; K₀=nothing, a₀=nothing, tol=1e-6)
 
-High level wrapper function for calculating ψ and b for the SQG model using given parameters
+High level wrapper function for calculating ``ψ`` and ``b`` for the SQG model using given parameters
 
-Arguments:
- - `grid`: grid structure containing x, y, and Krsq
+# Arguments:
+ - `grid`: grid structure containing `x`, `y`, and `Krsq`
  - `M`: number of coefficient to solve for, Integer (default: `12`)
  - (`U`, `ℓ`): vortex speed and radius, Numbers (default: (`1`, `1`))
- - `R`: vector of [R, R'], Vector (default: `[Inf, Inf]`)
+ - `R`: vector of ``[R, R']``, Vector (default: `[Inf, Inf]`)
  - `β`: beta-plane (y) PV gradient, Number (default: `0`)
  - `x₀`: position of vortex center, vector (default: `[0, 0]`)
  - `α`: initial angle of vortex, Number (default: `0`)
- - `K₀`, `a₀`: initial guesses for K and a, Arrays or nothings (default: `nothing`)
+ - `K₀`, `a₀`: initial guesses for ``K`` and ``a``, Arrays or nothings (default: `nothing`)
  - `tol`: error tolerance passed to `QuadGK` and `NLSolve` functions, Number (default: `1e-6`)
 
 Note: Here R is the baroclinic Rossby radius, R = NH/f, and R' = R₀²/R where R₀ is
@@ -584,17 +584,17 @@ function CreateModonSQG(
 end
 
 """
-Function: `CreateLCD(grid, U=1, ℓ=1, x₀=[0, 0], α=0)`
+    CreateLCD(grid, U=1, ℓ=1, x₀=[0, 0], α=0)
 
-High level wrapper function for calculating ψ and q for the Lamb-Chaplygin dipole using given parameters
+High level wrapper function for calculating ``ψ`` and ``q`` for the Lamb-Chaplygin dipole using given parameters
 
-Arguments:
- - `grid`: grid structure containing x, y, and Krsq
+# Arguments:
+ - `grid`: grid structure containing `x`, `y`, and `Krsq`
  - (`U`, `ℓ`): vortex speed and radius, Numbers (default: (`1`, `1`))
  - `x₀`: position of vortex center, vector (default: `[0, 0]`)
  - `α`: initial angle of vortex, Number (default: `0`)
 
-Note: This function uses the analytic solution for the LCD to calculate ψ and q.
+Note: This function uses the analytic solution for the LCD to calculate ``ψ`` and ``q``.
 """
 function CreateLCD(grid, U::Number = 1, ℓ::Number = 1, x₀::Vector = [0, 0], α::Number = 0)
 
@@ -630,18 +630,18 @@ function CreateLCD(grid, U::Number = 1, ℓ::Number = 1, x₀::Vector = [0, 0], 
 end
 
 """
-Function: `CreateLRD(grid, U=1, ℓ=1, R=1, β=0, x₀=[0, 0], α=0)`
+    CreateLRD(grid, U=1, ℓ=1, R=1, β=0, x₀=[0, 0], α=0)
 
-High level wrapper function for calculating ψ and q for the Larichev-Reznik dipole using given parameters
+High level wrapper function for calculating ``ψ`` and ``q`` for the Larichev-Reznik dipole using given parameters
 
-Arguments:
- - `grid`: grid structure containing x, y, and Krsq
+# Arguments:
+ - `grid`: grid structure containing `x`, `y`, and `Krsq`
  - (`U`, `ℓ`): vortex speed and radius, Numbers (default: (`1`, `1`))
  - (`R`, `β`): Rossby radii and (y) PV gradient, Numbers, (default: (`1`, `0`))
  - `x₀`: position of vortex center, vector (default: `[0, 0]`)
  - `α`: initial angle of vortex, Number (default: `0`)
 
-Note: This function uses the analytic solution for the LRD to calculate ψ and q.
+Note: This function uses the analytic solution for the LRD to calculate ``ψ`` and ``q``.
 """
 function CreateLRD(
     grid,
@@ -717,20 +717,20 @@ function CreateLRD(
 end
 
 """
-Function: `Eval_ψ_SQG(grid, ψ, z=[0], U=1, R=[Inf, Inf], β=0)`
+    Eval_ψ_SQG(grid, ψ, z=[0], U=1, R=[Inf, Inf], β=0)
 
-Evaluates ψ at specified depths, z in [-R, 0], for the SQG problem
+Evaluates ``ψ`` at specified depths, ``z ∈ [-R, 0]``, for the SQG problem
 
-Arguments:
- - `grid`: grid structure containing x, y, and Krsq
+# Arguments:
+ - `grid`: grid structure containing `x`, `y`, and `Krsq`
  - `ψ`: surface streamfunction, calculated using `Calc_ψb` or `CreateModonSQG`
  - `z`: vector of depths (default: `[0]`)
  - `U`: vortex speed, Number (default: `1`)
- - `R`: vector of [R, R'], Vector (default: `[Inf, Inf]`)
+ - `R`: vector of ``[R, R']``, Vector (default: `[Inf, Inf]`)
  - `β`: beta-plane (y) PV gradient, Number (default: `0`)
 
-Note: Here R is the baroclinic Rossby radius, R = NH/f, and R' = R₀²/R where R₀ is
-the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = g/(fN).
+Note: Here ``R`` is the baroclinic Rossby radius, ``R = NH/f``, and ``R' = R₀²/R`` where ``R₀`` is
+the barotropic Rossby radius, ``R₀ = √(gH)/f``. For infinite depth, ``R' = g/(fN)``.
 """
 function Eval_ψ_SQG(
     grid,
@@ -778,20 +778,20 @@ function Eval_ψ_SQG(
 end
 
 """
-Function: `Eval_q_SQG(grid, ψ, z=[0], U=1, R=[Inf, Inf], β=0)`
+    Eval_q_SQG(grid, ψ, z=[0], U=1, R=[Inf, Inf], β=0)
 
-Evaluates q at specified depths, z in [-R, 0], for the SQG problem
+Evaluates ``q`` at specified depths, ``z ∈ [-R, 0]``, for the SQG problem
 
-Arguments:
- - `grid`: grid structure containing x, y, and Krsq
+# Arguments:
+ - `grid`: grid structure containing `x`, `y`, and `Krsq`
  - `ψ`: surface streamfunction, calculated using `Calc_ψb` or `CreateModonSQG`
  - `z`: vector of depths (default: `[0]`)
  - `U`: vortex speed, Number (default: `1`)
- - `R`: vector of [R, R'], Vector (default: `[Inf, Inf]`)
+ - `R`: vector of ``[R, R']``, Vector (default: `[Inf, Inf]`)
  - `β`: beta-plane (y) PV gradient, Number (default: `0`)
 
-Note: Here R is the baroclinic Rossby radius, R = NH/f, and R' = R₀²/R where R₀ is
-the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = g/(fN).
+Note: Here ``R`` is the baroclinic Rossby radius, ``R = NH/f``, and ``R' = R₀²/R`` where ``R₀`` is
+the barotropic Rossby radius, ``R₀ = √(gH)/f``. For infinite depth, ``R' = g/(fN)``.
 """
 function Eval_q_SQG(
     grid,
@@ -811,20 +811,20 @@ function Eval_q_SQG(
 end
 
 """
-Function: `Eval_b_SQG(grid, ψ, z=[0], U=1, R=[Inf, Inf], β=0)`
+    Eval_b_SQG(grid, ψ, z=[0], U=1, R=[Inf, Inf], β=0)
 
-Evaluates b at specified depths, z in [-R, 0], for the SQG problem
+Evaluates ``b`` at specified depths, ``z ∈ [-R, 0]``, for the SQG problem
 
-Arguments:
- - `grid`: grid structure containing x, y, and Krsq
+# Arguments:
+ - `grid`: grid structure containing `x`, `y`, and `Krsq`
  - `ψ`: surface streamfunction, calculated using `Calc_ψb` or `CreateModonSQG`
  - `z`: vector of depths (default: `[0]`)
  - `U`: vortex speed, Number (default: `1`)
- - `R`: vector of [R, R'], Vector (default: `[Inf, Inf]`)
+ - `R`: vector of ``[R, R']``, Vector (default: `[Inf, Inf]`)
  - `β`: beta-plane (y) PV gradient, Number (default: `0`)
 
-Note: Here R is the baroclinic Rossby radius, R = NH/f, and R' = R₀²/R where R₀ is
-the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = g/(fN).
+Note: Here ``R`` is the baroclinic Rossby radius, ``R = NH/f``, and ``R' = R₀²/R`` where ``R₀`` is
+the barotropic Rossby radius, ``R₀ = √(gH)/f``. For infinite depth, ``R' = g/(fN)``.
 """
 function Eval_b_SQG(
     grid,
@@ -873,23 +873,23 @@ function Eval_b_SQG(
 end
 
 """
-Function: `Eval_w_SQG(grid, ψ, z=[0], U=1, R=[Inf, Inf], β=0)`
+    Eval_w_SQG(grid, ψ, z=[0], U=1, R=[Inf, Inf], β=0)
 
-Evaluates N²w at specified depths, z in [-R, 0], for the SQG problem using N²w = -J[ψ + Uy, b]
+Evaluates N²w at specified depths, ``z ∈ [-R, 0]``, for the SQG problem using ``N²w = -J[ψ + Uy, b]``
 
-Arguments:
- - `grid`: grid structure containing x, y, and Krsq
+# Arguments:
+ - `grid`: grid structure containing `x`, `y`, and `Krsq`
  - `ψ`: surface streamfunction, calculated using `Calc_ψb` or `CreateModonSQG`
  - `z`: vector of depths (default: `[0]`)
  - `U`: vortex speed, Number (default: `1`)
- - `R`: vector of [R, R'], Vector (default: `[Inf, Inf]`)
+ - `R`: vector of ``[R, R']``, Vector (default: `[Inf, Inf]`)
  - `β`: beta-plane (y) PV gradient, Number (default: `0`)
 
-Note: Here R is the baroclinic Rossby radius, R = NH/f, and R' = R₀²/R where R₀ is
-the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = g/(fN).
+Note: Here ``R`` is the baroclinic Rossby radius, ``R = NH/f``, and ``R' = R₀²/R`` where ``R₀`` is
+the barotropic Rossby radius, ``R₀ = √(gH)/f``. For infinite depth, ``R' = g/(fN)``.
 
-Note: this function is not accurate at the surface as ∇b is discontinuous there.
-Instead use w = -U∂η/∂x where η = fψ/g is the surface elevation, or w = 0 if R' = ∞.
+Note: this function is not accurate at the surface as ``∇b`` is discontinuous there.
+Instead use ``w = -U∂η/∂x`` where ``η = fψ/g`` is the surface elevation, or ``w = 0`` if ``R' = ∞``.
 """
 function Eval_w_SQG(
     grid,
@@ -918,13 +918,13 @@ function Eval_w_SQG(
 end
 
 """
-Function: `Calc_∇(f, grid)`
+    Calc_∇(f, grid)
 
-Calculate the gradient ∇f for a given field f
+Calculate the gradient ``∇f`` for a given field ``f``
 
-Arguments:
+# Arguments:
  - `f`: function, Array
- - `grid`: grid structure containing kr and l
+ - `grid`: grid structure containing `kr` and `l`
 """
 function Calc_∇(f::Union{CuArray,Array}, grid)
 
@@ -960,12 +960,12 @@ function Calc_∇(f::Union{CuArray,Array}, grid)
 end
 
 """
-Function: `CartesianGrid(grid)`
+    CartesianGrid(grid)
 
-Formats the (x, y) ranges from `grid` as two-dimensional Arrays
+Formats the ``(x, y)`` ranges from `grid` as two-dimensional Arrays
 
-Arguments:
- - `grid`: grid structure containing kr and l
+# Arguments:
+ - `grid`: grid structure containing `kr` and `l`
 """
 function CartesianGrid(grid)
 
@@ -977,12 +977,12 @@ function CartesianGrid(grid)
 end
 
 """
-Function: `PolarGrid(x, y, x₀)`
+    PolarGrid(x, y, x₀)
 
 Calculates the polar coordinates from (`x`, `y`) as two-dimensional Array centred on `x₀`
 
-Arguments:
- - `x`, `y`: 2D Arrays for x and y, created using `CartesianGrid`
+# Arguments:
+ - `x`, `y`: 2D Arrays for ``x`` and ``y``, created using `CartesianGrid`
  - `x₀`: Vector
 """
 function PolarGrid(x, y, x₀::Vector = [0])
@@ -995,13 +995,13 @@ function PolarGrid(x, y, x₀::Vector = [0])
 end
 
 """
-Function: `Calc_ζ(ψ, grid)`
+    Calc_ζ(ψ, grid)
 
-Calculate the vertical vorticity using ζ = ∂v/∂x - ∂u/∂y = ∇²ψ
+Calculate the vertical vorticity using ``ζ = ∂v/∂x - ∂u/∂y = ∇²ψ``
 
-Arguments:
+# Arguments:
  - `ψ`: streamfunction, Array
- - `grid`: grid structure containing Krsq
+ - `grid`: grid structure containing `Krsq`
 """
 function Calc_ζ(ψ::Union{CuArray,Array}, grid)
 
