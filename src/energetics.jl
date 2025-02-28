@@ -30,7 +30,7 @@ and the surface potential energy
 
 Calculates the kinetic and potential energy for the LQG system
 
-Arguments:
+# Arguments:
  - `grid`: grid structure containing `Krsq`
  - `ψ`: streamfunction in each layer, Array or CuArray
  - `R`: Rossby radius in each layer, Number or Vector
@@ -81,7 +81,7 @@ end
 
 Calculates the enstrophy for the LQG system
 
-Arguments:
+# Arguments:
  - `grid`: grid structure containing `Krsq`
  - `q`: potential vorticity anomaly in each layer, Array or CuArray
  - `H`: Thickness of each layer, Number or Vector
@@ -109,7 +109,7 @@ end
 Calculates the energies for the SQG system; the total domain integrated energy
 and the surface potential energy
 
-Arguments:
+# Arguments:
  - `grid`: grid structure containing `Krsq`
  - `ψ`: surface streamfunction, Array or CuArray
  - `b`: surface buoyancy, , Array or CuArray
@@ -139,7 +139,7 @@ end
 Calculates the integral ``I = ∫_A f^2 \\mathrm{d}A`` where ``A``
 is the 2D domain described by `grid`.
 
-Arguments:
+# Arguments:
  - `f`: input Array in real or Fourier space
  - `grid`: grid structure
 
