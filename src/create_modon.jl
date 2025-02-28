@@ -113,7 +113,7 @@ function CreateGrid(
     if length(Lx) == 2
 
         x₀ = Lx[1]
-        Lx = Lx[2]
+        Lx = Lx[2] - Lx[1]
 
     else
 
@@ -124,7 +124,7 @@ function CreateGrid(
     if length(Ly) == 2
 
         y₀ = Ly[1]
-        Ly = Ly[2]
+        Ly = Ly[2] - Ly[1]
 
     else
 
