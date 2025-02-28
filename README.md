@@ -61,7 +61,9 @@ We follow the [ColPrac guide for collaborative practices](https://github.com/Sci
 
 ### Editing
 
-The source files are stored in `src/`. It is recommended to open Julia with the `QGDipoles` project active by running `julia --project=.` from the root directory. Be careful not to add unnecessary packages to `Project.toml`.
+The source files are stored in `src/`. It is recommended to open Julia with the `QGDipoles` project active by running `julia --project=.` from the root directory. Be careful not to add unnecessary packages to `Project.toml` and do not push a `Project.toml` file which contains `QGDipoles.jl` as a dependency.
+
+We use `Documenter.jl` for creating the package documentation and `JuliaFormatter.jl` for consistent code formatting. These packages should NOT be added to the package dependencies of `QGDipoles.jl` and we recommend adding them to your base environment so they are available from any active environment.
 
 ### Formatting
 
@@ -70,7 +72,6 @@ This codebase is formatted using `JuliaFormatter.jl`. Formatting can be done by 
 import JuliaFormatter
 JuliaFormatter.format(".")
 ```
-`JuliaFormatter.jl` should not be added to the package dependencies of `QGDipoles.jl`.
 
 ### Documentation
 
@@ -79,14 +80,12 @@ The documentation is stored within `docs/` and can be built using `Documenter.jl
 Pkg.develop(".")  # this adds the local copy of `QGDipoles.jl` to the `docs` environment 
 include("docs/make.jl")
 ```
-The newly built documentation will be available in `docs/build` and can be viewed by opening `docs/build/index.html` with a web browser. `Documenter.jl` should not be added to the package dependencies of `QGDipoles.jl`.
+The newly built documentation will be available in `docs/build` and can be viewed by opening `docs/build/index.html` with a web browser.
 
 ### Tests
 
 Tests are stored in `test/` and can be run using either
 ```julia
 include("test/runtests.jl")
+```
 or by activating the package manager by entering `]` at the Julia REPL then entering `test`.
-
-
-
