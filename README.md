@@ -83,7 +83,7 @@ JuliaFormatter.format(".")
 The documentation is stored within `docs/` and can be built using `Documenter.jl` by running `docs/make.jl`. Full instructions for using `Documenter.jl` are available [here](https://documenter.juliadocs.org/stable/man/guide/). The documentation can be re-built by opening Julia using `julia --project=docs/` then entering the following into the REPL:
 ```julia
 import Pkg
-Pkg.develop(".")  # this adds the local copy of `QGDipoles.jl` to the `docs` environment 
+Pkg.develop(path=".")  # this adds the local copy of `QGDipoles.jl` to the `docs` environment 
 include("docs/make.jl")
 ```
 The newly built documentation will be available in `docs/build` and can be viewed by opening `docs/build/index.html` with a web browser.
