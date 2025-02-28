@@ -68,7 +68,7 @@ The source files are stored in `src/`. It is recommended to open Julia with the 
 This codebase is formatted using `JuliaFormatter.jl`. Formatting can be done by entering the following into the Julia REPL from the root directory:
 ```julia
 import JuliaFormatter
-format(".")
+JuliaFormatter.format(".")
 ```
 `JuliaFormatter.jl` should not be added to the package dependencies of `QGDipoles.jl`.
 
