@@ -14,6 +14,7 @@ makedocs(
     pages = Any[
         "Home"=>"index.md",
         "Installation"=>"Installation.md",
+        "Methodology"=>"Methodology.md",
         "Examples"=>"Examples.md",
         "List of Functions"=>"Functions.md",
     ],
