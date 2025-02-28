@@ -4,7 +4,7 @@ Tests for the LQG functiond for QGDipoles.jl
 """
 
 """
-Function: `Test1QG_K(U, ℓ, R, β)`
+    Test1QG_K(U, ℓ, R, β)
 
 Tests the value of K for a 1-layer QG solution by comparing with the result obtained by solving
 the root finding problem of Larichev & Reznik.
@@ -62,7 +62,7 @@ function Test1QG_K(U::Number, ℓ::Number, R::Number, β::Number)
 end
 
 """
-Function: `Test1QG_ψ(cuda)`
+    Test1QG_ψ(cuda)
 
 Tests the value of maximum value of ψ for the LCD against a known value.
 
@@ -96,7 +96,7 @@ function Test1QG_ψ(cuda::Bool)
 end
 
 """
-Function: `Test2QG_K()`
+    Test2QG_K()
 
 Tests the value of (K_1, K_2) for a 2-layer vortex against known values.
 
@@ -131,7 +131,7 @@ function Test2QG_K()
 end
 
 """
-Function: `Test2QG_PVinv(cuda)`
+    Test2QG_PVinv(cuda)
 
 Tests if the 3D PV inversion array has been built correctly to avoid Inf/NaN values in ψ.
 Common error in (0, 0) wavenumber due to divide by 0 issues. Due to differences in function
@@ -179,7 +179,7 @@ function Test2QG_PVinv(cuda)
 end
 
 """
-Function: `TestLQG_ActiveLayers()`
+    TestLQG_ActiveLayers()
 
 Tests if active and passive layers are being correctly applied. This is done by building a three
 layer system and comparing the results obtained by removing the passive layers with the results

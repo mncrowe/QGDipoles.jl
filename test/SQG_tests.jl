@@ -4,7 +4,7 @@ Tests for the SQG functions from QGDipoles.jl
 """
 
 """
-Function: `TestSQG_K()`
+    TestSQG_K()
 
 Tests the value of K for an SQG vortex against known values.
 
@@ -36,7 +36,7 @@ function TestSQG_K()
 end
 
 """
-Function: `TestSQG_v(cuda)`
+    TestSQG_v(cuda)
 
 Tests the value of maximum(v) for an SQG vortex against known values.
 This function tests the velocity calculation on the CPU and GPU grids.

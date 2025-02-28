@@ -14,7 +14,7 @@ x₀ = [0, 0]# position of vortex center
 M = 8# number of coefficients in Zernike expansion
 tol = 1e-8# maximum error in solution evaluation
 cuda = false# use CuArrays for grid
-K₀, a₀ = [4, 4], Nothing# guesses for K and a
+K₀, a₀ = [4, 4], nothing# guesses for K and a
 
 # Set grid parameters
 
@@ -34,14 +34,4 @@ grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 
 using Plots
 
-heatmap(
-    grid.x,
-    grid.y,
-    transpose(ψ[:, :, 1]);
-    colormap = :balance,
-    aspect_ratio = 1,
-    xlims = (-Lx / 2, Lx / 2),
-    ylims = (-Ly / 2, Ly / 2),
-    xlabel = "x",
-    ylabel = "y",
-)
+heatmap(grid, ψ, layer = 1)

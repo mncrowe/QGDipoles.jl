@@ -10,7 +10,7 @@ R = 1# Rossby radius in each layer
 
 M = 8# number of coefficients in Zernike expansion
 tol = 1e-8# maximum error in solution evaluation
-cuda = false# use CuArrays for grid
+cuda = true# use CuArrays for grid
 method = 0# 0; eigensolve/nlsolve, 1; nlsolve
 
 # Set grid parameters
@@ -36,14 +36,4 @@ u, v = Calc_uv(ψ, grid)
 
 using Plots
 
-heatmap(
-    grid.x,
-    grid.y,
-    transpose(ψ[:, :, 1]);
-    colormap = :balance,
-    aspect_ratio = 1,
-    xlims = (-Lx / 2, Lx / 2),
-    ylims = (-Ly / 2, Ly / 2),
-    xlabel = "x",
-    ylabel = "y",
-)
+heatmap(grid, ψ)

@@ -8,6 +8,7 @@ functions for a particular part of the code. The four files are:
 - SQG_tests.jl
 - Wrapper_tests.jl
 - Energetics_tests.jl
+- Type_tests.jl
 
 """
 
@@ -133,3 +134,30 @@ end
     end
 
 end
+
+# Test examples
+
+@testset "Examples" begin
+
+    Ex = filter(contains(r".jl$"), readdir("../examples/"; join=true))
+    
+    for i in 1:length(Ex)
+
+        #include.(Ex[i])
+        @test true
+
+    end
+
+end
+
+# Test types/structures
+
+@testset
+
+    include("Type_tests.jl")
+
+    @test true
+
+end
+
+

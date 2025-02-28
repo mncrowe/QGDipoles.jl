@@ -14,7 +14,7 @@ Lx, Ly = 20.48, 20.48
 T = 10
 Δt = 0.01
 Nt = Int(T / Δt)# number of timesteps
-dev = GPU()
+dev = CPU()
 stepper = "FilteredRK4"
 
 # Define problem using SingleLayerQG from GeophysicalFlows.jl
@@ -49,27 +49,4 @@ SingleLayerQG.updatevars!(prob)
 
 using Plots
 
-plot(
-    heatmap(
-        prob.grid.x,
-        prob.grid.y,
-        device_array(CPU())(transpose(q₀));
-        colormap = :balance,
-        aspect_ratio = 1,
-        xlims = (-Lx / 2, Lx / 2),
-        ylims = (-Ly / 2, Ly / 2),
-        xlabel = "x",
-        ylabel = "y",
-    ),
-    heatmap(
-        prob.grid.x,
-        prob.grid.y,
-        device_array(CPU())(transpose(prob.vars.q));
-        colormap = :balance,
-        aspect_ratio = 1,
-        xlims = (-Lx / 2, Lx / 2),
-        ylims = (-Ly / 2, Ly / 2),
-        xlabel = "x",
-        ylabel = "y",
-    ),
-)
+plot(heatmap(prob.grid, q₀), heatmap(prob.grid, prob.vars.q))

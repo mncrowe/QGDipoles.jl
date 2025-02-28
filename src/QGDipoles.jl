@@ -8,7 +8,7 @@ module QGDipoles
 
 # Load required packages
 
-using Jacobi, FFTW, LinearAlgebra, SpecialFunctions, QuadGK, NLsolve, CUDA
+using Jacobi, FFTW, LinearAlgebra, SpecialFunctions, QuadGK, NLsolve, CUDA, RecipesBase
 
 # Export names for all functions and types
 
@@ -78,5 +78,6 @@ include("create_modon.jl")
 include("energetics.jl")
 include("vortex_types.jl")
 include("monopoles.jl")
+include("plotting.jl")
 
 end

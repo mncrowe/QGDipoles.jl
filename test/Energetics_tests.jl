@@ -4,7 +4,7 @@ Tests for the energetics functions from QGDipoles.jl
 """
 
 """
-Function: `TestLQGEnergy1Layer(cuda)`
+    TestLQGEnergy1Layer(cuda)
 
 Tests the values of KE and PE for a 1-layer QG model against known values.
 
@@ -38,7 +38,7 @@ function TestLQGEnergy1Layer(cuda)
 end
 
 """
-Function: `TestLQGEnergy2Layer(cuda)`
+    TestLQGEnergy2Layer(cuda)
 
 Tests the values of KE and PE for a 2-layer QG model against known values.
 
@@ -73,7 +73,7 @@ function TestLQGEnergy2Layer(cuda)
 end
 
 """
-Function: `TestSQGEnergy(cuda)`
+    TestSQGEnergy(cuda)
 
 Tests the values of E and SPE for an SQG model against known values.
 

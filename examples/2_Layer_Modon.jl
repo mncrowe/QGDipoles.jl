@@ -34,27 +34,4 @@ grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 
 using Plots
 
-plot(
-    heatmap(
-        grid.x,
-        grid.y,
-        transpose(ψ[:, :, 1]);
-        colormap = :balance,
-        aspect_ratio = 1,
-        xlims = (-Lx / 2, Lx / 2),
-        ylims = (-Ly / 2, Ly / 2),
-        xlabel = "x",
-        ylabel = "y",
-    ),
-    heatmap(
-        grid.x,
-        grid.y,
-        transpose(ψ[:, :, 2]);
-        colormap = :balance,
-        aspect_ratio = 1,
-        xlims = (-Lx / 2, Lx / 2),
-        ylims = (-Ly / 2, Ly / 2),
-        xlabel = "x",
-        ylabel = "y",
-    ),
-)
+plot(heatmap(grid, ψ, layer = 1), heatmap(grid, ψ, layer = 2))
