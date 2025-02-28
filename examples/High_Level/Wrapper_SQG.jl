@@ -29,8 +29,7 @@ grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 ψ, b, K, a = CreateModonSQG(grid, M, U, ℓ, R, β, x₀; K₀, a₀, tol)
 # ψ, b = CreateModonSQG(grid, M, U, ℓ, R, β, x₀; K₀, a₀, tol) # fields only
 
-# Plot surface streamfunction ψ
+# Plot surface streamfunction ψ, if we have `Plots.jl` added
 
-using Plots
-
-heatmap(grid, ψ)
+# using Plots
+# heatmap(grid, ψ)

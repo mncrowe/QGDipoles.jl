@@ -36,8 +36,7 @@ grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 ψ, b = Calc_ψb(a, U, ℓ, R, β, grid)
 u, v = Calc_uv(ψ, grid)
 
-# Plot surface bouyancy b
+# Plot surface bouyancy b, if we have `Plots.jl` added
 
-using Plots
-
-heatmap(grid, b)
+# using Plots
+# heatmap(grid, b)

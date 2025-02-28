@@ -139,11 +139,15 @@ end
 
 @testset "Examples" begin
 
-    Ex = filter(contains(r".jl$"), readdir("../examples/"; join=true))
-    
+    Ex_diag = filter(contains(r".jl$"), readdir("../examples/Diagnostics"; join=true))
+    Ex_high = filter(contains(r".jl$"), readdir("../examples/High_Level"; join=true))
+    Ex_lowl = filter(contains(r".jl$"), readdir("../examples/Low_Level"; join=true))
+    Ex_strc = filter(contains(r".jl$"), readdir("../examples/Structures"; join=true))
+    Ex = [Ex_diag; Ex_high; Ex_lowl; Ex_strc]
+
     for i in 1:length(Ex)
 
-        #include.(Ex[i])
+        include.(Ex[i])
         @test true
 
     end
@@ -152,7 +156,7 @@ end
 
 # Test types/structures
 
-@testset
+@testset "Types" begin
 
     include("Type_tests.jl")
 

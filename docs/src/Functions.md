@@ -2,7 +2,7 @@
 
 This page lists all Modules, Functions and Structures available in this package.
 
-## `QGDipoles.jl`
+## QGDipoles.jl Module
 
 ```@docs
 QGDipoles
@@ -57,7 +57,7 @@ Calc_ψb
 Calc_uv
 ```
 
-## Monopolar Vortices (`monopoles.jl`)
+## Monopolar Vortices (monopoles.jl)
 
 ```@docs
 CreateRankine
@@ -83,9 +83,10 @@ QGDipoles.PolarGrid
 QGDipoles.AreaInteg2
 ```
 
-## Base
+## Base & RecipesBase
 
 ```@docs
 Base.summary
 Base.show
+RecipesBase.apply_recipe
 ```

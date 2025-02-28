@@ -45,8 +45,7 @@ diags = Diagnostic(SingleLayerQG.energy, prob; nsteps = Nt, freq = Int(Nt / 100)
 stepforward!(prob, diags, Nt)
 SingleLayerQG.updatevars!(prob)
 
-# Plot initial and final fields
+# Plot initial and final fields if we have `Plots.jl` added
 
-using Plots
-
-plot(heatmap(prob.grid, q₀), heatmap(prob.grid, prob.vars.q))
+# using Plots
+# plot(heatmap(prob.grid, q₀), heatmap(prob.grid, prob.vars.q))

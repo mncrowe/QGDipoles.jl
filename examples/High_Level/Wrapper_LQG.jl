@@ -30,8 +30,7 @@ grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 ψ, q, K, a = CreateModonLQG(grid, M, U, ℓ, R, β, ActiveLayers, x₀; K₀, a₀, tol)
 # ψ, q = CreateModonLQG(grid, M, U, ℓ, R, β, ActiveLayers, x₀; K₀, a₀, tol) # fields only
 
-# Plot streamfunction ψ in layer 1
+# Plot streamfunction ψ in layer 1, if we have `Plots.jl` added
 
-using Plots
-
-heatmap(grid, ψ, layer = 1)
+# using Plots
+# heatmap(grid, ψ, layer = 1)

@@ -35,8 +35,7 @@ K, a = IncludePassiveLayers(K, a, ActiveLayers)
 grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 ψ, q = Calc_ψq(a, U, ℓ, R, β, grid, x₀)
 
-# Plot streamfunction ψ in layer 2
+# Plot streamfunction ψ in layer 2, if we have `Plots.jl` added
 
-using Plots
-
-heatmap(grid, ψ, layer = 2)
+# using Plots
+# heatmap(grid, ψ, layer = 2)

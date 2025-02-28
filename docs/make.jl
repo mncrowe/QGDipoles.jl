@@ -1,4 +1,4 @@
-using Documenter, QGDipoles
+using Documenter, QGDipoles, RecipesBase
 
 format = Documenter.HTML(
     assets = ["assets/favicon.ico"],

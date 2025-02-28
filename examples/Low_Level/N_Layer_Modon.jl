@@ -36,8 +36,7 @@ grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 ψ, q = Calc_ψq(a, U, ℓ, R, β, grid)
 u, v = Calc_uv(ψ, grid)
 
-# Plot streamfunction ψ in layer 1
+# Plot streamfunction ψ in layer 1, if we have `Plots.jl` added
 
-using Plots
-
-heatmap(grid, ψ, layer = 1)
+# using Plots
+# heatmap(grid, ψ, layer = 1)
