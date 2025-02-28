@@ -28,15 +28,6 @@ This package is not compatible with versions of Julia earlier than 1.10 due to t
 
 See `examples/` for example scripts and `docs/documentation.md` for information on how to use this package and how it works. Full documetation is available [here](https://mncrowe.github.io/QGDipoles.jl).
 
-## Files
-
-This package contains the following files in `src/`:
-
-* `create_modon.jl`: contains functions for calculating modon solutions on a grid using a given set of coefficients
-* `lin_sys.jl`: contains functions for building and solving an inhomogeneous eigenvalue problem for the coefficients
-* `JJ_int.jl`: contains numerical integration functions for calculating the terms in the inhomogeneous eigenvalue problem
-* `QGDipoles.jl`: module file which loads dependencies and exports all functions
-
 ## Dependencies
 
 This package requires the following dependencies:
@@ -50,6 +41,19 @@ This package requires the following dependencies:
 * CUDA (v5.4.3)
 
 The specified versions are confirmed to work. Earlier versions may also work.
+
+## Files
+
+This package contains the following files in `src/`:
+
+* `create_modon.jl`: contains functions for calculating modon solutions on a grid using a given set of coefficients
+* `energetics.jl`: contains functions for evaluating energy and enstrophy diagnostics for a given vortex
+* `JJ_int.jl`: contains numerical integration functions for calculating the terms in the inhomogeneous eigenvalue problem
+* `lin_sys.jl`: contains functions for building and solving an inhomogeneous eigenvalue problem for the coefficients
+* `monopoles.jl`: contains functions for constructing monopolar vortex solutions
+* `plotting.jl`: contains recipes for plotting vortex solutions using `Plots.jl`
+* `QGDipoles.jl`: module file which loads dependencies and exports all functions
+* `vortex_types.jl`: contains structures for storing vortex parameter sets and solutions
 
 ## Methodology
 
