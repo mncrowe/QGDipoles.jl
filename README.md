@@ -12,12 +12,12 @@ It is designed to work with GeophysicalFlows.jl and FourierFlows.jl.
 `QGDipoles.jl` can be installed using the Julia package manager. It is recommended to [create a new environment](https://pkgdocs.julialang.org/v1/environments/) for each project and install any new packages to that environment. 
 
 Installation may be done using the package manager directly by typing `]` at the Julia REPL and entering the following:
-```julia-repl
+```julia
 add https://github.com/mncrowe/QGDipoles.jl.git
 instantiate
 ```
 Alternatively, you may import the package manager and install by entering the following directly into the Julia REPL:
-```julia-repl
+```julia
 import Pkg
 Pkg.add(url="https://github.com/mncrowe/QGDipoles.jl")
 Pkg.instantiate()
@@ -82,6 +82,7 @@ JuliaFormatter.format(".")
 
 The documentation is stored within `docs/` and can be built using `Documenter.jl` by running `docs/make.jl`. Full instructions for using `Documenter.jl` are available [here](https://documenter.juliadocs.org/stable/man/guide/). The documentation can be re-built by opening Julia using `julia --project=docs/` then entering the following into the REPL:
 ```julia
+import Pkg
 Pkg.develop(".")  # this adds the local copy of `QGDipoles.jl` to the `docs` environment 
 include("docs/make.jl")
 ```
