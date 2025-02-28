@@ -55,7 +55,7 @@ For those interested in the original (layered QG only) implementation, it can be
 
 ## Contributing
 
-Issue should be submitted [here](https://github.com/mncrowe/QGDipoles.jl/issues/) and discussions or questions [here](https://github.com/mncrowe/QGDipoles.jl/discussions).
+Issues should be submitted [here](https://github.com/mncrowe/QGDipoles.jl/issues/) and discussions or questions [here](https://github.com/mncrowe/QGDipoles.jl/discussions).
 
 We follow the [ColPrac guide for collaborative practices](https://github.com/SciML/ColPrac). New contributors should make sure to read that guide. Below are some additional practices we follow.
 
