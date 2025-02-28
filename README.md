@@ -9,14 +9,19 @@ It is designed to work with GeophysicalFlows.jl and FourierFlows.jl.
 
 ## Installation
 
-To install use the Julia package manager:
+`QGDipoles.jl` can be installed using the Julia package manager. It is recommended to [create a new environment](https://pkgdocs.julialang.org/v1/environments/) for each project and install any new packages to that environment. 
 
-```julia
-julia> ]
-(v1.10) pgk> add https://github.com/mncrowe/QGDipoles.jl.git
-(v1.10) pgk> instantiate
+Installation may be done using the package manager directly by typing `]` at the Julia REPL and entering the following:
+```julia-repl
+add https://github.com/mncrowe/QGDipoles.jl.git
+instantiate
 ```
-
+Alternatively, you may import the package manager and install by entering the following directly into the Julia REPL:
+```julia-repl
+import Pkg
+Pkg.add(url="https://github.com/mncrowe/QGDipoles.jl")
+Pkg.instantiate()
+```
 This package is not compatible with versions of Julia earlier than 1.10 due to the `eachslice` function.
 
 ## Examples and Documentation
