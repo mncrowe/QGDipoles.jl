@@ -43,6 +43,8 @@ DefLQGParams
 DefSQGParams
 DefLQGVortex
 DefSQGVortex
+UpdateParams
+UpdateVortex
 ```
 
 ## Low-Level Functions

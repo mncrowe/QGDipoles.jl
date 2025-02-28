@@ -7,6 +7,24 @@ solution to be included in the same structure and allow parameters to be checked
 """
 
 """
+    CreateGrid(; Nx=512, Ny=512, Lx=[-5,5], Ly=[-5,5], cuda=false)
+
+Define the numerical grid as a `GridStruct`
+
+# Arguments:
+ - `Nx`, `Ny`: number of gridpoints in x and y directions, Integers
+ - `Lx`, `Ly`: x and y domains, either vectors of endpoints or lengths, Vectors or Numbers
+ - `cuda`: `true`; use CUDA CuArray for fields (default: `false`)
+"""
+CreateGrid(;
+    Nx = 512,
+    Ny = 512,
+    Lx = [-5, 5],
+    Ly = [-5, 5],
+    cuda = false,
+) = CreateGrid(Nx, Ny, Lx, Ly; cuda)
+
+"""
     LQGParams
 
 Stores the parameters for an LQG dipolar vortex solution
@@ -150,7 +168,7 @@ struct SQGVortex
 end
 
 """
-    DefLQGParams(U=1, ℓ=1, R=Inf, β=0, ActiveLayers=1, H=1, x₀=[0,0], α=0, M=8; tol=1e-6, K₀=nothing, a₀=nothing, UseAnalytic=false, CalcVelocity=false, CalcVorticity=false, CalcEnergy=false, CalcEnstrophy=false)
+    DefLQGParams(; U=1, ℓ=1, R=Inf, β=0, ActiveLayers=1, H=1, x₀=[0,0], α=0, M=8, tol=1e-6, K₀=nothing, a₀=nothing, UseAnalytic=false, CalcVelocity=false, CalcVorticity=false, CalcEnergy=false, CalcEnstrophy=false)
 
 Defines an `LQGParams` structure using the given inputs
 
@@ -173,7 +191,7 @@ Defines an `LQGParams` structure using the given inputs
  - `CalcEnergy`: flag to determine if energy is calculated
  - `CalcEnstrophy`: flag to determine if enstrophy is calculated
 """
-function DefLQGParams(
+function DefLQGParams(;
     U::Number = 1,
     ℓ::Number = 1,
     R::Union{Number,Vector} = Inf,
@@ -182,7 +200,7 @@ function DefLQGParams(
     H::Union{Number,Vector} = 1,
     x₀::Vector = [0, 0],
     α::Number = 0,
-    M::Int = 8;
+    M::Int = 8,
     tol::Number = 1e-6,
     K₀::Union{Number,Array,Nothing} = nothing,
     a₀::Union{Array,Nothing} = nothing,
@@ -212,10 +230,11 @@ function DefLQGParams(
         CalcEnergy,
         CalcEnstrophy,
     )
+
 end
 
 """
-    DefSQGParams(U=1, ℓ=1, R=[Inf,Inf], β=0, x₀=[0,0], α=0, M=12; tol=1e-6, K₀=nothing, a₀=nothing, CalcVelocity=false, CalcVorticity=false, CalcEnergy=false)
+    DefSQGParams(; U=1, ℓ=1, R=[Inf,Inf], β=0, x₀=[0,0], α=0, M=12, tol=1e-6, K₀=nothing, a₀=nothing, CalcVelocity=false, CalcVorticity=false, CalcEnergy=false)
 
 Defines an `SQGParams` structure using the given inputs
 
@@ -234,14 +253,14 @@ Defines an `SQGParams` structure using the given inputs
  - `CalcVorticity`: flag to determine if vorticity is calculated
  - `CalcEnergy`: flag to determine if energy is calculated
 """
-function DefSQGParams(
+function DefSQGParams(;
     U::Number = 1,
     ℓ::Number = 1,
     R::Vector = [Inf, Inf],
     β::Number = 0,
     x₀::Vector = [0, 0],
     α::Number = 0,
-    M::Int = 12;
+    M::Int = 12,
     tol::Number = 1e-6,
     K₀::Union{Number,Array,Nothing} = nothing,
     a₀::Union{Array,Nothing} = nothing,
@@ -265,10 +284,139 @@ function DefSQGParams(
         CalcVorticity,
         CalcEnergy,
     )
+
 end
 
 """
-    DefLQGVortex(grid, U=1, ℓ=1, R=Inf, β=0, ActiveLayers=1, H=1, x₀=[0,0], α=0, M=8; tol=1e-6, K₀=nothing, a₀=nothing, UseAnalytic=false, CalcVelocity=false, CalcVorticity=false, CalcEnergy=false, CalcEnstrophy=false)
+    UpdateParams(params::LQGParams; kwargs...)
+
+Creates an `LQGParams` structure by replacing parameters in `params` with the given keywords
+
+# Arguments:
+ - `params`: `LQGParams` parameter structure
+ - `kwargs...`: keyword arguments for `DefLQGParams`
+"""
+function UpdateParams(params::LQGParams;
+    U::Number = params.U,
+    ℓ::Number = params.ℓ,
+    R::Union{Number,Vector} = params.R,
+    β::Union{Number,Vector} = params.β,
+    ActiveLayers::Union{Number,Vector} = params.ActiveLayers,
+    H::Union{Number,Vector} = params.H,
+    x₀::Vector = params.x₀,
+    α::Number = params.α,
+    M::Int = params.M,
+    tol::Number = params.tol,
+    K₀::Union{Number,Array,Nothing} = params.K₀,
+    a₀::Union{Array,Nothing} = params.a₀,
+    UseAnalytic::Bool = params.UseAnalytic,
+    CalcVelocity::Bool = params.CalcVelocity,
+    CalcVorticity::Bool = params.CalcVorticity,
+    CalcEnergy::Bool = params.CalcEnergy,
+    CalcEnstrophy::Bool = params.CalcEnstrophy,
+)
+
+return params = DefLQGParams(;
+    U,
+    ℓ,
+    R,
+    β,
+    ActiveLayers,
+    H,
+    x₀,
+    α,
+    M,
+    tol,
+    K₀,
+    a₀,
+    UseAnalytic,
+    CalcVelocity,
+    CalcVorticity,
+    CalcEnergy,
+    CalcEnstrophy,
+)
+
+end
+
+"""
+    UpdateParams(params::SQGParams; kwargs...)
+
+Creates an `SQGParams` structure by replacing parameters in `params` with the given keywords
+
+# Arguments:
+ - `params`: `SQGParams` parameter structure
+ - `kwargs...`: keyword arguments for `DefSQGParams`
+"""
+function UpdateParams(params::SQGParams;
+    U::Number = params.U,
+    ℓ::Number = params.ℓ,
+    R::Vector = params.R,
+    β::Number = params.β,
+    x₀::Vector = params.x₀,
+    α::Number = params.α,
+    M::Int = params.M,
+    tol::Number = params.tol,
+    K₀::Union{Number,Array,Nothing} = params.K₀,
+    a₀::Union{Array,Nothing} = params.a₀,
+    CalcVelocity::Bool = params.CalcVelocity,
+    CalcVorticity::Bool = params.CalcVorticity,
+    CalcEnergy::Bool = params.CalcEnergy,
+)
+
+return DefSQGParams(;
+    U,
+    ℓ,
+    R,
+    β,
+    x₀,
+    α,
+    M,
+    tol,
+    K₀,
+    a₀,
+    CalcVelocity,
+    CalcVorticity,
+    CalcEnergy,
+)
+
+end
+
+"""
+    UpdateVortex(grid, vortex::LQGVortex; kwargs...)
+
+Creates an `LQGVortex` structure by replacing parameters in `vortex.params` with the given keywords
+
+# Arguments:
+ - `grid`: grid structure
+ - `vortex`: `LQGVortex` structure
+ - `kwargs...`: keyword arguments for `DefLQGParams`
+"""
+function UpdateVortex(grid, vortex::LQGVortex; kwargs...)
+
+    params = UpdateParams(vortex.params; kwargs...)
+    return DefLQGVortex(grid, params)
+
+end
+
+"""
+    UpdateVortex(grid, vortex::SQGVortex; kwargs...)
+
+Creates an `SQGVortex` structure by replacing parameters in `vortex.params` with the given keywords
+
+# Arguments:
+ - `grid`: grid structure
+ - `vortex`: `SQGVortex` structure
+ - `kwargs...`: keyword arguments for `DefSQGParams`
+"""
+function UpdateVortex(grid, vortex::SQGVortex; kwargs...)
+
+    params = UpdateParams(vortex.params; kwargs...)
+    return DefSQGVortex(grid, params)
+
+end
+
+"""
+    DefLQGVortex(grid; U=1, ℓ=1, R=Inf, β=0, ActiveLayers=1, H=1, x₀=[0,0], α=0, M=8, tol=1e-6, K₀=nothing, a₀=nothing, UseAnalytic=false, CalcVelocity=false, CalcVorticity=false, CalcEnergy=false, CalcEnstrophy=false)
 
 
 Defines an `LQGVortex` solution structure using the given inputs
@@ -294,7 +442,7 @@ Defines an `LQGVortex` solution structure using the given inputs
  - `CalcEnstrophy`: flag to determine if enstrophy is calculated
 """
 function DefLQGVortex(
-    grid,
+    grid;
     U::Number = 1,
     ℓ::Number = 1,
     R::Union{Number,Vector} = Inf,
@@ -303,7 +451,7 @@ function DefLQGVortex(
     H::Union{Number,Vector} = 1,
     x₀::Vector = [0, 0],
     α::Number = 0,
-    M::Int = 8;
+    M::Int = 8,
     tol::Number = 1e-6,
     K₀::Union{Number,Array,Nothing} = nothing,
     a₀::Union{Array,Nothing} = nothing,
@@ -314,7 +462,7 @@ function DefLQGVortex(
     CalcEnstrophy::Bool = false,
 )
 
-    params = DefLQGParams(
+    params = DefLQGParams(;
         U,
         ℓ,
         R,
@@ -323,7 +471,7 @@ function DefLQGVortex(
         H,
         x₀,
         α,
-        M;
+        M,
         tol,
         K₀,
         a₀,
@@ -375,7 +523,7 @@ function DefLQGVortex(
 end
 
 """
-    DefSQGVortex(grid, U=1, ℓ=1, R=[Inf,Inf], β=0, x₀=[0,0], α=0, M=12; tol=1e-6, K₀=nothing, a₀=nothing, CalcVelocity=false, CalcVorticity=false, CalcEnergy=false)
+    DefSQGVortex(grid; U=1, ℓ=1, R=[Inf,Inf], β=0, x₀=[0,0], α=0, M=12, tol=1e-6, K₀=nothing, a₀=nothing, CalcVelocity=false, CalcVorticity=false, CalcEnergy=false)
 
 Defines an `SQGVortex` solution structure using the given inputs
 
@@ -396,14 +544,14 @@ Defines an `SQGVortex` solution structure using the given inputs
  - `CalcEnergy`: flag to determine if energy is calculated
 """
 function DefSQGVortex(
-    grid,
+    grid;
     U::Number = 1,
     ℓ::Number = 1,
     R::Vector = [Inf, Inf],
     β::Number = 0,
     x₀::Vector = [0, 0],
     α::Number = 0,
-    M::Int = 12;
+    M::Int = 12,
     tol::Number = 1e-6,
     K₀::Union{Number,Array,Nothing} = nothing,
     a₀::Union{Number,Array,Nothing} = nothing,
@@ -412,14 +560,14 @@ function DefSQGVortex(
     CalcEnergy::Bool = false,
 )
 
-    params = DefSQGParams(
+    params = DefSQGParams(;
         U,
         ℓ,
         R,
         β,
         x₀,
         α,
-        M;
+        M,
         tol,
         K₀,
         a₀,
@@ -463,7 +611,7 @@ Defines an `LQGVortex` solution structure using the given inputs
 function DefLQGVortex(grid, params::LQGParams)
 
     return DefLQGVortex(
-        grid,
+        grid;
         params.U,
         params.ℓ,
         params.R,
@@ -472,7 +620,7 @@ function DefLQGVortex(grid, params::LQGParams)
         params.H,
         params.x₀,
         params.α,
-        params.M;
+        params.M,
         params.tol,
         params.K₀,
         params.a₀,
@@ -496,14 +644,14 @@ Defines an `SQGVortex` solution structure using the given inputs
 function DefSQGVortex(grid, params::SQGParams)
 
     return DefSQGVortex(
-        grid,
+        grid;
         params.U,
         params.ℓ,
         params.R,
         params.β,
         params.x₀,
         params.α,
-        params.M;
+        params.M,
         params.tol,
         params.K₀,
         params.a₀,

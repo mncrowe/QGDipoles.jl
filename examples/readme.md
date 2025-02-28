@@ -50,4 +50,6 @@ The available example scripts are:
 
 ### Structures
 
+* Vortex_Structures_LQG.jl: Constructs various 1-layer LQG vortices using vortex structures.
 
+* Vortex_Structures_SQG.jl: Constructs various SQG vortices using vortex structures.

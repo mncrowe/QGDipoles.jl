@@ -62,6 +62,8 @@ export
     DefSQGParams,
     DefLQGVortex,
     DefSQGVortex,
+    UpdateParams,
+    UpdateVortex,
 
     # monopoles.jl
     CreateRankine,
