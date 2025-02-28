@@ -83,10 +83,9 @@ The newly built documentation will be available in `docs/build` and can be viewe
 
 ### Tests
 
-Tests are stored in `tests/` and can be run using either
+Tests are stored in `test/` and can be run using either
 ```julia
-include("tests/runtests.jl")
-```
+include("test/runtests.jl")
 or by activating the package manager by entering `]` at the Julia REPL then entering `test`.
 
 
