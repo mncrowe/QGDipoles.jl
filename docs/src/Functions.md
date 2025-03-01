@@ -8,58 +8,103 @@ This page lists all Modules, Functions and Structures available in this package.
 QGDipoles
 ```
 
+## Vortex Structures
+
+### LQG
+
+```@docs
+LQGParams
+LQGVortex
+DefLQGParams
+DefLQGVortex
+```
+
+### SQG
+
+```@docs
+SQGParams
+SQGVortex
+DefSQGParams
+DefSQGVortex
+```
+
+### Shared
+```@docs
+UpdateParams
+UpdateVortex
+```
+
 ## High-Level Functions
+
+### LQG
 
 ```@docs
 CreateModonLQG
-CreateModonSQG
 CreateLCD
 CreateLRD
+```
+
+### SQG
+
+```@docs
+CreateModonSQG
+Eval_ψ_SQG
+Eval_q_SQG
+Eval_b_SQG
+Eval_w_SQG
 ```
 
 ## Utilities
 
 ```@docs
 CreateGrid
-Eval_ψ_SQG
-Eval_q_SQG
-Eval_b_SQG
-Eval_w_SQG
+Calc_uv
 Calc_∇
 Calc_ζ
-EnergyLQG
-EnstrophyLQG
-EnergySQG
 ```
 
-## Vortex Types
+## Diagnostics
+
+### LQG
 
 ```@docs
-LQGParams
-SQGParams
-LQGVortex
-SQGVortex
-DefLQGParams
-DefSQGParams
-DefLQGVortex
-DefSQGVortex
-UpdateParams
-UpdateVortex
+EnergyLQG
+EnstrophyLQG
+```
+
+### SQG
+
+```@docs
+EnergySQG
 ```
 
 ## Low-Level Functions
 
+### LQG
+
 ```@docs
-BuildLinSys
+BuildLinSysLQG
 ApplyPassiveLayers
 IncludePassiveLayers
-SolveInhomEVP
 Calc_ψq
-Calc_ψb
-Calc_uv
 ```
 
-## Monopolar Vortices (monopoles.jl)
+### SQG
+
+```@docs
+BuildLinSysSQG
+Calc_ψb
+```
+
+### Shared
+
+```@docs
+SolveInhomEVP
+```
+
+## Extras
+
+### Monopoles
 
 ```@docs
 CreateRankine

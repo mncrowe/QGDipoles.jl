@@ -17,7 +17,6 @@ function TestSQG_K()
     tol = 1e-6
     K₀ = 4
     method = 1
-    sqg = true
 
     U, ℓ = 1, 1
     R = [Inf, Inf]
@@ -28,8 +27,8 @@ function TestSQG_K()
 
     # Solve linear system
 
-    A, B, c, d = BuildLinSys(M, λ, μ; tol, sqg)
-    K, a = SolveInhomEVP(A, B, c, d; K₀, tol, method, sqg)
+    A, B, c, d = BuildLinSysSQG(M, λ, μ; tol)
+    K, a = SolveInhomEVP(A, B, c, d; K₀, tol, method, m = 1)
 
     return abs(K[1] - 4.12126) < 1e-5
 
@@ -50,7 +49,6 @@ function TestSQG_v(cuda)
     tol = 1e-6
     K₀ = 4
     method = 1
-    sqg = true
 
     U, ℓ = 1, 1
     R = [Inf, Inf]
@@ -64,8 +62,8 @@ function TestSQG_v(cuda)
 
     # Solve linear system
 
-    A, B, c, d = BuildLinSys(M, λ, μ; tol, sqg)
-    K, a = SolveInhomEVP(A, B, c, d; K₀, tol, method, sqg)
+    A, B, c, d = BuildLinSysSQG(M, λ, μ; tol)
+    K, a = SolveInhomEVP(A, B, c, d; K₀, tol, method, m = 1)
 
     # Create solution
 

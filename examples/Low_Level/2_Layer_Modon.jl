@@ -22,7 +22,7 @@ Lx, Ly = 10, 10
 λ = ℓ ./ R
 μ = β * ℓ^2 / U
 
-A, B, c, d = BuildLinSys(M, λ, μ; tol)
+A, B, c, d = BuildLinSysLQG(M, λ, μ; tol)
 K, a = SolveInhomEVP(A, B, c, d; tol)
 
 # Create grid and calculate streamfunctions and vorticities

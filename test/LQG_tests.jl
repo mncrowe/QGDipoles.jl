@@ -24,7 +24,7 @@ function Test1QG_K(U::Number, ℓ::Number, R::Number, β::Number)
 
     # Create linear system
 
-    A, B, c, d = BuildLinSys(M, λ, μ; tol)
+    A, B, c, d = BuildLinSysLQG(M, λ, μ; tol)
     K₁, a = SolveInhomEVP(A, B, c, d; K₀, tol, method)
 
     # Calculate semi-analytic result using root finding
@@ -83,7 +83,7 @@ function Test1QG_ψ(cuda::Bool)
 
     # Build linear system
 
-    A, B, c, d = BuildLinSys(M, λ, μ; tol)
+    A, B, c, d = BuildLinSysLQG(M, λ, μ; tol)
     K, a = SolveInhomEVP(A, B, c, d; K₀, tol, method)
 
     # Calculate solution
@@ -119,7 +119,7 @@ function Test2QG_K()
 
     # Build linear system
 
-    A, B, c, d = BuildLinSys(M, λ, μ; tol)
+    A, B, c, d = BuildLinSysLQG(M, λ, μ; tol)
     K₁, a = SolveInhomEVP(A, B, c, d; K₀, tol, method)
 
     # Set known value for K
@@ -159,7 +159,7 @@ function Test2QG_PVinv(cuda)
 
     # Build linear system
 
-    A, B, c, d = BuildLinSys(M, λ, μ; tol)
+    A, B, c, d = BuildLinSysLQG(M, λ, μ; tol)
     K, a = SolveInhomEVP(A, B, c, d; K₀, tol, method)
 
     # Calculate solution
@@ -207,7 +207,7 @@ function TestLQG_ActiveLayers()
     λ = ℓ ./ R
     μ = β * ℓ^2 / U
 
-    A, B, c, d = BuildLinSys(M, λ, μ; tol)
+    A, B, c, d = BuildLinSysLQG(M, λ, μ; tol)
     K₁, _ = SolveInhomEVP(A, B, c, d; K₀, tol, warn)
 
     # Build and solve reduced linear system

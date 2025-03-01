@@ -13,73 +13,117 @@ using Jacobi, FFTW, LinearAlgebra, SpecialFunctions, QuadGK, NLsolve, CUDA, Reci
 # Export names for all functions and types
 
 export
-    # JJ_integ.jl
-    #A_func,
-    #B_func,
-    #JJ_int,
 
-    # lin_sys.jl
-    BuildLinSys,
-    ApplyPassiveLayers,
-    IncludePassiveLayers,
+    ## core
+
     SolveInhomEVP,
     #InhomEVP_F!,
     #OrthogSpace,
 
-    # create_modon.jl
-    #ZernikeR,
     #GridStruct,
     CreateGrid,
-    Calc_ψq,
-    Calc_ψb,
-    Calc_uv,
-    #ΔNCalc,
-    CreateModonLQG,
-    CreateModonSQG,
-    CreateLCD,
-    CreateLRD,
-    Eval_ψ_SQG,
-    Eval_q_SQG,
-    Eval_b_SQG,
-    Eval_w_SQG,
-    Calc_∇,
     #CartesianGrid,
     #PolarGrid,
-    Calc_ζ,
 
-    # energetics.jl
-    EnergyLQG,
-    EnstrophyLQG,
-    EnergySQG,
+    #JJ_int,
     #AreaInteg2,
 
-    # vortex_types.jl
-    LQGParams,
-    SQGParams,
-    LQGVortex,
-    SQGVortex,
-    DefLQGParams,
-    DefSQGParams,
-    DefLQGVortex,
-    DefSQGVortex,
-    UpdateParams,
-    UpdateVortex,
+    #ZernikeR,
 
-    # monopoles.jl
+    ## extras
+
     CreateRankine,
     Create1LMonopole,
     InvertVorticity1LQG,
     CreateLQGMonopole,
-    InvertVorticityLQG
+    InvertVorticityLQG,
+
+    ## QG shared
+
+    UpdateParams,
+    UpdateVortex,
+
+    ## LQG
+
+    #A_func,
+    #B_func,
+    BuildLinSysLQG,
+    ApplyPassiveLayers,
+    IncludePassiveLayers,
+
+    Calc_ψq,
+    #ΔNCalc,
+
+    CreateModonLQG,
+    CreateLCD,
+    CreateLRD,
+
+    EnergyLQG,
+    EnstrophyLQG,
+
+    LQGParams,
+    DefLQGParams,
+    LQGVortex,
+    DefLQGVortex,
+
+    ## SQG
+    
+    BuildLinSysSQG,
+
+    Calc_ψb,
+
+    CreateModonSQG,
+
+    Eval_ψ_SQG,
+    Eval_q_SQG,
+    Eval_b_SQG,
+    Eval_w_SQG,
+
+    EnergySQG,
+
+    SQGParams,
+    DefSQGParams,
+    SQGVortex,
+    DefSQGVortex,
+
+    ## utils
+
+    Calc_uv,
+    Calc_∇,
+    Calc_ζ
 
 # Include all function and type definitions
 
-include("JJ_integ.jl")
-include("lin_sys.jl")
-include("create_modon.jl")
-include("energetics.jl")
-include("vortex_types.jl")
-include("monopoles.jl")
-include("plotting.jl")
+## core
+
+include("core/evp_solve.jl")
+include("core/grid.jl")
+include("core/num_integ.jl")
+include("core/plotting.jl")
+include("core/zernike.jl")
+
+## extras
+
+include("extras/monopoles.jl")
+
+## LQG
+
+include("LQG/lqg_diag.jl")
+include("LQG/lqg_evp.jl")
+include("LQG/lqg_high.jl")
+include("LQG/lqg_low.jl")
+include("LQG/lqg_type.jl")
+
+## SQG
+
+include("SQG/sqg_diag.jl")
+include("SQG/sqg_evp.jl")
+include("SQG/sqg_high.jl")
+include("SQG/sqg_low.jl")
+include("SQG/sqg_type.jl")
+
+## utils
+
+include("utils/field_utils.jl")
 
 end

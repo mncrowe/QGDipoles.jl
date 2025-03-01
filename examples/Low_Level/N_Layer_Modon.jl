@@ -24,7 +24,7 @@ Lx, Ly = 20, 20
 λ = ℓ ./ R
 μ = β * ℓ^2 / U
 
-A, B, c, d = BuildLinSys(M, λ, μ; tol)
+A, B, c, d = BuildLinSysLQG(M, λ, μ; tol)
 A, B, c, d = ApplyPassiveLayers(A, B, c, d, ActiveLayers)
 
 K, a = SolveInhomEVP(A, B, c, d; K₀, tol)

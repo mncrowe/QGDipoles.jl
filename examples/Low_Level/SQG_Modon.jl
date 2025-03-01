@@ -15,7 +15,7 @@ M = 20# number of coefficients in Zernike expansion
 tol = 1e-6# maximum error in solution evaluation
 cuda = false# use CuArrays for grid
 method = 0# 0; eigensolve/nlsolve, 1; nlsolve
-sqg = true# functions use SQG functionality
+m = 1# exponent of K in linear system, 1 for SQG
 
 # Set grid parameters
 
@@ -27,8 +27,8 @@ Lx, Ly = 10, 10
 λ = ℓ ./ R
 μ = β * ℓ^2 / U
 
-A, B, c, d = BuildLinSys(M, λ, μ; tol, sqg)
-K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol, method, sqg)
+A, B, c, d = BuildLinSysSQG(M, λ, μ; tol)
+K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol, method, m)
 
 # Create grid and calculate streamfunctions and vorticities
 
