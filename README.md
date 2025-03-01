@@ -44,16 +44,15 @@ The specified versions are confirmed to work. Earlier versions may also work.
 
 ## Files
 
-This package contains the following files in `src/`:
+This directory contains the following:
 
-* `create_modon.jl`: contains functions for calculating modon solutions on a grid using a given set of coefficients
-* `energetics.jl`: contains functions for evaluating energy and enstrophy diagnostics for a given vortex
-* `JJ_int.jl`: contains numerical integration functions for calculating the terms in the inhomogeneous eigenvalue problem
-* `lin_sys.jl`: contains functions for building and solving an inhomogeneous eigenvalue problem for the coefficients
-* `monopoles.jl`: contains functions for constructing monopolar vortex solutions
-* `plotting.jl`: contains recipes for plotting vortex solutions using `Plots.jl`
-* `QGDipoles.jl`: module file which loads dependencies and exports all functions
-* `vortex_types.jl`: contains structures for storing vortex parameter sets and solutions
+* `docs/`: contains documentation and build script for html generation.
+* `examples/`: example scripts, more examples are available in the documentation.
+* `src/`: source Julia files for QGDipoles.jl.
+* `test/`: tests for QGDipoles.jl package.
+* `utils/`: additional utilities for package management.
+* `Project.toml`: project file containing dependencies for QGDipoles.jl.
+* `README.md`: this readme file.
 
 ## Methodology
 
