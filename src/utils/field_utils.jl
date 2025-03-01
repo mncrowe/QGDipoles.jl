@@ -15,15 +15,18 @@ to ensure they work with the output of these models.
 """
 
 """
-    Calc_uv(ψ, grid)
+    Calc_uv(grid, ψ)
 
 Calculate the velocity fields from ``ψ`` using ``(u, v) = (-∂ψ/∂y, ∂ψ/∂x)``
 
 # Arguments:
- - `ψ`: streamfunction, Array
  - `grid`: grid structure containing `kr` and `l`
+ - `ψ`: streamfunction, Array
 """
-function Calc_uv(ψ::Union{CuArray,Array}, grid)
+function Calc_uv(
+    grid,
+    ψ::Union{CuArray,Array},
+)
 
     Nd = ndims(ψ)
     Nx, Ny = size(ψ)
@@ -57,15 +60,18 @@ function Calc_uv(ψ::Union{CuArray,Array}, grid)
 end
 
 """
-    Calc_∇(f, grid)
+    Calc_∇(grid, f)
 
 Calculate the gradient ``∇f`` for a given field ``f``
 
 # Arguments:
- - `f`: function, Array
  - `grid`: grid structure containing `kr` and `l`
+ - `f`: function, Array
 """
-function Calc_∇(f::Union{CuArray,Array}, grid)
+function Calc_∇(
+    grid,
+    f::Union{CuArray,Array},
+)
 
     Nd = ndims(f)
     Nx, Ny = size(f)
@@ -99,15 +105,18 @@ function Calc_∇(f::Union{CuArray,Array}, grid)
 end
 
 """
-    Calc_ζ(ψ, grid)
+    Calc_ζ(grid, ψ)
 
 Calculate the vertical vorticity using ``ζ = ∂v/∂x - ∂u/∂y = ∇²ψ``
 
 # Arguments:
- - `ψ`: streamfunction, Array
  - `grid`: grid structure containing `Krsq`
+ - `ψ`: streamfunction, Array
 """
-function Calc_ζ(ψ::Union{CuArray,Array}, grid)
+function Calc_ζ(
+    grid,
+    ψ::Union{CuArray,Array},
+)
 
     Nd = ndims(ψ)
     Nx, Ny = size(ψ)

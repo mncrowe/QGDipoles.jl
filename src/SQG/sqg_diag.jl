@@ -3,16 +3,16 @@ This file cotains energy diagnostics for the SQG model.
 
 For SQG, the two quantities of interest are the total domain averaged energy
 
-``E = -\\frac{1}{2} \\int_A \\psi b dx dy,``
+``E = -\\frac{1}{2} ʃ_A ψ b dx dy,``
 
 and the surface potential energy
 
-``SPE = \\frac{1}{2} \\int_A |b + \\psi / R^\\prime|^2 dx dy.``
+``SPE = \\frac{1}{2} ʃ_A |b + ψ / R′|^2 dx dy.``
 
 """
 
 """
-    EnergySQG(grid, ψ, b, R′)
+    EnergySQG(grid, ψ, b; R′)
 
 Calculates the energies for the SQG system; the total domain integrated energy
 and the surface potential energy
@@ -26,7 +26,12 @@ and the surface potential energy
 Note: the surface potential energy is sometimes referred to as the generalised
 enstrophy or the buoyancy variance.
 """
-function EnergySQG(grid, ψ::Union{CuArray,Array}, b::Union{CuArray,Array}, R′::Number = Inf)
+function EnergySQG(
+    grid,
+    ψ::Union{CuArray,Array},
+    b::Union{CuArray,Array};
+    R′::Number = Inf,
+)
 
     ψh = rfft(ψ)
     bh = rfft(b)

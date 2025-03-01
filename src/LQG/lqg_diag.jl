@@ -4,33 +4,35 @@ solutions in the LQG model.
 
 For the (multi-layer) LQG model we have:
 
-``KE = \\frac{H_i}{2H} \\int_A |\\nabla\\psi_i|^2 dx dy,``
+``KE = \\frac{H_i}{2H} ʃ_A |∇ψ_i|^2 dx dy,``
 
-``PE = \\frac{H_i}{2H R_i^2} \\int_A |\\psi_i - \\psi_{i+1}|^2 dx dy,``
+``PE = \\frac{H_i}{2H R_i^2} ʃ_A |ψ_i - ψ_{i+1}|^2 dx dy,``
 
 For 1 layer (equivalent barotropic) QG, the PE is given by
 
-``PE = \\frac{1}{2 R^2} \\int_A |\\psi|^2 dx dy,``
+``PE = \\frac{1}{2 R^2} ʃ_A |ψ|^2 dx dy,``
 
-and the KE is the same as the multi-layer case.
+and the KE is the same as the multi-layer case. The enstrophy is
+
+``Z = \\frac{H_i}{2H} ʃ_A q^2 dx dy.``
 
 """
 
 """
-    EnergyLQG(grid, ψ, R, H=[1])
+    EnergyLQG(grid, ψ; R=Inf, H=[1])
 
 Calculates the kinetic and potential energy for the LQG system
 
 # Arguments:
  - `grid`: grid structure containing `Krsq`
  - `ψ`: streamfunction in each layer, Array or CuArray
- - `R`: Rossby radius in each layer, Number or Vector
- - `H`: Thickness of each layer, Number or Vector
+ - `R`: Rossby radius in each layer, Number or Vector (default: `Inf`)
+ - `H`: Thickness of each layer, Number or Vector (default: `[1]`)
 """
 function EnergyLQG(
     grid,
-    ψ::Union{CuArray,Array},
-    R::Union{Number,Vector},
+    ψ::Union{CuArray,Array};
+    R::Union{Number,Vector} = Inf,
     H::Union{Number,Vector} = [1],
 )
 
@@ -68,28 +70,32 @@ function EnergyLQG(
 end
 
 """
-    EnstrophyLQG(grid, q, H=[1])
+    EnstrophyLQG(grid, q; H=[1])
 
 Calculates the enstrophy for the LQG system
 
 # Arguments:
  - `grid`: grid structure containing `Krsq`
  - `q`: potential vorticity anomaly in each layer, Array or CuArray
- - `H`: Thickness of each layer, Number or Vector
+ - `H`: Thickness of each layer, Number or Vector (default: `[1]`)
 """
-function EnstrophyLQG(grid, q::Union{CuArray,Array}, H::Union{Number,Vector} = [1])
+function EnstrophyLQG(
+    grid,
+    q::Union{CuArray,Array};
+    H::Union{Number,Vector} = [1],
+)
 
     Nx, Ny = size(q)[1:2]
     N = Int(length(q) / (Nx * Ny))
 
     D = sum(H)
 
-    EN = zeros(N)
+    Z = zeros(N)
 
     for i = 1:N
-        EN[i] = H[i] / (2 * D) * AreaInteg2(q[:, :, i], grid)
+        Z[i] = H[i] / (2 * D) * AreaInteg2(q[:, :, i], grid)
     end
 
-    return EN
+    return Z
 
 end

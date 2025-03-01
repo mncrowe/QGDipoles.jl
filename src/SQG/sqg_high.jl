@@ -11,7 +11,7 @@ the SQG (surface) solution for ψ.
 """
 
 """
-    CreateModonSQG(grid, M, U=1, ℓ=1, R=[Inf, Inf], β=0, x₀=[0, 0], α=0; K₀=nothing, a₀=nothing, tol=1e-6)
+    CreateModonSQG(grid; U=1, ℓ=1, R=[Inf, Inf], β=0, x₀=[0, 0], α=0, M=12, tol=1e-6, K₀=nothing, a₀=nothing)
 
 High level wrapper function for calculating ``ψ`` and ``b`` for the SQG model using given parameters
 
@@ -30,17 +30,17 @@ Note: Here R is the baroclinic Rossby radius, R = NH/f, and R' = R₀²/R where 
 the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = g/(fN).
 """
 function CreateModonSQG(
-    grid,
-    M::Int = 12,
+    grid;
     U::Number = 1,
     ℓ::Number = 1,
     R::Vector = [Inf, Inf],
     β::Number = 0,
     x₀::Vector = [0, 0],
-    α::Number = 0;
+    α::Number = 0,
+    M::Int = 12,
+    tol = 1e-6,
     K₀::Union{Number,Array,Nothing} = nothing,
     a₀::Union{Array,Nothing} = nothing,
-    tol = 1e-6,
 )
 
     # Define intermediate variables
@@ -57,14 +57,14 @@ function CreateModonSQG(
 
     # Construct solution using computed coefficients
 
-    ψ, b = Calc_ψb(a, U, ℓ, R, β, grid, x₀, α)
+    ψ, b = Calc_ψb(grid, a; U, ℓ, R, β, x₀, α)
 
     return ψ, b, K, a
 
 end
 
 """
-    Eval_ψ_SQG(grid, ψ, z=[0], U=1, R=[Inf, Inf], β=0)
+    Eval_ψ_SQG(grid, ψ; z=[0], U=1, R=[Inf, Inf], β=0)
 
 Evaluates ``ψ`` at specified depths, ``z ∈ [-R, 0]``, for the SQG problem
 
@@ -81,7 +81,7 @@ the barotropic Rossby radius, ``R₀ = √(gH)/f``. For infinite depth, ``R' = g
 """
 function Eval_ψ_SQG(
     grid,
-    ψ::Union{CuArray,Array},
+    ψ::Union{CuArray,Array};
     z::Vector = [0],
     U::Number = 1,
     R::Vector = [Inf, Inf],
@@ -125,7 +125,7 @@ function Eval_ψ_SQG(
 end
 
 """
-    Eval_q_SQG(grid, ψ, z=[0], U=1, R=[Inf, Inf], β=0)
+    Eval_q_SQG(grid, ψ; z=[0], U=1, R=[Inf, Inf], β=0)
 
 Evaluates ``q`` at specified depths, ``z ∈ [-R, 0]``, for the SQG problem
 
@@ -142,7 +142,7 @@ the barotropic Rossby radius, ``R₀ = √(gH)/f``. For infinite depth, ``R' = g
 """
 function Eval_q_SQG(
     grid,
-    ψ::Union{CuArray,Array},
+    ψ::Union{CuArray,Array};
     z::Vector = [0],
     U::Number = 1,
     R::Vector = [Inf, Inf],
@@ -158,7 +158,7 @@ function Eval_q_SQG(
 end
 
 """
-    Eval_b_SQG(grid, ψ, z=[0], U=1, R=[Inf, Inf], β=0)
+    Eval_b_SQG(grid, ψ; z=[0], U=1, R=[Inf, Inf], β=0)
 
 Evaluates ``b`` at specified depths, ``z ∈ [-R, 0]``, for the SQG problem
 
@@ -175,7 +175,7 @@ the barotropic Rossby radius, ``R₀ = √(gH)/f``. For infinite depth, ``R' = g
 """
 function Eval_b_SQG(
     grid,
-    ψ::Union{CuArray,Array},
+    ψ::Union{CuArray,Array};
     z::Vector = [0],
     U::Number = 1,
     R::Vector = [Inf, Inf],
@@ -220,7 +220,7 @@ function Eval_b_SQG(
 end
 
 """
-    Eval_w_SQG(grid, ψ, z=[0], U=1, R=[Inf, Inf], β=0)
+    Eval_w_SQG(grid, ψ; z=[0], U=1, R=[Inf, Inf], β=0)
 
 Evaluates N²w at specified depths, ``z ∈ [-R, 0]``, for the SQG problem using ``N²w = -J[ψ + Uy, b]``
 
@@ -240,7 +240,7 @@ Instead use ``w = -U∂η/∂x`` where ``η = fψ/g`` is the surface elevation, 
 """
 function Eval_w_SQG(
     grid,
-    ψ::Union{CuArray,Array},
+    ψ::Union{CuArray,Array};
     z::Vector = [0],
     U::Number = 1,
     R::Vector = [Inf, Inf],

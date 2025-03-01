@@ -44,25 +44,25 @@ FourierFlows.jl and GeophysicalFlows.jl so will also work with this grid.
 """
 
 """
-    Calc_ψq(a, U, ℓ, R, β, grid, x₀=[0, 0], α=0)
+    Calc_ψq(grid, a; U, ℓ, R, β, x₀=[0, 0], α=0)
 
 Calculate ``ψ`` and ``q`` in a layered QG model using coefficients and vortex parameters
 
 # Arguments:
- - `a`: M x N array of coefficients, Array
- - (`U`, `ℓ`): vortex speed and radius, Numbers
- - (`R`, `β`): Rossby radii and (y) PV gradients in each layer, Numbers or Vectors
  - `grid`: grid structure containing x, y, and Krsq
+ - `a`: M x N array of coefficients, Array
+ - (`U`, `ℓ`): vortex speed and radius, Numbers (default: `(1, 1)`)
+ - (`R`, `β`): Rossby radii and (y) PV gradients in each layer, Numbers or Vectors (default: `(Inf, 0)`)
  - `x₀`: position of vortex center, vector (default: `[0, 0]`)
  - `α`: initial angle of vortex, Number (default: `0`)
 """
 function Calc_ψq(
-    a::Array,
-    U::Number,
-    ℓ::Number,
-    R::Union{Number,Vector},
-    β::Union{Number,Vector},
     grid,
+    a::Array;
+    U::Number = 1,
+    ℓ::Number = 1,
+    R::Union{Number,Vector} = Inf,
+    β::Union{Number,Vector} = 0,
     x₀::Vector = [0, 0],
     α::Number = 0,
 )

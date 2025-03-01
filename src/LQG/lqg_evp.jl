@@ -118,7 +118,11 @@ Evaluates the matrix function ``A(ξ, λ, μ) = K(ξ) [K(ξ) + D(μ)]⁻¹ ξ⁻
  - `λ`: ratio of vortex radius to Rossby radius in each layer, Number or Vector
  - `μ`: nondimensional (y) vorticity gradient in each layer, Number or Vector
 """
-function A_func(ξ::Number, λ::Union{Vector,Number}, μ::Union{Vector,Number})
+function A_func(
+    ξ::Number,
+    λ::Union{Vector,Number},
+    μ::Union{Vector,Number},
+)
 
     N = length(μ)
 
@@ -163,7 +167,11 @@ Evaluates the matrix function ``B(ξ, λ, μ) = [K(ξ) + D(μ)]⁻¹ ξ⁻¹``
  - `λ`: ratio of vortex radius to Rossby radius in each layer, Number or Vector
  - `μ`: nondimensional (y) vorticity gradient in each layer, Number or Vector
 """
-function B_func(ξ::Number, λ::Union{Vector,Number}, μ::Union{Vector,Number})
+function B_func(
+    ξ::Number,
+    λ::Union{Vector,Number},
+    μ::Union{Vector,Number},
+)
 
     N = length(μ)
 
@@ -253,7 +261,11 @@ Includes columns corresponding to passive layers in the eigenvalue and coefficie
  - `K`, `a`: eigenvalue and coefficient arrays describing system solution, Arrays
  - `ActiveLayers`: vector of 1s or 0s where 1 denotes an active layer, Number or Vector
 """
-function IncludePassiveLayers(K::Array, a::Array, ActiveLayers::Union{Number,Vector})
+function IncludePassiveLayers(
+    K::Array,
+    a::Array,
+    ActiveLayers::Union{Number,Vector},
+)
 
     # Ensure ActiveLayers is a Vector
 

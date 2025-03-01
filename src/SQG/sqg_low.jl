@@ -40,16 +40,16 @@ FourierFlows.jl and GeophysicalFlows.jl so will also work with this grid.
 """
 
 """
-    Calc_ψb(a, U, ℓ, R, β, grid, x₀=[0, 0], α=0)
+    Calc_ψb(grid, a; U, ℓ, R, β, x₀=[0, 0], α=0)
 
 Calculate SQG fields ``ψ`` and ``b`` using coefficients and vortex parameters
 
 # Arguments:
- - `a`: M x 1 array of coefficients, Array
- - (`U`, `ℓ`): vortex speed and radius, Numbers
- - `R`: vector of ``[R, R']``, Vector
- - `β`: beta-plane (y) PV gradient, Number
  - `grid`: grid structure containing `x`, `y`, and `Krsq`
+ - `a`: M x 1 array of coefficients, Array
+ - (`U`, `ℓ`): vortex speed and radius, Numbers (default: `1`)
+ - `R`: vector of ``[R, R']``, Vector (default: `[Inf, Inf]`)
+ - `β`: beta-plane (y) PV gradient, Number (default: `1`)
  - `x₀`: position of vortex center, vector (default: `[0, 0]`)
  - `α`: initial angle of vortex, Number (default: `0`)
 
@@ -57,12 +57,12 @@ Note: Here R is the baroclinic Rossby radius, R = NH/f, and R' = R₀²/R where 
 the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = g/(fN).
 """
 function Calc_ψb(
-    a::Array,
-    U::Number,
-    ℓ::Number,
-    R::Vector,
-    β::Number,
     grid,
+    a::Array;
+    U::Number = 1,
+    ℓ::Number = 1,
+    R::Vector = [Inf, Inf],
+    β::Number = 0,
     x₀::Vector = [0, 0],
     α::Number = 0,
 )

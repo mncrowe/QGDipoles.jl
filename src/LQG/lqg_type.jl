@@ -270,35 +270,35 @@ function DefLQGVortex(
 
     if UseAnalytic
         if N == 1
-            ψ, q, K = CreateLRD(grid, U, ℓ, R, β, x₀, α)
+            ψ, q, K = CreateLRD(grid; U, ℓ, R, β, x₀, α)
             a = nothing
         else
             @error "UseAnalytic = true not supported for N > 1"
         end
     else
-        ψ, q, K, a = CreateModonLQG(grid, M, U, ℓ, R, β, ActiveLayers, x₀, α; K₀, a₀, tol)
+        ψ, q, K, a = CreateModonLQG(grid; U, ℓ, R, β, ActiveLayers, x₀, α, M, tol, K₀, a₀)
     end
 
     if CalcVelocity
-        u, v = Calc_uv(ψ, grid)
+        u, v = Calc_uv(grid, ψ)
     else
         u, v = nothing, nothing
     end
 
     if CalcVorticity
-        ζ = Calc_ζ(ψ, grid)
+        ζ = Calc_ζ(grid, ψ)
     else
         ζ = nothing
     end
 
     if CalcEnergy
-        KE, PE = EnergyLQG(grid, ψ, R, H)
+        KE, PE = EnergyLQG(grid, ψ; R, H)
     else
         KE, PE = nothing, nothing
     end
 
     if CalcEnstrophy
-        EN = EnstrophyLQG(grid, q, H)
+        EN = EnstrophyLQG(grid, q; H)
     else
         EN = nothing
     end

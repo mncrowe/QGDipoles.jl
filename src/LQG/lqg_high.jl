@@ -11,36 +11,36 @@ Larichev-Reznik Dipole using the analytic solutions for these cases.
 """
 
 """
-    CreateModonLQG(grid, M, U=1, ℓ=1, R=1, β=0, ActiveLayers=1, x₀=[0, 0], α=0; K₀=nothing, a₀=nothing, tol=1e-6)
+    CreateModonLQG(grid; U=1, ℓ=1, R=Inf, β=0, ActiveLayers=1, x₀=[0, 0], α=0, M=8, tol=1e-6, K₀=nothing, a₀=nothing)
 
 High level wrapper function for calculating ``ψ`` and ``q`` for the Layered QG model using given parameters
 
 # Arguments:
  - `grid`: grid structure containing `x`, `y`, and `Krsq`
- - `M`: number of coefficient to solve for, Integer (default: `8`)
  - (`U`, `ℓ`): vortex speed and radius, Numbers (default: (`1`, `1`))
- - (`R`, `β`): Rossby radii and (y) PV gradients in each layer, Numbers or Vectors, (default: (`1`, `0`))
+ - (`R`, `β`): Rossby radii and (y) PV gradients in each layer, Numbers or Vectors, (default: (`Inf`, `0`))
  - `ActiveLayers`: vector of 1s or 0s where 1 denotes an active layer, Number or Vector, (default: `[1,..,1]`)
  - `x₀`: position of vortex center, vector (default: `[0, 0]`)
  - `α`: initial angle of vortex, Number (default: 0)
- - `K₀`, `a₀`: initial guesses for ``K`` and ``a``, Arrays or nothings (default: `nothing`)
+ - `M`: number of coefficient to solve for, Integer (default: `8`)
  - `tol`: error tolerance passed to `QuadGK` and `NLSolve` functions, Number (default: `1e-6`)
+ - `K₀`, `a₀`: initial guesses for ``K`` and ``a``, Arrays or nothings (default: `nothing`)
 
 Note: provide values of K₀ and a₀ for active layers ONLY.
 """
 function CreateModonLQG(
-    grid,
-    M::Int = 8,
+    grid;
     U::Number = 1,
     ℓ::Number = 1,
-    R::Union{Number,Vector} = 1,
+    R::Union{Number,Vector} = Inf,
     β::Union{Number,Vector} = 0,
     ActiveLayers::Union{Number,Vector} = 1,
     x₀::Vector = [0, 0],
     α::Number = 0;
+    M::Int = 8,
+    tol = 1e-6,
     K₀::Union{Number,Array,Nothing} = nothing,
     a₀::Union{Array,Nothing} = nothing,
-    tol = 1e-6,
 )
 
     # If ActiveLayers size does not match size of R, assume all layers are active
@@ -67,14 +67,14 @@ function CreateModonLQG(
 
     # Construct solution using computed coefficients
 
-    ψ, q = Calc_ψq(a, U, ℓ, R, β, grid, x₀, α)
+    ψ, q = Calc_ψq(grid, a; U, ℓ, R, β, x₀, α)
 
     return ψ, q, K, a
 
 end
 
 """
-    CreateLCD(grid, U=1, ℓ=1, x₀=[0, 0], α=0)
+    CreateLCD(grid; U=1, ℓ=1, x₀=[0, 0], α=0)
 
 High level wrapper function for calculating ``ψ`` and ``q`` for the Lamb-Chaplygin dipole using given parameters
 
@@ -86,7 +86,13 @@ High level wrapper function for calculating ``ψ`` and ``q`` for the Lamb-Chaply
 
 Note: This function uses the analytic solution for the LCD to calculate ``ψ`` and ``q``.
 """
-function CreateLCD(grid, U::Number = 1, ℓ::Number = 1, x₀::Vector = [0, 0], α::Number = 0)
+function CreateLCD(
+    grid;
+    U::Number = 1,
+    ℓ::Number = 1,
+    x₀::Vector = [0, 0],
+    α::Number = 0,
+)
 
     # Define K as the first root of Bessel J_1(x)
 
@@ -120,24 +126,24 @@ function CreateLCD(grid, U::Number = 1, ℓ::Number = 1, x₀::Vector = [0, 0], 
 end
 
 """
-    CreateLRD(grid, U=1, ℓ=1, R=1, β=0, x₀=[0, 0], α=0)
+    CreateLRD(grid; U=1, ℓ=1, R=Inf, β=0, x₀=[0, 0], α=0)
 
 High level wrapper function for calculating ``ψ`` and ``q`` for the Larichev-Reznik dipole using given parameters
 
 # Arguments:
  - `grid`: grid structure containing `x`, `y`, and `Krsq`
  - (`U`, `ℓ`): vortex speed and radius, Numbers (default: (`1`, `1`))
- - (`R`, `β`): Rossby radii and (y) PV gradient, Numbers, (default: (`1`, `0`))
+ - (`R`, `β`): Rossby radii and (y) PV gradient, Numbers, (default: (`Inf`, `0`))
  - `x₀`: position of vortex center, vector (default: `[0, 0]`)
  - `α`: initial angle of vortex, Number (default: `0`)
 
 Note: This function uses the analytic solution for the LRD to calculate ``ψ`` and ``q``.
 """
 function CreateLRD(
-    grid,
+    grid;
     U::Number = 1,
     ℓ::Number = 1,
-    R::Number = 1,
+    R::Number = Inf,
     β::Number = 0,
     x₀::Vector = [0, 0],
     α::Number = 0,

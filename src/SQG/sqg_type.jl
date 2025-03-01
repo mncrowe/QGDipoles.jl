@@ -224,22 +224,22 @@ function DefSQGVortex(
         CalcEnergy,
     )
 
-    ψ, b, K, a = CreateModonSQG(grid, M, U, ℓ, R, β, x₀, α; K₀, a₀, tol)
+    ψ, b, K, a = CreateModonSQG(grid; U, ℓ, R, β, x₀, α, M, tol, K₀, a₀)
 
     if CalcVelocity
-        u, v = Calc_uv(ψ, grid)
+        u, v = Calc_uv(grid, ψ)
     else
         u, v = nothing, nothing
     end
 
     if CalcVorticity
-        ζ = Calc_ζ(ψ, grid)
+        ζ = Calc_ζ(grid, ψ)
     else
         ζ = nothing
     end
 
     if CalcEnergy
-        E, SPE = EnergySQG(grid, ψ, b, R[2])
+        E, SPE = EnergySQG(grid, ψ, b; R′ = R[2])
     else
         E, SPE = nothing, nothing
     end

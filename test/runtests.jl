@@ -160,7 +160,25 @@ end
 
     include("Type_tests.jl")
 
-    @test true
+    for cuda_active in use_cuda#  run for CPU & GPU if available
+
+        grid = CreateGrid(;
+            Nx = 128,
+            Ny = 128,
+            Lx = [-6, 6],
+            Ly = [-6, 6],
+            cuda = cuda_active,
+        )
+
+        # Test LQGVortex and LQGParams construction
+
+        @test TestLQGVortex(grid)
+
+        # Test SQGVortex and SQGParams construction
+
+        @test TestSQGVortex(grid)
+
+    end
 
 end
 
