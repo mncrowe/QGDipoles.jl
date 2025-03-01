@@ -86,13 +86,7 @@ High level wrapper function for calculating ``ψ`` and ``q`` for the Lamb-Chaply
 
 Note: This function uses the analytic solution for the LCD to calculate ``ψ`` and ``q``.
 """
-function CreateLCD(
-    grid;
-    U::Number = 1,
-    ℓ::Number = 1,
-    x₀::Vector = [0, 0],
-    α::Number = 0,
-)
+function CreateLCD(grid; U::Number = 1, ℓ::Number = 1, x₀::Vector = [0, 0], α::Number = 0)
 
     # Define K as the first root of Bessel J_1(x)
 

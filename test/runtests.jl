@@ -68,13 +68,8 @@ use_cuda = CUDA.functional() ? (false, true) : (false,)
         # Test 2-layer LQG energy calculation
         @test TestLQGEnergy2Layer(grid)
 
-        grid = CreateGrid(;
-            Nx = 128,
-            Ny = 128,
-            Lx = [-6, 6],
-            Ly = [-6, 6],
-            cuda = cuda_active,
-        )
+        grid =
+            CreateGrid(; Nx = 128, Ny = 128, Lx = [-6, 6], Ly = [-6, 6], cuda = cuda_active)
 
         # Test LQGVortex and LQGParams construction
         @test TestLQGVortex(grid)
@@ -113,13 +108,8 @@ end
         # Test SQG energy calculation
         @test TestSQGEnergy(grid)
 
-        grid = CreateGrid(;
-            Nx = 128,
-            Ny = 128,
-            Lx = [-6, 6],
-            Ly = [-6, 6],
-            cuda = cuda_active,
-        )
+        grid =
+            CreateGrid(; Nx = 128, Ny = 128, Lx = [-6, 6], Ly = [-6, 6], cuda = cuda_active)
 
         # Test SQGVortex and SQGParams construction
         @test TestSQGVortex(grid)
@@ -134,14 +124,17 @@ end
 
     Ex_dir = joinpath(pkgdir(QGDipoles), "examples")
 
-    Ex_diag = filter(contains(r".jl$"), readdir(joinpath(Ex_dir, "Diagnostics"); join=true))
-    Ex_high = filter(contains(r".jl$"), readdir(joinpath(Ex_dir, "High_Level"); join=true))
-    Ex_lowl = filter(contains(r".jl$"), readdir(joinpath(Ex_dir, "Low_Level"); join=true))
-    Ex_strc = filter(contains(r".jl$"), readdir(joinpath(Ex_dir, "Structures"); join=true))
+    Ex_diag =
+        filter(contains(r".jl$"), readdir(joinpath(Ex_dir, "Diagnostics"); join = true))
+    Ex_high =
+        filter(contains(r".jl$"), readdir(joinpath(Ex_dir, "High_Level"); join = true))
+    Ex_lowl = filter(contains(r".jl$"), readdir(joinpath(Ex_dir, "Low_Level"); join = true))
+    Ex_strc =
+        filter(contains(r".jl$"), readdir(joinpath(Ex_dir, "Structures"); join = true))
 
     Ex = [Ex_diag; Ex_high; Ex_lowl; Ex_strc]
 
-    for i in 1:length(Ex)
+    for i = 1:length(Ex)
 
         include.(Ex[i])
         @test true

@@ -80,13 +80,7 @@ end
 Tests the SQG wrapper by comparing against the results without a wrapper.
 
 """
-function TestWrapperSQG(
-    grid;
-    U::Number,
-    ℓ::Number,
-    R::Vector,
-    β::Number,
-)
+function TestWrapperSQG(grid; U::Number, ℓ::Number, R::Vector, β::Number)
 
     # Set numerical parameters
 

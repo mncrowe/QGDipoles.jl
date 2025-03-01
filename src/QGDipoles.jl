@@ -50,37 +50,29 @@ export
     BuildLinSysLQG,
     ApplyPassiveLayers,
     IncludePassiveLayers,
-
     Calc_ψq,
     #ΔNCalc,
 
     CreateModonLQG,
     CreateLCD,
     CreateLRD,
-
     EnergyLQG,
     EnstrophyLQG,
-
     LQGParams,
     DefLQGParams,
     LQGVortex,
     DefLQGVortex,
 
     ## SQG
-    
+
     BuildLinSysSQG,
-
     Calc_ψb,
-
     CreateModonSQG,
-
     Eval_ψ_SQG,
     Eval_q_SQG,
     Eval_b_SQG,
     Eval_w_SQG,
-
     EnergySQG,
-
     SQGParams,
     DefSQGParams,
     SQGVortex,

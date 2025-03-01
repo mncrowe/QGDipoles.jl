@@ -136,7 +136,8 @@ Creates an `SQGParams` structure by replacing parameters in `params` with the gi
  - `params`: `SQGParams` parameter structure
  - `kwargs...`: keyword arguments for `DefSQGParams`
 """
-function UpdateParams(params::SQGParams;
+function UpdateParams(
+    params::SQGParams;
     U::Number = params.U,
     ℓ::Number = params.ℓ,
     R::Vector = params.R,
@@ -152,21 +153,21 @@ function UpdateParams(params::SQGParams;
     CalcEnergy::Bool = params.CalcEnergy,
 )
 
-return DefSQGParams(;
-    U,
-    ℓ,
-    R,
-    β,
-    x₀,
-    α,
-    M,
-    tol,
-    K₀,
-    a₀,
-    CalcVelocity,
-    CalcVorticity,
-    CalcEnergy,
-)
+    return DefSQGParams(;
+        U,
+        ℓ,
+        R,
+        β,
+        x₀,
+        α,
+        M,
+        tol,
+        K₀,
+        a₀,
+        CalcVelocity,
+        CalcVorticity,
+        CalcEnergy,
+    )
 
 end
 

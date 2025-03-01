@@ -157,7 +157,8 @@ Creates an `LQGParams` structure by replacing parameters in `params` with the gi
  - `params`: `LQGParams` parameter structure
  - `kwargs...`: keyword arguments for `DefLQGParams`
 """
-function UpdateParams(params::LQGParams;
+function UpdateParams(
+    params::LQGParams;
     U::Number = params.U,
     ℓ::Number = params.ℓ,
     R::Union{Number,Vector} = params.R,
@@ -177,25 +178,25 @@ function UpdateParams(params::LQGParams;
     CalcEnstrophy::Bool = params.CalcEnstrophy,
 )
 
-return params = DefLQGParams(;
-    U,
-    ℓ,
-    R,
-    β,
-    ActiveLayers,
-    H,
-    x₀,
-    α,
-    M,
-    tol,
-    K₀,
-    a₀,
-    UseAnalytic,
-    CalcVelocity,
-    CalcVorticity,
-    CalcEnergy,
-    CalcEnstrophy,
-)
+    return params = DefLQGParams(;
+        U,
+        ℓ,
+        R,
+        β,
+        ActiveLayers,
+        H,
+        x₀,
+        α,
+        M,
+        tol,
+        K₀,
+        a₀,
+        UseAnalytic,
+        CalcVelocity,
+        CalcVorticity,
+        CalcEnergy,
+        CalcEnstrophy,
+    )
 
 end
 

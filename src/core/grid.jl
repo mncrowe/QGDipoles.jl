@@ -103,13 +103,8 @@ Define the numerical grid as a `GridStruct` using a keyword-based method
  - `Lx`, `Ly`: x and y domains, either vectors of endpoints or lengths, Vectors or Numbers
  - `cuda`: `true`; use CUDA CuArray for fields (default: `false`)
 """
-CreateGrid(;
-    Nx = 512,
-    Ny = 512,
-    Lx = [-5, 5],
-    Ly = [-5, 5],
-    cuda = false,
-) = CreateGrid(Nx, Ny, Lx, Ly; cuda)
+CreateGrid(; Nx = 512, Ny = 512, Lx = [-5, 5], Ly = [-5, 5], cuda = false) =
+    CreateGrid(Nx, Ny, Lx, Ly; cuda)
 
 """
     CartesianGrid(grid)

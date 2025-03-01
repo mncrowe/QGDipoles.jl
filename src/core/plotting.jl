@@ -17,16 +17,16 @@ Recipe for plotting field `F` on `grid`
 """
 @recipe function f(grid, F::Array; layer = 1)
 
-	# Set default attributes
-	aspect_ratio --> 1
-	colormap --> :balance
-	xlims --> (minimum(grid.x), maximum(grid.x) + step(grid.x))
-	ylims --> (minimum(grid.y), maximum(grid.y) + step(grid.y))
-	xlabel --> "x"
-	ylabel --> "y"
-	
-	# Return the plotted values
-	grid.x, grid.y, transpose(@view(F[:, :, layer]))
+    # Set default attributes
+    aspect_ratio --> 1
+    colormap --> :balance
+    xlims --> (minimum(grid.x), maximum(grid.x) + step(grid.x))
+    ylims --> (minimum(grid.y), maximum(grid.y) + step(grid.y))
+    xlabel --> "x"
+    ylabel --> "y"
+
+    # Return the plotted values
+    grid.x, grid.y, transpose(@view(F[:, :, layer]))
 
 end
 
@@ -42,15 +42,15 @@ Recipe for plotting field `F` on `grid`
 """
 @recipe function f(grid, F::CuArray; layer = 1)
 
-	# Set default attributes
-	aspect_ratio --> 1
-	colormap --> :balance
-	xlims --> (minimum(grid.x), maximum(grid.x) + step(grid.x))
-	ylims --> (minimum(grid.y), maximum(grid.y) + step(grid.y))
-	xlabel --> "x"
-	ylabel --> "y"
-	
-	# Return the plotted values
-	grid.x, grid.y, Array(transpose(@view(F[:, :, layer])))
+    # Set default attributes
+    aspect_ratio --> 1
+    colormap --> :balance
+    xlims --> (minimum(grid.x), maximum(grid.x) + step(grid.x))
+    ylims --> (minimum(grid.y), maximum(grid.y) + step(grid.y))
+    xlabel --> "x"
+    ylabel --> "y"
+
+    # Return the plotted values
+    grid.x, grid.y, Array(transpose(@view(F[:, :, layer])))
 
 end

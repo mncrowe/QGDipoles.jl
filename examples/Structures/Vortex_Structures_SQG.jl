@@ -7,17 +7,12 @@ using QGDipoles
 
 # Start by creating a grid
 
-grid = CreateGrid(;
-    Nx = 512,
-    Ny = 512,
-    Lx = [-5, 5],
-    Ly = [-5, 5],
-    cuda = false,
-)
+grid = CreateGrid(; Nx = 512, Ny = 512, Lx = [-5, 5], Ly = [-5, 5], cuda = false)
 
 # Now we create our vortex solution, all possible keywords are included below
 
-vortex = DefSQGVortex(grid;
+vortex = DefSQGVortex(
+    grid;
     U = 1,
     ℓ = 1,
     R = [Inf, Inf],
@@ -79,13 +74,7 @@ vortex4 = DefSQGVortex(grid, params2)
 
 # We can also move our vortex to a different grid
 
-grid2 = CreateGrid(;
-    Nx = 256,
-    Ny = 256,
-    Lx = [-4, 4],
-    Ly = [-4, 4],
-    cuda = false,
-)
+grid2 = CreateGrid(; Nx = 256, Ny = 256, Lx = [-4, 4], Ly = [-4, 4], cuda = false)
 
 vortex5 = UpdateVortex(grid2, vortex4)
 

@@ -79,11 +79,7 @@ Calculates the enstrophy for the LQG system
  - `q`: potential vorticity anomaly in each layer, Array or CuArray
  - `H`: Thickness of each layer, Number or Vector (default: `[1]`)
 """
-function EnstrophyLQG(
-    grid,
-    q::Union{CuArray,Array};
-    H::Union{Number,Vector} = [1],
-)
+function EnstrophyLQG(grid, q::Union{CuArray,Array}; H::Union{Number,Vector} = [1])
 
     Nx, Ny = size(q)[1:2]
     N = Int(length(q) / (Nx * Ny))

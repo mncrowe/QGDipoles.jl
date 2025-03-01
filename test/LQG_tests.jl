@@ -267,11 +267,7 @@ the numerical method enforces periodicity through the Fourier transforms whereas
 analytical result decays as 1/r so remains O(0.1) at y ~ 10.
 
 """
-function TestLCD(
-    grid;
-    U::Number,
-    ℓ::Number,
-)
+function TestLCD(grid; U::Number, ℓ::Number)
 
     # Set numerical parameters
 
@@ -298,13 +294,7 @@ Note: the LRD generally decays much faster than the LCD as it is O(K_1(p*r)) in 
 Therefore we expect less difference between the two methods compared with the LCD results.
 
 """
-function TestLRD(
-    grid;
-    U::Number,
-    ℓ::Number,
-    R::Number,
-    β::Number,
-)
+function TestLRD(grid; U::Number, ℓ::Number, R::Number, β::Number)
 
     # Set numerical parameters
 
@@ -415,4 +405,3 @@ function TestLQGEnergy2Layer(grid)
     return TestKE1 & TestKE2 & TestPE
 
 end
-

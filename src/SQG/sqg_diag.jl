@@ -26,12 +26,7 @@ and the surface potential energy
 Note: the surface potential energy is sometimes referred to as the generalised
 enstrophy or the buoyancy variance.
 """
-function EnergySQG(
-    grid,
-    ψ::Union{CuArray,Array},
-    b::Union{CuArray,Array};
-    R′::Number = Inf,
-)
+function EnergySQG(grid, ψ::Union{CuArray,Array}, b::Union{CuArray,Array}; R′::Number = Inf)
 
     ψh = rfft(ψ)
     bh = rfft(b)

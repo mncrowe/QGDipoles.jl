@@ -7,17 +7,12 @@ using QGDipoles
 
 # Start by creating a grid
 
-grid = CreateGrid(;
-    Nx = 512,
-    Ny = 512,
-    Lx = [-5, 5],
-    Ly = [-5, 5],
-    cuda = false,
-)
+grid = CreateGrid(; Nx = 512, Ny = 512, Lx = [-5, 5], Ly = [-5, 5], cuda = false)
 
 # Now we create our vortex solution, all possible keywords are included below
 
-vortex = DefLQGVortex(grid;
+vortex = DefLQGVortex(
+    grid;
     U = 1,
     ℓ = 1,
     R = Inf,
@@ -78,7 +73,7 @@ vortex3 = DefLQGVortex(grid, params)
 
 # We can modify our parameters and then make a new vortex
 
-params2 = UpdateParams(params; α = π/4)
+params2 = UpdateParams(params; α = π / 4)
 vortex4 = DefLQGVortex(grid, params2)
 
 # We can plot these using `Plots.jl`
@@ -87,13 +82,7 @@ vortex4 = DefLQGVortex(grid, params2)
 
 # We can also move our vortex to a different grid
 
-grid2 = CreateGrid(;
-    Nx = 256,
-    Ny = 256,
-    Lx = [-5, 5],
-    Ly = [-5, 5],
-    cuda = false,
-)
+grid2 = CreateGrid(; Nx = 256, Ny = 256, Lx = [-5, 5], Ly = [-5, 5], cuda = false)
 
 vortex5 = UpdateVortex(grid2, vortex4)
 
