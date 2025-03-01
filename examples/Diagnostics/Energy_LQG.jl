@@ -20,13 +20,13 @@ Lx, Ly = 10, 10
 # Create modon solution and grid
 
 grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
-ψ, q, K, a = CreateModonLQG(grid, M, U, ℓ, R, β; tol)
+ψ, q, K, a = CreateModonLQG(grid; U, ℓ, R, β, M, tol)
 
 # Calculate kinetic and potential energy, we've used layer depth 
 # H = R (assuming g'/f^2 = 1 in nondimensional units)
 
-KE, PE = EnergyLQG(grid, ψ, R, R .^ 2)
+KE, PE = EnergyLQG(grid, ψ; R, H = R .^ 2)
 
 # Calculate the enstrophy
 
-Q = EnstrophyLQG(grid, q, R .^ 2)
+Q = EnstrophyLQG(grid, q; H = R .^ 2)

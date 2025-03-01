@@ -28,7 +28,7 @@ K, a = SolveInhomEVP(A, B, c, d; tol)
 # Create grid and calculate streamfunctions and vorticities
 
 grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
-ψ, q = Calc_ψq(a, U, ℓ, R, β, grid)
+ψ, q = Calc_ψq(grid, a; U, ℓ, R, β)
 
 # Plot streamfunction ψ in both layers, if we have `Plots.jl` added
 

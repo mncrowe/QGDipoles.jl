@@ -26,9 +26,9 @@ function TestLQGEnergy1Layer(cuda)
 
     # Create LRD using numerical method
 
-    ψ, _, _, _ = CreateModonLQG(grid, M, U, ℓ, R, β; tol)
+    ψ, _, _, _ = CreateModonLQG(grid; U, ℓ, R, β, M, tol)
 
-    KE, PE = EnergyLQG(grid, ψ, R)
+    KE, PE = EnergyLQG(grid, ψ; R)
 
     TestKE = KE[1] - 12.653032138613069 < 1e-6
     TestPE = PE[1] - 2.2180534691913154 < 1e-6
@@ -60,9 +60,9 @@ function TestLQGEnergy2Layer(cuda)
 
     # Create LRD using numerical method
 
-    ψ, _, _, _ = CreateModonLQG(grid, M, U, ℓ, R, β; tol)
+    ψ, _, _, _ = CreateModonLQG(grid; U, ℓ, R, β, M, tol)
 
-    KE, PE = EnergyLQG(grid, ψ, R, [1, 1])
+    KE, PE = EnergyLQG(grid, ψ; R, H = [1, 1])
 
     TestKE1 = KE[1] - 3.5838305725995547 < 1e-6
     TestKE2 = KE[2] - 4.7052971811344300 < 1e-6
@@ -95,9 +95,9 @@ function TestSQGEnergy(cuda)
 
     # Create LRD using numerical method
 
-    ψ, b, _, _ = CreateModonSQG(grid, M, U, ℓ, R, β; tol)
+    ψ, b, _, _ = CreateModonSQG(grid; U, ℓ, R, β, M, tol)
 
-    E, SPE = EnergySQG(grid, ψ, b, R[2])
+    E, SPE = EnergySQG(grid, ψ, b; R′ = R[2])
 
     TestE = E[1] - 9.750526656500448 < 1e-6
     TestSPE = SPE[1] - 30.137121991640193 < 1e-6

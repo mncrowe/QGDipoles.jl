@@ -135,14 +135,17 @@ end
 
 end
 
-# Test examples
+# Test examples run
 
 @testset "Examples" begin
 
-    Ex_diag = filter(contains(r".jl$"), readdir("../examples/Diagnostics"; join=true))
-    Ex_high = filter(contains(r".jl$"), readdir("../examples/High_Level"; join=true))
-    Ex_lowl = filter(contains(r".jl$"), readdir("../examples/Low_Level"; join=true))
-    Ex_strc = filter(contains(r".jl$"), readdir("../examples/Structures"; join=true))
+    Ex_dir = joinpath(pkgdir(QGDipoles), "examples")
+
+    Ex_diag = filter(contains(r".jl$"), readdir(joinpath(Ex_dir, "Diagnostics"); join=true))
+    Ex_high = filter(contains(r".jl$"), readdir(joinpath(Ex_dir, "High_Level"); join=true))
+    Ex_lowl = filter(contains(r".jl$"), readdir(joinpath(Ex_dir, "Low_Level"); join=true))
+    Ex_strc = filter(contains(r".jl$"), readdir(joinpath(Ex_dir, "Structures"); join=true))
+
     Ex = [Ex_diag; Ex_high; Ex_lowl; Ex_strc]
 
     for i in 1:length(Ex)
@@ -181,5 +184,12 @@ end
     end
 
 end
+
+# Test extra functionality of core functions
+
+
+
+# Test extra functions
+
 
 

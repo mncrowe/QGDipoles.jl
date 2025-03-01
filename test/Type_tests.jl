@@ -49,7 +49,7 @@ non-default parameters
 """
 function TestSQGVortex(grid)
 
-    vortex = DefLQGVortex(
+    vortex = DefSQGVortex(
         grid;
         U = 0.95,
         ℓ = 1.05,

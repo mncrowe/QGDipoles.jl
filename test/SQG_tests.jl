@@ -68,11 +68,11 @@ function TestSQG_v(cuda)
     # Create solution
 
     grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
-    ψ, b = Calc_ψb(a, U, ℓ, R, β, grid)
+    ψ, b = Calc_ψb(grid, a; U, ℓ, R, β)
 
     # Calculate velocities	
 
-    u, v = Calc_uv(ψ, grid)
+    u, v = Calc_uv(grid, ψ)
 
     return abs(maximum(v) - 3.54912) < 1e-5
 

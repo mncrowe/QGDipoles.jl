@@ -33,8 +33,8 @@ K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol, method, m)
 # Create grid and calculate streamfunctions and vorticities
 
 grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
-ψ, b = Calc_ψb(a, U, ℓ, R, β, grid)
-u, v = Calc_uv(ψ, grid)
+ψ, b = Calc_ψb(grid, a; U, ℓ, R, β)
+u, v = Calc_uv(grid, ψ)
 
 # Plot surface bouyancy b, if we have `Plots.jl` added
 

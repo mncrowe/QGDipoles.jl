@@ -27,8 +27,8 @@ grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 
 # create modon solution
 
-ψ, q, K, a = CreateModonLQG(grid, M, U, ℓ, R, β, ActiveLayers, x₀; K₀, a₀, tol)
-# ψ, q = CreateModonLQG(grid, M, U, ℓ, R, β, ActiveLayers, x₀; K₀, a₀, tol) # fields only
+ψ, q, K, a = CreateModonLQG(grid; U, ℓ, R, β, ActiveLayers, x₀, M, tol, K₀, a₀)
+# ψ, q = CreateModonLQG(grid; U, ℓ, R, β, ActiveLayers, x₀, M, tol, K₀, a₀) # fields only
 
 # Plot streamfunction ψ in layer 1, if we have `Plots.jl` added
 

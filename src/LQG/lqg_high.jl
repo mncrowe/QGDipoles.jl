@@ -36,7 +36,7 @@ function CreateModonLQG(
     β::Union{Number,Vector} = 0,
     ActiveLayers::Union{Number,Vector} = 1,
     x₀::Vector = [0, 0],
-    α::Number = 0;
+    α::Number = 0,
     M::Int = 8,
     tol = 1e-6,
     K₀::Union{Number,Array,Nothing} = nothing,

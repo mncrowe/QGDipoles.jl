@@ -26,8 +26,8 @@ grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 
 # create modon solution
 
-ψ, b, K, a = CreateModonSQG(grid, M, U, ℓ, R, β, x₀; K₀, a₀, tol)
-# ψ, b = CreateModonSQG(grid, M, U, ℓ, R, β, x₀; K₀, a₀, tol) # fields only
+ψ, b, K, a = CreateModonSQG(grid; U, ℓ, R, β, x₀, M, tol, K₀, a₀)
+# ψ, b = CreateModonSQG(grid; U, ℓ, R, β, x₀, M, tol, K₀, a₀) # fields only
 
 # Plot surface streamfunction ψ, if we have `Plots.jl` added
 

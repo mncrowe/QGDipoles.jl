@@ -89,7 +89,7 @@ function Test1QG_ψ(cuda::Bool)
     # Calculate solution
 
     grid = CreateGrid(Nx, Ny, Lx, Ly; cuda = cuda)
-    ψ, q = Calc_ψq(a, 1, 1, Inf, 0, grid)
+    ψ, q = Calc_ψq(grid, a; U = 1, ℓ = 1, R = Inf, β = 0)
 
     return abs(maximum(ψ) - 1.28110) < 1e-5
 
@@ -165,7 +165,7 @@ function Test2QG_PVinv(cuda)
     # Calculate solution
 
     grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
-    ψ, q = Calc_ψq(a, U, ℓ, R, β, grid)
+    ψ, q = Calc_ψq(grid, a; U, ℓ, R, β)
 
     # Look for NaN and Inf values
 

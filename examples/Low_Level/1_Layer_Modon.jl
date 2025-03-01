@@ -29,8 +29,8 @@ K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol, method)
 # Create grid and calculate streamfunctions and vorticities
 
 grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
-ψ, q = Calc_ψq(a, U, ℓ, R, β, grid)
-u, v = Calc_uv(ψ, grid)
+ψ, q = Calc_ψq(grid, a; U, ℓ, R, β)
+u, v = Calc_uv(grid, ψ)
 
 # We can plot streamfunction ψ, if we have `Plots.jl` added
 

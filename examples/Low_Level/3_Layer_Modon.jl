@@ -33,7 +33,7 @@ K, a = IncludePassiveLayers(K, a, ActiveLayers)
 # Create grid and calculate streamfunctions and vorticities
 
 grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
-ψ, q = Calc_ψq(a, U, ℓ, R, β, grid, x₀)
+ψ, q = Calc_ψq(grid, a; U, ℓ, R, β, x₀)
 
 # Plot streamfunction ψ in layer 2, if we have `Plots.jl` added
 

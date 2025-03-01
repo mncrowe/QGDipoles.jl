@@ -32,7 +32,7 @@ prob = SingleLayerQG.Problem(
 
 # Set initial condition
 
-_, q₀, K = CreateLCD(prob.grid, U, ℓ)
+_, q₀, K = CreateLCD(prob.grid; U, ℓ)
 q₀ = reshape(q₀, nx, ny)# convert from size (nx, ny, 1) to size (nx, ny)
 SingleLayerQG.set_q!(prob, q₀)
 
