@@ -238,7 +238,7 @@ function CreateLQGMonopole(
 
     # calculate ψ
 
-    ψ = InvertVorticityLQG(grid, q, R)
+    ψ = InvertVorticityLQG(grid, q; R)
 
     return ψ, q
 

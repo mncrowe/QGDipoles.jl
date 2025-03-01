@@ -176,7 +176,7 @@ function ΔNCalc(
 
     if length(β) < N
 
-        βU⁻¹ = zeros(N)
+        βU⁻¹ = β[1] / U * ones(N)
 
     else
 
