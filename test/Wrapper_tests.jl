@@ -35,7 +35,7 @@ function TestWrapperLQG(
     λ = ℓ ./ R
     μ = β * ℓ^2 / U
 
-    A, B, c, d = BuildLinSys(M, λ, μ; tol)
+    A, B, c, d = BuildLinSysLQG(M, λ, μ; tol)
     K, a = SolveInhomEVP(A, B, c, d; tol)
     ψ₁, _ = Calc_ψq(a, U, ℓ, R, β, grid)
 
@@ -59,7 +59,6 @@ function TestWrapperSQG(U::Number, ℓ::Number, R::Vector, β::Number; cuda::Boo
 
     M = 8
     tol = 1e-8
-    sqg = true
 
     # Create grid
 
@@ -73,8 +72,8 @@ function TestWrapperSQG(U::Number, ℓ::Number, R::Vector, β::Number; cuda::Boo
     λ = ℓ ./ R
     μ = β * ℓ^2 / U
 
-    A, B, c, d = BuildLinSys(M, λ, μ; tol, sqg)
-    K, a = SolveInhomEVP(A, B, c, d; tol, sqg)
+    A, B, c, d = BuildLinSysSQG(M, λ, μ; tol)
+    K, a = SolveInhomEVP(A, B, c, d; tol, m = 1)
     ψ₁, _ = Calc_ψb(a, U, ℓ, R, β, grid)
 
     # Calculate solution with wrapper
