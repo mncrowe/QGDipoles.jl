@@ -20,7 +20,7 @@ Full documentation exists with examples covering a range of LQG and SQG solution
 ## How does QGDipoles.jl work?
 
 This package is based on the semi-analytic theory of dipolar vortices derived in Johnson & Crowe 2023[^1] and Crowe & Johnson 2023[^2] for SQG solutions and Crowe & Johnson 2024[^3] for LQG solutions.
-Details of the numerical method and problem parameters can be found on the Methodology page.
+Details of the numerical method and problem parameters can be found on the [Methodology](@ref Methodology) page.
 This code consists of an updated version of the MATLAB code released as supplementary material with Crowe & Johnson 2024[^3] and incorporates (unreleased) functions for the SQG problem.
 For those interested in the original (LQG only) implementation, it can be found [here](https://github.com/mncrowe/QGDipoles.m).
 

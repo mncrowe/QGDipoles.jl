@@ -15,19 +15,15 @@ The streamfunction, ``\psi``, and PV anomaly, ``q``, are related through PV inve
 ### Layered Quasi-Geostrophic (LQG) Solutions
 
 In the LQG model, steady, propagating, dipolar vortices satisfy the relation
-
 ```math
 q_i + \beta_i y = F_i(\psi_i + Uy),
 ```
-
 where ``\beta_i`` denotes the background PV gradient, ``i \in [1,\dots,N]`` is the layer index and ``F_i`` is an arbitrary (piecewise continuous) function.
 To proceed, we assume that ``F_i(z) = (\beta_i/U) z`` for ``x^2 + y^2 > \ell^2`` (outside the vortex) and ``F_i(z) = -(K_i^2/\ell^2) z`` for ``x^2 + y^2 < \ell^2`` (inside the vortex).
 Using a Hankel transform and expansion in term of Zernike radial functions, the problem may be reduced to the linear algebra system
-
 ```math
 \left[ \textbf{A} -  \sum _{n = 1}^N K_n^2\textbf{B}_n \right] \textbf{a} = \textbf{c}_0 + \sum _{n = 1}^N K_n^2 \textbf{c}_n,
 ```
-
 where ``\textbf{A}`` and ``\textbf{B}_n`` are matrices, ``\textbf{a}`` is a vector containing the coefficients in the polynomial expansion, ``\textbf{c}_j`` are vectors and the ``K_n`` are defined in ``F_i`` above and appear as unknown eigenvalues in the linear problem.
 In order to solve the system, ``N`` additional conditions are required.
 These are ``\textbf{d}_n \cdot \textbf{a} = 0`` for ``n \in [1, \dots, N]`` where the ``\textbf{d}_n`` are vectors.
@@ -42,26 +38,20 @@ In the one-layer case the problem reduces to known analytical solutions, such as
 ### Surface Quasi-Geostrophic (SQG) Solutions
 
 In the SQG model, steady, propagating, dipolar vortices satisfy the relation
-
 ```math
 \left[\partial_z + \frac{1}{R'}\right] \psi = F(\psi + Uy),
 ```
-
 where
-
 ```math
 \partial_z = \sqrt{-\nabla^2 + \beta/U} \hspace{5pt} \tanh \left[R \sqrt{-\nabla^2 + \beta/U} \right],
 ```
-
 is a Dirichlet-Neumann operator linking the surface streamfunction, ``\psi``, and the surface buoyancy, ``b = \partial_z \psi``.
 Here, ``(R, R')`` describes the baroclinic and barotropic Rossby radii and ``\beta`` is the background vorticity gradient.
 We assume that ``F(z) = 0`` for ``x^2 + y^2 > \ell^2`` (outside the vortex) and ``F_i(z) = -(K/\ell) z`` for ``x^2 + y^2 < \ell^2``.
 Using a Hankel transform and expansion in term of Zernike radial functions, the problem may be reduced to the linear algebra system
-
 ```math
 \left[ \textbf{A} -  K\textbf{B} \right] \textbf{a} = \textbf{c}_0 + K \textbf{c}_1,
 ```
-
 where ``\textbf{A}`` and ``\textbf{B}`` are matrices, ``\textbf{c}_i`` are vectors, ``\textbf{a}`` is a vector of coefficients and ``K`` is an eigenvalue related to ``F``.
 An additional condition is required to solve this system for a unique set of ``K``.
 This condition is taken to be continuity across the vortex boundary and corresponds to ``\textbf{d} \cdot \textbf{a} = 0`` for some vector ``\textbf{d}``.
@@ -74,15 +64,15 @@ Solving this linear system allows the surface streamfunction, ``\psi``, and surf
 ### Solving the Linear System
 
 Consider the multi-parameter, inhomogeneous eigenvalue problem
-
 ```math
 \left[ \textbf{A} -  \sum _{n = 1}^N K_n^m\textbf{B}_n \right] \textbf{a} = \textbf{c}_0 + \sum _{n = 1}^N K_n^m \textbf{c}_n, \quad \textrm{s.t.} \quad \textbf{d}_n \cdot \textbf{a} = 0 \quad \textrm{for} \quad n \in [1, \dots N],
 ```
-
 which describes both the SQG (``m, N = 1``) and LQG (``m = 2``) systems.
 For ``N = 1``, this system may be converted into a quadratic eigenvalue problem and solved by standard techniques.
 For ``N > 1``, existing techniques scale poorly with matrix size so we take an alternative approach and find ``(K, \textbf{a})`` using a root finding method, where the orthogonality conditions (``\textbf{d}_n \cdot \textbf{a} = 0``) are used to reduce the dimension of the space.
 These two approaches are described in the Appendix of Crowe & Johnson 2024[^3].
+
+Further details on solving the multi-parameter, ingomogeneous eigenvalue problem are given [here](https://github.com/mncrowe/InhomMultiparameterEVP) using a MATLAB demonstration.
 
 ### Recovering the Vortex Solution
 
@@ -97,25 +87,17 @@ This section contains a summary of the LQG and SQG systems of equations and tabl
 ### The LQG System
 
 The layered QG equations are
-
 ```math
-
 (\partial_t - U \partial_x) q_i + J(\psi_i,q_i) + \beta_i \partial_x \psi_i = 0, \quad i \in \{1,2,\dots, N\},
-
 ```
-
 where the potential vorticity in each layer, ``q_i``, is given in terms of the streamfunction in each layer, ``\psi_i``, by
-
 ```math
-
 \begin{align*}
 q_1 = &\, \nabla^2 \psi_1 + R_1^{-2} (\psi_2 - \psi_1),\\
 q_i = &\, \nabla^2 \psi_i + R_i^{-2} (\psi_{i-1}-2\,\psi_i+\psi_{i+1}), \quad i \in \{2,\dots N-1\},\\
 q_N = &\, \nabla^2 \psi_N  + R_N^{-2} (\psi_{N-1}-\psi_N),
 \end{align*}
-
 ```
-
 and ``R_i = \sqrt{g'H_i}/f`` is the Rossby radius of deformation in each layer.
 The full list of parameters for the LQG system is given in the table below.
 
@@ -138,31 +120,19 @@ The full list of parameters for the LQG system is given in the table below.
 ### The SQG System
 
 The 3D QG equations are
-
 ```math
-
 (\partial_t - U \partial_x) q + J(\psi,q) + \beta \partial_x \psi = 0, \quad \textrm{for} \quad z \in [-R, 0],
-
 ```
-
 where
-
 ```math
-
 q = \left[\frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2} + \frac{\partial^2}{\partial z^2}\right] \psi, \quad \textrm{for} \quad z \in [-R, 0],
-
 ```
-
 and ``R = NH/f`` is the Baroclinic Rossby radius.
 Note that we have rescaled ``z`` by ``N/f`` so ``q`` and ``\psi`` are related by the 3D Laplacian operator.
 The top boundary condition is taken to be
-
 ```math
-
 (\partial_t - U \partial_x) [b + N^2 \eta] + J(\psi, b + N^2 \eta) = 0, \quad \textrm{on} \quad z  = 0,
-
 ```
-
 and we assume that ``b = 0`` on the bottom surface, ``z = -R``.
 Here, ``b = N \partial\psi/\partial z`` is the buoyancy and ``\eta = f\psi/g`` is the surface elevation.
 
@@ -194,7 +164,6 @@ Note: this package returns ``b/N`` rather than ``b``. When working with dimensio
 | ``g`` | gravitational acceleration | - |
 | ``f`` | Coriolis parameters | - |
 | ``H`` | layer depth | - |
-
 
 [^1]: [Johnson, E. R., and M. N. Crowe, 2023, Oceanic dipoles in a surface quasigeostrophic model, J. Fluid Mech., 958, R2](https://doi.org/10.1017/jfm.2023.87).
 [^2]: [Crowe, M. N., and E. R. Johnson, 2023, The evolution of surface quasi-geostrophic modons on sloping topography, J. Fluid. Mech., 970, A10](https://doi.org/10.1017/jfm.2023.607).

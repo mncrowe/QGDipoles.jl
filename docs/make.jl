@@ -17,6 +17,7 @@ makedocs(
         "Methodology"=>"Methodology.md",
         "Examples"=>"Examples.md",
         "List of Functions"=>"Functions.md",
+        "FAQ"=>"FAQ.md",
     ],
 )
 
