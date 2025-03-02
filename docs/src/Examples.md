@@ -29,7 +29,7 @@ using QGDipoles
 cp(joinpath(pkgdir(QGDipoles), "examples"), "examples")
 ```
 
-## Vortex Structures
+## Example: Vortex Structures
 
 The recommended way to use `QGDipoles.jl` for new users is to create vortex structures.
 Let's create a single-layer QG vortex with unit radius and velocity ``ℓ = U = 1`` and impose a background rotation gradient of ``β = 1``.
@@ -81,7 +81,7 @@ plot(heatmap(grid, vortex.u), heatmap(grid, vortex.v))
 println(vortex.E)
 ```
 
-## High-Level Functions
+## Example: High-Level Functions
 
 Instead of working with structures, we can also calculate vortrex solutions directly as arrays using both high-level and low-level functions.
 The high-level functions are wrappers for the low-level functionality and allow us to easily calculate solutions without having to uderstand the underlying linear algebra method.
@@ -152,9 +152,9 @@ For both the LQG and SQG cases, the lowest order mode typically has a value of `
 Setting `K_0` allows us to specify the approximate value of ``K`` we want for our solution.
 If we look at ``K``, we find that ``K = 7.34205...`` and if we look at our plot, we see that it's a solution with a mode 2 structure in the radial direction.
 
-In addition to these wrapper functions, the functions `CreateLCD` and `CreateLCD` implement the Lamb-Chaplygin dipole[^2] and Larichev-Reznik dipole[^3] directly using the analytical solution for these cases.
+In addition to these wrapper functions, the functions [`CreateLCD`](@ref) and [`CreateLRD`](@ref) implement the Lamb-Chaplygin dipole[^2] and Larichev-Reznik dipole[^3] directly using the analytical solution for these cases.
 
-## Low-Level Functions
+## Example: Low-Level Functions
 
 Low-level functions are also available to calculate vortex solutions.
 In general, these allow more customisation than the high-level wrapper and vortex structures however some understanding of the underlying method is required to work with them effectively.
@@ -326,7 +326,7 @@ nothing # hide
 ```
 We have introduced a couple of new variables here.
 Firstly, `cuda` is a flag that is passed to the grid object and when set to `true` will create the grid on an available GPU.
-Secondly, `method` is passed to the linear system solver, `SolveInhomEVP`, and determines if root-finding is used as the default method (`method = 1`) or if the problem is solved by eigenvalue methods for the 1-layer LQG and SQG problems (`method = 0`).
+Secondly, `method` is passed to the linear system solver, [`SolveInhomEVP`](@ref), and determines if root-finding is used as the default method (`method = 1`) or if the problem is solved by eigenvalue methods for the 1-layer LQG and SQG problems (`method = 0`).
 In general, `method = 0` should be used, but if you have a good initial guess for ``K`` and ``\textbf{a}``, it may be faster to use `method = 1`.
 
 Next we can build the linear system
@@ -353,7 +353,7 @@ u, v = Calc_uv(grid, ψ)
 nothing # hide
 ```
 
-## Integration with GeophysicalFlows.jl
+## Example: GeophysicalFlows.jl
 
 `QGDipoles.jl` is designed to be compatible with `GeophysicalFlows.jl`[^4] and provide a means of generating dipolar vortex initial conditions for layered QG and surface QG simulations.
 Here, we'll discuss a simple example of how to setup a 1-layer simulation in `GeophyiscalFlows.jl` using the Lamb-Chaplygin dipole as the initial condition.
@@ -379,7 +379,7 @@ stepper = "FilteredRK4"
 `GeophysicalFlows.jl` allows simulations to be run on a GPU so we can set `dev = GPU()` to use this functionality.
 In this case, `QGDipoles.jl` will construct vortex solutions as `CuArrays` using `CUDA` when given a grid that is stored on a GPU.
 We can now define our problem using the `SingleLayerQG` module from `GeophysicalFlows.jl`.
-This problem will contain a grid (`prob.grid`) that can be passed to functions from `QGDipoles.jl` in the same manner as grids contructed using `CreateGrid`
+This problem will contain a grid (`prob.grid`) that can be passed to functions from `QGDipoles.jl` in the same manner as grids contructed using [`CreateGrid`](@ref)
 ```julia
 # Define problem using SingleLayerQG from GeophysicalFlows.jl
 
@@ -394,7 +394,7 @@ prob = SingleLayerQG.Problem(dev;
 ```
 Here, we've used a background flow which moves in the opposite direction to the vortex and with the same magnitude, `U`.
 Therefore, we're working in a frame co-moving with the vortex and we expect it to remain centred on the orogin throughout the evolution.
-Next, we'll use `CreateLCD` to create a Lamb-Chaplygin dipole and use this as our initial condition.
+Next, we'll use [`CreateLCD`](@ref) to create a Lamb-Chaplygin dipole and use this as our initial condition.
 ```julia
 # Set initial condition
 

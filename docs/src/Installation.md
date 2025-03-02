@@ -30,6 +30,7 @@ This package requires the following dependencies:
 * QuadGK (v2.9.4)
 * SpecialFunctions (v2.4.0)
 * CUDA (v5.4.3)
+* RecipesBase (v1.3.4)
 
-The specified versions are confirmed to work and earlier versions may also work.
+The specified versions are confirmed to work and earlier/later versions may also work.
 These packages will be automatically installed with QGDipoles.jl and do not need to be added seperately.
