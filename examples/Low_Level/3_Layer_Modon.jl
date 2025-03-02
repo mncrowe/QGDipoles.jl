@@ -24,7 +24,7 @@ Lx, Ly = [0, 10], [0, 10]
 λ = ℓ ./ R
 μ = β * ℓ^2 / U
 
-A, B, c, d = BuildLinSys(M, λ, μ; tol)
+A, B, c, d = BuildLinSysLQG(M, λ, μ; tol)
 A, B, c, d = ApplyPassiveLayers(A, B, c, d, ActiveLayers)
 
 K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol)
@@ -33,20 +33,9 @@ K, a = IncludePassiveLayers(K, a, ActiveLayers)
 # Create grid and calculate streamfunctions and vorticities
 
 grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
-ψ, q = Calc_ψq(a, U, ℓ, R, β, grid, x₀)
+ψ, q = Calc_ψq(grid, a; U, ℓ, R, β, x₀)
 
-# Plot streamfunction ψ in layer 2
+# Plot streamfunction ψ in layer 2, if we have `Plots.jl` added
 
-using Plots
-
-heatmap(
-    grid.x,
-    grid.y,
-    transpose(ψ[:, :, 2]);
-    colormap = :balance,
-    aspect_ratio = 1,
-    xlims = Lx,
-    ylims = Ly,
-    xlabel = "x",
-    ylabel = "y",
-)
+# using Plots
+# heatmap(grid, ψ, layer = 2)

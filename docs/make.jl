@@ -1,4 +1,4 @@
-using Documenter, QGDipoles
+using Documenter, QGDipoles, RecipesBase
 
 format = Documenter.HTML(
     assets = ["assets/favicon.ico"],
@@ -14,8 +14,10 @@ makedocs(
     pages = Any[
         "Home"=>"index.md",
         "Installation"=>"Installation.md",
+        "Methodology"=>"Methodology.md",
         "Examples"=>"Examples.md",
         "List of Functions"=>"Functions.md",
+        "FAQ"=>"FAQ.md",
     ],
 )
 

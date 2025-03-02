@@ -20,8 +20,8 @@ Lx, Ly = 10, 10
 # create modon solution and grid
 
 grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
-ψ, b, _, _ = CreateModonSQG(grid, M, U, ℓ, R, β; tol)
+ψ, b, _, _ = CreateModonSQG(grid; U, ℓ, R, β, M, tol)
 
 # calculate the domain integrated energy and surface potential energy
 
-E, SPE = EnergySQG(grid, ψ, b, R[2])
+E, SPE = EnergySQG(grid, ψ, b; R′ = R[2])
