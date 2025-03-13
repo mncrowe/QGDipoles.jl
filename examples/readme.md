@@ -2,7 +2,7 @@
 
 This directory contains a series of examples for generating dipolar vortex solutions in the layered QG and surface QG model. Further discussion of these examples is given [here](https://mncrowe.github.io/QGDipoles.jl/dev/Examples/).
 
-These examples are divide across 5 directories:
+These examples are divided across 5 directories:
 
 * Diagnostics: examples demonstrating how to use diagnostics such as energy and enstrophy
 
