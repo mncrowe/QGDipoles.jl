@@ -21,7 +21,8 @@ import Pkg
 Pkg.add("Plots")
 Pkg.instantiate()
 ```
-One of the examples below also required `GeophysicalFlows.jl` which can be installed in the same way.
+One of the examples below also requires `GeophysicalFlows.jl` which can be installed in the same way.
+
 
 We can now follow the examples below or copy the `examples/` directory to our current working directory using
 ```julia
