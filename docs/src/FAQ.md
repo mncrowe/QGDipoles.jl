@@ -40,7 +40,7 @@ In this case, the two available methods are
 * Nonlinear root finding: root-finding is used to determine the eigenvalue and eigenvector given an initial guess.
 * Generalised eigenvalue methods: the underlying problem is converted to a generalised eigenvalue problem and solved using standard methods.
 The choice of method can be specified using the low-level function [`SolveInhomEVP`](@ref) with the keyword `method`.
-`method = 0` corresponds to the generalised eigenvalue method while `method = 1` corresponds to nonlinear root finding.
+`method = :eigensolve` corresponds to the generalised eigenvalue method while `method = :nlsolve` corresponds to nonlinear root finding.
 
 ### How do I examine the underlying linear system?
 

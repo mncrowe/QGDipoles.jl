@@ -302,41 +302,61 @@ nothing # hide
 
 ### SQG Vortex
 
-This example covers the SQG vortex and introduces grids on a GPU.
-There are a few changes here compared to the LQG setup.
-Firstly, we'll need to set the flag `m` to `1` as the exponent of the eigenvalues in the linear system is different in the SQG case and the solver assume LQG by default.
-Also, despite the SQG problem having only 1-layer, we enter `R` as a 2 element vector since we need both the (reduced) barotropic and baroclinic Rossby radii, ``R`` and ``R'``.
-We'll take these as ``\infty`` and note that all functions accept infinite Rossby radii in both the SQG and LQG cases.
-However, ``R = 0`` is not valid since the QG assumptions break down in this limit.
-Note that we take ``M = 20`` here as, in general, we need more coefficients for the SQG problem compared to the LQG problem as they decay slower with coefficient number.
-This is compensated by the fact that the SQG system is faster to calculate than the LQG system.
+This example covers the SQG vortex and a few low-level solver options. The SQG problem
+requires a few changes to solver options, which we discuss below.
 
-Start by setting our parameters
+Start by setting parameters for the SQG vortex and grid, similar to previous examples:
 ```@example sqg
 using QGDipoles
 
 # Set problem parameters
 
 U, ℓ = 1, 1     	# vortex speed and radius
-R = [Inf, Inf]		# Baroclinic and Barotropic Rossby radii
 β = 0		    	# background PV gradient in the interior
 
-M = 20		    	# number of coefficients in Zernike expansion
-tol = 1e-6	    	# maximum error in solution evaluation
-cuda = false		# use CuArrays for grid
-method = 0	    	# 0; eigensolve/nlsolve, 1; nlsolve
-
-# Set grid parameters
+# Create grid
 
 Nx, Ny = 512, 512
 Lx, Ly = 10, 10
 
+grid = CreateGrid(Nx, Ny, Lx, Ly)
+
 nothing # hide
 ```
-We have introduced a couple of new variables here.
-Firstly, `cuda` is a flag that is passed to the grid object and when set to `true` will create the grid on an available GPU.
-Secondly, `method` is passed to the linear system solver, [`SolveInhomEVP`](@ref), and determines if root-finding is used as the default method (`method = 1`) or if the problem is solved by eigenvalue methods for the 1-layer LQG and SQG problems (`method = 0`).
-In general, `method = 0` should be used, but if you have a good initial guess for ``K`` and ``\textbf{a}``, it may be faster to use `method = 1`.
+Despite the SQG problem having only 1-layer, here we enter `R` as a 2 element vector since we need both 
+the (reduced) barotropic and baroclinic Rossby radii, ``R`` and ``R'``.
+We'll take these as ``∞`` and note that all functions accept infinite Rossby radii in both the SQG and LQG cases.
+However, ``R = 0`` is not valid since the QG assumptions break down in this limit.
+```@example sqg
+R = [Inf, Inf]		# Baroclinic and Barotropic Rossby radii
+
+nothing # hide
+```
+The SQG problem also requires more coefficients to converge to the same accuracy as the LQG problem.
+Therefore, we take ``M = 20`` here.
+```@example sqg
+M = 20		    	# number of coefficients in Zernike expansion
+
+nothing # hide
+```
+The need for more coefficients is compensated by the fact that the SQG system is faster to calculate than the LQG system.
+
+We can use two different solution method for solving the SQG eigenvalue problem.
+These are:
+ - an eigenvalue method (`method = :eigensolve`),
+ - or a root-finding method (`method = :nlsolve`).
+
+For the 1-layer LQG and SQG problems, the eigenvalue method will generally be faster (i.e. `method = :eigensolve`).
+For multi-layer problems, the root-finding method is always used (i.e. `method = :nlsolve`) as eigenvalue methods scale poorly with the number of layers.
+If you have a good initial guess for ``K`` and ``\textbf{a}``, you may be able to use `method = :nlsolve` to speed up the calculation in 1-layer LQG and SQG problems.
+The `method` flag is passed to the linear system solver, [`SolveInhomEVP`](@ref).
+
+We'll use the root-finding method here.
+```@example sqg
+method = :nlsolve
+
+nothing # hide
+```
 
 Next we can build the linear system
 ```@example sqg
@@ -345,17 +365,20 @@ Next we can build the linear system
 λ = ℓ ./ R
 μ = β * ℓ^2/U
 
-A, B, c, d = BuildLinSysSQG(M, λ, μ; tol)
-K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol, method, m = 1)
+A, B, c, d = BuildLinSysSQG(M, λ, μ)
+K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, method, m = 1)
 
 nothing # hide
 ```
-And finally we can create our solution
+
+!!! note "The exponent of K"
+	`m` is the exponent of `K` in the eigenvalue problem, ``K^m``.
+	The solver, [`SolveInhomEVP`](@ref), assumes LQG by default, i.e. `m=2`.
+	However, for SQG, we should use `m=1`.
+
+Finally we can create our solution
 
 ```@example sqg
-# Create grid and calculate streamfunctions and vorticities
-
-grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 ψ, b = Calc_ψb(grid, a; U, ℓ, R, β)
 u, v = Calc_uv(grid, ψ)
 

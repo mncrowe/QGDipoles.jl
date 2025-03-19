@@ -23,7 +23,7 @@ x₀ = [Kᵐ₀; a₀']. Changing the initial guess may be required to identify 
 """
 
 """
-    SolveInhomEVP(A, B, c, d; K₀=nothing, a₀=nothing, tol=1e-6, method=0, m=2, warn=true)
+    SolveInhomEVP(A, B, c, d; K₀=nothing, a₀=nothing, tol=1e-6, method=:eigensolve, m=2, warn=true)
 
 Solves the inhomogeneous eigenvalue problem using nonlinear root finding
 
@@ -33,7 +33,7 @@ Solves the inhomogeneous eigenvalue problem using nonlinear root finding
 # Keyword arguments:
  - `K₀`, `a₀`: initial guesses for ``K`` and ``a``, Arrays or nothings (default: `nothing`)
  - `tol`: error tolerance for `nlsolve`, Number (default: `1e-6`)
- - `method`: `0` - eigensolve for ``N = 1`` and `nlsolve` for ``N > 1``, `1` - `nlsolve` (default: `0`)
+ - `method`: `:eigensolve` or `:nlsolve`, for ``N > 1`` `:nlsolve` is used automatically (default: `:eigensolve`)
  - `m`: exponent of ``K`` in eignevalue problem (default: `2`)
  - `warn`: if `true` displays warning if solution includes unextracted passive layers (default: `true`)
 
@@ -46,10 +46,12 @@ function SolveInhomEVP(
     K₀::Union{Number,Array,Nothing} = nothing,
     a₀::Union{Array,Nothing} = nothing,
     tol::Number = 1e-6,
-    method::Int = 0,
+    method = :eigensolve,
     m::Int = 2,
     warn::Bool = true,
 )
+
+    @assert method in (:eigensolve, :nlsolve) "Method must be either :eigensolve or :nlsolve"
 
     # Ensure K₀ is a Vector
 
@@ -66,15 +68,11 @@ function SolveInhomEVP(
 
     # Use root finding method for multi-layer systems
 
-    if N > 1
+    method = N > 1 ? :nlsolve : method
 
-        method = 1
+    if method == :eigensolve
 
-    end
-
-    if method == 0
-
-        # Use analytical solution if method = 0
+        # Use analytical linear algebra solution if method = :eigensolve
 
         # Set K₀ value if none given
 
@@ -119,9 +117,9 @@ function SolveInhomEVP(
 
     end
 
-    if method == 1
+    if method == :nlsolve
 
-        # Use root finding method if method = 1
+        # Use root finding method if method = :nlsolve
 
         # Calculate basis vectors spanning the space orthogonal to the d vectors
 
