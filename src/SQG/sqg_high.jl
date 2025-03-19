@@ -72,7 +72,7 @@ Evaluates ``ψ`` at specified depths, ``z ∈ [-R, 0]``, for the SQG problem
 
 # Arguments:
  - `grid`: grid structure containing `x`, `y`, and `Krsq`
- - `ψ`: surface streamfunction, calculated using `Calc_ψb` or `CreateModonSQG`
+ - `ψ`: surface streamfunction, calculated using [`Calc_ψb`](@ref) or [`CreateModonSQG`](@ref)
 
 # Keyword arguments:
  - `z`: vector of depths (default: `[0]`)
@@ -135,7 +135,7 @@ Evaluates ``q`` at specified depths, ``z ∈ [-R, 0]``, for the SQG problem
 
 # Arguments:
  - `grid`: grid structure containing `x`, `y`, and `Krsq`
- - `ψ`: surface streamfunction, calculated using `Calc_ψb` or `CreateModonSQG`
+ - `ψ`: surface streamfunction, calculated using [`Calc_ψb`](@ref) or [`CreateModonSQG`](@ref)
 
 # Keyword arguments:
  - `z`: vector of depths (default: `[0]`)
@@ -170,7 +170,7 @@ Evaluates ``b`` at specified depths, ``z ∈ [-R, 0]``, for the SQG problem
 
 # Arguments:
  - `grid`: grid structure containing `x`, `y`, and `Krsq`
- - `ψ`: surface streamfunction, calculated using `Calc_ψb` or `CreateModonSQG`
+ - `ψ`: surface streamfunction, calculated using [`Calc_ψb`](@ref) or [`CreateModonSQG`](@ref)
 
 # Keyword arguments:
  - `z`: vector of depths (default: `[0]`)
@@ -234,7 +234,7 @@ Evaluates N²w at specified depths, ``z ∈ [-R, 0]``, for the SQG problem using
 
 # Arguments:
  - `grid`: grid structure containing `x`, `y`, and `Krsq`
- - `ψ`: surface streamfunction, calculated using `Calc_ψb` or `CreateModonSQG`
+ - `ψ`: surface streamfunction, calculated using [`Calc_ψb`](@ref) or [`CreateModonSQG`](@ref)
 
 # Keyword arguments:
  - `z`: vector of depths (default: `[0]`)

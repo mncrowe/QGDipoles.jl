@@ -76,7 +76,7 @@ end
 """
     DefSQGParams(; U=1, ℓ=1, R=[Inf,Inf], β=0, x₀=[0,0], α=0, M=12, tol=1e-6, K₀=nothing, a₀=nothing, CalcVelocity=false, CalcVorticity=false, CalcEnergy=false)
 
-Defines an `SQGParams` structure using the given inputs
+Defines an [`SQGParams`](@ref) structure using the given inputs
 
 # Keyword arguments:
  - `U`: Vortex speed
@@ -130,13 +130,13 @@ end
 """
     UpdateParams(params::SQGParams; kwargs...)
 
-Creates an `SQGParams` structure by replacing parameters in `params` with the given keywords
+Creates an [`SQGParams`](@ref) structure by replacing parameters in `params` with the given keywords
 
 # Arguments:
- - `params`: `SQGParams` parameter structure
+ - `params`: [`SQGParams`](@ref) parameter structure
 
 # Keyword arguments:
- - `kwargs...`: keyword arguments for `DefSQGParams`
+ - `kwargs...`: keyword arguments for [`DefSQGParams`](@ref)
 """
 function UpdateParams(
     params::SQGParams;
@@ -176,7 +176,7 @@ end
 """
     DefSQGVortex(grid; U=1, ℓ=1, R=[Inf,Inf], β=0, x₀=[0,0], α=0, M=12, tol=1e-6, K₀=nothing, a₀=nothing, CalcVelocity=false, CalcVorticity=false, CalcEnergy=false)
 
-Defines an `SQGVortex` solution structure using the given inputs
+Defines an [`SQGVortex`](@ref) solution structure using the given inputs
 
 # Arguments:
  - `grid`: grid structure
@@ -255,11 +255,11 @@ end
 """
     DefSQGVortex(grid, params)
 
-Defines an `SQGVortex` solution structure using the given inputs
+Defines an [`SQGVortex`](@ref) solution structure using the given inputs
 
 # Arguments:
  - `grid`: grid structure
- - `params`: vortex parameters, `LQGParams` structure
+ - `params`: vortex parameters, [`LQGParams`](@ref) structure
 """
 function DefSQGVortex(grid, params::SQGParams)
 
@@ -284,14 +284,14 @@ end
 """
     UpdateVortex(grid, vortex::SQGVortex; kwargs...)
 
-Creates an `SQGVortex` structure by replacing parameters in `vortex.params` with the given keywords
+Creates an [`SQGVortex`](@ref) structure by replacing parameters in `vortex.params` with the given keywords
 
 # Arguments:
  - `grid`: grid structure
- - `vortex`: `SQGVortex` structure
+ - `vortex`: [`SQGVortex`](@ref) structure
 
 # Keyword arguments:
- - `kwargs...`: keyword arguments for `DefSQGParams`
+ - `kwargs...`: keyword arguments for [`DefSQGParams`](@ref)
 """
 function UpdateVortex(grid, vortex::SQGVortex; kwargs...)
 
@@ -303,7 +303,7 @@ end
 """
     Base.summary
 
-Summary method for custom type `SQGParams`
+Summary method for custom type [`SQGParams`](@ref)
 """
 function Base.summary(::SQGParams)
     return string("Parameter set structure for an SQG vortex solution (SQGParams)")
@@ -312,7 +312,7 @@ end
 """
     Base.summary
 
-Summary method for custom type `SQGVortex`
+Summary method for custom type [`SQGVortex`](@ref)
 """
 function Base.summary(::SQGVortex)
     return string("Vortex solution structure for an SQG model (SQGVortex)")
@@ -321,7 +321,7 @@ end
 """
     Base.show
 
-Show method for custom type `SQGParams`
+Show method for custom type [`SQGParams`](@ref)
 """
 function Base.show(io::IO, p::SQGParams)
 
@@ -375,7 +375,7 @@ end
 """
     Base.show
 
-Show method for custom type `SQGVortex`
+Show method for custom type [`SQGVortex`](@ref)
 """
 function Base.show(io::IO, p::SQGVortex)
 

@@ -32,7 +32,7 @@ end
 """
     CreateGrid(Nx, Ny, Lx, Ly; cuda=false)
 
-Define the numerical grid as a `GridStruct`
+Define the numerical grid as a [`GridStruct`](@ref)
 
 # Arguments:
  - `Nx`, `Ny`: number of gridpoints in x and y directions, Integers
@@ -98,12 +98,12 @@ end
 """
     CreateGrid(; Nx=512, Ny=512, Lx=[-5,5], Ly=[-5,5], cuda=false)
 
-Define the numerical grid as a `GridStruct` using a keyword-based method
+Define the numerical grid as a [`GridStruct`](@ref) using a keyword-based method
 
 # Keyword arguments:
  - `Nx`, `Ny`: number of gridpoints in x and y directions, Integers
  - `Lx`, `Ly`: x and y domains, either vectors of endpoints or lengths, Vectors or Numbers
- - `cuda`: `true`; use CUDA CuArray for fields (default: `false`)
+ - `cuda`: `true`; use `CUDA` CuArray for fields (default: `false`)
 """
 CreateGrid(; Nx = 512, Ny = 512, Lx = [-5, 5], Ly = [-5, 5], cuda = false) =
     CreateGrid(Nx, Ny, Lx, Ly; cuda)
@@ -131,7 +131,7 @@ end
 Calculates the polar coordinates from (`x`, `y`) as two-dimensional Array centred on `x₀`
 
 # Arguments:
- - `x`, `y`: 2D Arrays for ``x`` and ``y``, created using `CartesianGrid`
+ - `x`, `y`: 2D Arrays for ``x`` and ``y``, created using [`CartesianGrid`](@ref)
  - `x₀`: Vector
 """
 function PolarGrid(x, y, x₀::Vector = [0])
@@ -144,7 +144,7 @@ function PolarGrid(x, y, x₀::Vector = [0])
 end
 
 """
-Base.summary function for custom type `GridStruct`
+Base.summary function for custom type [`GridStruct`](@ref)
 """
 function Base.summary(g::GridStruct)
 
@@ -160,7 +160,7 @@ function Base.summary(g::GridStruct)
 end
 
 """
-Base.show function for custom type `GridStruct`
+Base.show function for custom type [`GridStruct`](@ref)
 """
 function Base.show(io::IO, g::GridStruct)
 

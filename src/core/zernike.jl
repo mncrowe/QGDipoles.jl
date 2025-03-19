@@ -1,7 +1,7 @@
 """
     ZernikeR(n, x)
 
-Define the Zernike radial function using the `jacobi` function from SpecialFunctions
+Define the Zernike radial function using the `jacobi` function from `SpecialFunctions`
 
 # Arguments:
  - `n`: order, Integer

@@ -16,10 +16,10 @@ and enstrophy diagnostics for various QG models.
 Evaluates the integral ``I = ∫_0^∞ F(ξ) J_{2j+2}(ξ) J_{2k+2}(ξ) \\mathrm{d}ξ``
 
 # Arguments:
- - `F`: function to integrate, typically `A_func` or `B_func`, Function
+ - `F`: function to integrate, typically [`A_func`](@ref) or [`B_func`](@ref), Function
  - `j`: first Bessel function index, Integer
  - `k`: second Bessel function index, Integer
- - `tol`: error tolerance for QuadGK, Number (default: `1e-6`)
+ - `tol`: error tolerance for `QuadGK`, Number (default: `1e-6`)
 
 Note: This integral is performed by deforming the contour of integration into the complex plane
 where the Bessel function decays exponentially in the imaginary direction.

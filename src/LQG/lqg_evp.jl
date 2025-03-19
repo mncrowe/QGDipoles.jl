@@ -58,7 +58,7 @@ the LQG problem
  - `μ`: nondimensional (y) vorticity gradient in each layer, Number or Vector
 
 # Keyword arguments:
- - `tol`: error tolerance for QuadGK via `JJ_int`, Number (default: `1e-6`)
+ - `tol`: error tolerance for `QuadGK` via `JJ_int`, Number (default: `1e-6`)
 """
 function BuildLinSysLQG(
     M::Int,

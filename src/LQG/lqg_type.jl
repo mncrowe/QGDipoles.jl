@@ -85,7 +85,7 @@ end
 """
     DefLQGParams(; U=1, ℓ=1, R=Inf, β=0, ActiveLayers=1, H=1, x₀=[0,0], α=0, M=8, tol=1e-6, K₀=nothing, a₀=nothing, UseAnalytic=false, CalcVelocity=false, CalcVorticity=false, CalcEnergy=false, CalcEnstrophy=false)
 
-Defines an `LQGParams` structure using the given inputs
+Defines an [`LQGParams`](@ref) structure using the given inputs
 
 # Keyword arguments:
  - `U`: Vortex speed
@@ -151,13 +151,13 @@ end
 """
     UpdateParams(params::LQGParams; kwargs...)
 
-Creates an `LQGParams` structure by replacing parameters in `params` with the given keywords
+Creates an [`LQGParams`](@ref) structure by replacing parameters in `params` with the given keywords
 
 # Arguments:
- - `params`: `LQGParams` parameter structure
+ - `params`: [`LQGParams`](@ref) parameter structure
 
 # Keyword arguments:
- - `kwargs...`: keyword arguments for `DefLQGParams`
+ - `kwargs...`: keyword arguments for [`DefLQGParams`](@ref)
 """
 function UpdateParams(
     params::LQGParams;
@@ -206,7 +206,7 @@ end
     DefLQGVortex(grid; U=1, ℓ=1, R=Inf, β=0, ActiveLayers=1, H=1, x₀=[0,0], α=0, M=8, tol=1e-6, K₀=nothing, a₀=nothing, UseAnalytic=false, CalcVelocity=false, CalcVorticity=false, CalcEnergy=false, CalcEnstrophy=false)
 
 
-Defines an `LQGVortex` solution structure using the given inputs
+Defines an [`LQGVortex`](@ref) solution structure using the given inputs
 
 # Arguments:
  - `grid`: grid structure
@@ -314,11 +314,11 @@ end
 """
     DefLQGVortex(grid, params)
 
-Defines an `LQGVortex` solution structure using the given inputs
+Defines an [`LQGVortex`](@ref) solution structure using the given inputs
 
 # Arguments:
  - `grid`: grid structure
- - `params`: vortex parameters, LQGParams structure
+ - `params`: vortex parameters, [`LQGParams`](@ref) structure
 """
 function DefLQGVortex(grid, params::LQGParams)
 
@@ -347,14 +347,14 @@ end
 """
     UpdateVortex(grid, vortex::LQGVortex; kwargs...)
 
-Creates an `LQGVortex` structure by replacing parameters in `vortex.params` with the given keywords
+Creates an [`LQGVortex`](@ref) structure by replacing parameters in `vortex.params` with the given keywords
 
 # Arguments:
  - `grid`: grid structure
- - `vortex`: `LQGVortex` structure
+ - `vortex`: [`LQGVortex`](@ref) structure
 
 # Keyword arguments:
- - `kwargs...`: keyword arguments for `DefLQGParams`
+ - `kwargs...`: keyword arguments for [`DefLQGParams`](@ref)
 """
 function UpdateVortex(grid, vortex::LQGVortex; kwargs...)
 
@@ -366,7 +366,7 @@ end
 """
     Base.summary
 
-Summary method for custom type `LQGParams`
+Summary method for custom type [`LQGParams`](@ref)
 """
 function Base.summary(::LQGParams)
     return string("Parameter set structure for an LQG vortex solution (LQGParams)")
@@ -375,7 +375,7 @@ end
 """
     Base.summary
 
-Summary method for custom type `LQGVortex`
+Summary method for custom type [`LQGVortex`](@ref)
 """
 function Base.summary(::LQGVortex)
     return string("Vortex solution structure for an LQG model (LQGVortex)")
@@ -384,7 +384,7 @@ end
 """
     Base.show
 
-Show method for custom type `LQGParams`
+Show method for custom type [`LQGParams`](@ref)
 """
 function Base.show(io::IO, p::LQGParams)
 
@@ -455,7 +455,7 @@ end
 """
     Base.show
 
-Show method for custom type `LQGVortex`
+Show method for custom type [`LQGVortex`](@ref)
 """
 function Base.show(io::IO, p::LQGVortex)
 
