@@ -51,6 +51,8 @@ Calculate ``ψ`` and ``q`` in a layered QG model using coefficients and vortex p
 # Arguments:
  - `grid`: grid structure containing x, y, and Krsq
  - `a`: M x N array of coefficients, Array
+
+# Keyword arguments:
  - (`U`, `ℓ`): vortex speed and radius, Numbers (default: `(1, 1)`)
  - (`R`, `β`): Rossby radii and (y) PV gradients in each layer, Numbers or Vectors (default: `(Inf, 0)`)
  - `x₀`: position of vortex center, vector (default: `[0, 0]`)

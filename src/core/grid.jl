@@ -13,7 +13,7 @@ for `FourierFlows.jl` or `GeophysicalFlows.jl`.
 
 Stores the grid variables in physical and Fourier space
 
-# Arguments:
+# Fields:
  - `x`, `y`: x and y points in physical space, Ranges
  - `kr`, `l`: x and y points in Fourier space, Arrays
  - `Krsq`: `kr²+l²` in Fourier space, Array
@@ -37,6 +37,8 @@ Define the numerical grid as a `GridStruct`
 # Arguments:
  - `Nx`, `Ny`: number of gridpoints in x and y directions, Integers
  - `Lx`, `Ly`: x and y domains, either vectors of endpoints or lengths, Vectors or Numbers
+
+# Keyword arguments:
  - `cuda`: `true`; use CUDA CuArray for fields (default: `false`)
 """
 function CreateGrid(
@@ -98,7 +100,7 @@ end
 
 Define the numerical grid as a `GridStruct` using a keyword-based method
 
-# Arguments:
+# Keyword arguments:
  - `Nx`, `Ny`: number of gridpoints in x and y directions, Integers
  - `Lx`, `Ly`: x and y domains, either vectors of endpoints or lengths, Vectors or Numbers
  - `cuda`: `true`; use CUDA CuArray for fields (default: `false`)

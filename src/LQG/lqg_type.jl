@@ -11,7 +11,7 @@ solution to be included in the same structure and allow parameters to be checked
 
 Stores the parameters for an LQG dipolar vortex solution
 
-# Arguments:
+# Fields:
  - `U`: Vortex speed
  - `ℓ`: Vortex radius
  - `R`: Rossby radius
@@ -55,7 +55,7 @@ end
 
 Stores fields and diagnostics for an LQG dipolar vortex solution
 
-# Arguments:
+# Fields:
  - `params`: Vortex params
  - `ψ`: streamfunction
  - `q`: potential vorticity anomaly
@@ -87,7 +87,7 @@ end
 
 Defines an `LQGParams` structure using the given inputs
 
-# Arguments:
+# Keyword arguments:
  - `U`: Vortex speed
  - `ℓ`: Vortex radius
  - `R`: Rossby radius
@@ -155,6 +155,8 @@ Creates an `LQGParams` structure by replacing parameters in `params` with the gi
 
 # Arguments:
  - `params`: `LQGParams` parameter structure
+
+# Keyword arguments:
  - `kwargs...`: keyword arguments for `DefLQGParams`
 """
 function UpdateParams(
@@ -208,6 +210,8 @@ Defines an `LQGVortex` solution structure using the given inputs
 
 # Arguments:
  - `grid`: grid structure
+
+# Keyword arguments:
  - `U`: Vortex speed
  - `ℓ`: Vortex radius
  - `R`: Rossby radius
@@ -348,6 +352,8 @@ Creates an `LQGVortex` structure by replacing parameters in `vortex.params` with
 # Arguments:
  - `grid`: grid structure
  - `vortex`: `LQGVortex` structure
+
+# Keyword arguments:
  - `kwargs...`: keyword arguments for `DefLQGParams`
 """
 function UpdateVortex(grid, vortex::LQGVortex; kwargs...)

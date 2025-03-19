@@ -16,6 +16,8 @@ region ``r < ℓ``.
 
 # Arguments:
  - `grid`: grid structure containing `x`, `y`, and `Krsq`
+
+# Keyword arguments:
  - `ℓ`: vortex speed and radius, Numbers (default: `1`)
  - `Γ`: vortex circulation (default: `2π`)
  - `x₀`: position of vortex center, vector (default: `[0, 0]`)
@@ -62,6 +64,8 @@ for ``r > ℓ`` and ``z₀ = ψ(r=ℓ)``. These solutions exist only on an f-pla
 
 # Arguments:
  - `grid`: grid structure containing `x`, `y`, and `Krsq`
+
+# Keyword arguments:
  - `ℓ`: vortex speed and radius, Numbers (default: `1`)
  - `Γ`: vortex circulation (default: `2π`)
  - `R`: Rossby radius (default: `Inf`)
@@ -156,6 +160,8 @@ This function inverts the potential vorticity relation ``q = [∇²-1/R²]ψ`` f
 # Arguments:
  - `grid`: grid structure containing `x`, `y`, and `Krsq`
  - `q`: potential vorticity field, Array
+
+# Keyword arguments:
  - `R`: Rossby radius (default: `Inf`)
 
 Note: This function is designed to be used for creating periodic streamfunctions using
@@ -198,6 +204,8 @@ split into a dipole equation ``qⱼ + βⱼ = -Kⱼ²(ψⱼ + Uy)`` and a monopo
 
 # Arguments:
  - `grid`: grid structure containing `x`, `y`, and `Krsq`
+
+# Keyword arguments:
  - `ℓ`: vortex speed and radius, Numbers (default: `1`)
  - `E`: vector of ``Eⱼ`` values, Number or Vector (default: `[1, ... , 1]`)
  - `R`: Rossby radius (default: `Inf`)
@@ -243,6 +251,8 @@ This function inverts the potential vorticity relation ``q = ΔN ψ`` for the LQ
 # Arguments:
  - `grid`: grid structure containing `x`, `y`, and `Krsq`
  - `q`: potential vorticity field, Array
+
+# Keyword arguments:
  - `R`: Rossby radius, Number or Vector (default: `Inf`)
 
 """

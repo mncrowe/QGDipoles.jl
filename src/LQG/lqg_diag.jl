@@ -26,6 +26,8 @@ Calculates the kinetic and potential energy for the LQG system
 # Arguments:
  - `grid`: grid structure containing `Krsq`
  - `ψ`: streamfunction in each layer, Array or CuArray
+
+# Keyword arguments:
  - `R`: Rossby radius in each layer, Number or Vector (default: `Inf`)
  - `H`: Thickness of each layer, Number or Vector (default: `[1]`)
 """
@@ -77,6 +79,8 @@ Calculates the enstrophy for the LQG system
 # Arguments:
  - `grid`: grid structure containing `Krsq`
  - `q`: potential vorticity anomaly in each layer, Array or CuArray
+
+# Keyword arguments:
  - `H`: Thickness of each layer, Number or Vector (default: `[1]`)
 """
 function EnstrophyLQG(grid, q::Union{CuArray,Array}; H::Union{Number,Vector} = [1])

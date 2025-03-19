@@ -47,6 +47,8 @@ Calculate SQG fields ``ψ`` and ``b`` using coefficients and vortex parameters
 # Arguments:
  - `grid`: grid structure containing `x`, `y`, and `Krsq`
  - `a`: M x 1 array of coefficients, Array
+
+# Keyword arguments:
  - (`U`, `ℓ`): vortex speed and radius, Numbers (default: `1`)
  - `R`: vector of ``[R, R']``, Vector (default: `[Inf, Inf]`)
  - `β`: beta-plane (y) PV gradient, Number (default: `1`)

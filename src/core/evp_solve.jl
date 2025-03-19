@@ -29,6 +29,8 @@ Solves the inhomogeneous eigenvalue problem using nonlinear root finding
 
 # Arguments:
  - `A`, `B`, `c`, `d`: inhomogeneous eigenvalue problem terms, Arrays
+
+# Keyword arguments:
  - `K₀`, `a₀`: initial guesses for ``K`` and ``a``, Arrays or nothings (default: `nothing`)
  - `tol`: error tolerance for `nlsolve`, Number (default: `1e-6`)
  - `method`: `0` - eigensolve for ``N = 1`` and `nlsolve` for ``N > 1``, `1` - `nlsolve` (default: `0`)

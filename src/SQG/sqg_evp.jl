@@ -42,6 +42,8 @@ the SQG problem
  - `M`: number of coefficient to solve for, Integer
  - `λ`: ratio of vortex radius to Rossby radius in each layer, Number or Vector
  - `μ`: nondimensional (y) vorticity gradient in each layer, Number or Vector
+
+# Keyword arguments:
  - `tol`: error tolerance for QuadGK via `JJ_int`, Number (default: `1e-6`)
 """
 function BuildLinSysSQG(

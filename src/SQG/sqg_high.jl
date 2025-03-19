@@ -17,14 +17,16 @@ High level wrapper function for calculating ``ψ`` and ``b`` for the SQG model u
 
 # Arguments:
  - `grid`: grid structure containing `x`, `y`, and `Krsq`
- - `M`: number of coefficient to solve for, Integer (default: `12`)
+
+# Keyword arguments:
  - (`U`, `ℓ`): vortex speed and radius, Numbers (default: (`1`, `1`))
  - `R`: vector of ``[R, R']``, Vector (default: `[Inf, Inf]`)
  - `β`: beta-plane (y) PV gradient, Number (default: `0`)
  - `x₀`: position of vortex center, vector (default: `[0, 0]`)
  - `α`: initial angle of vortex, Number (default: `0`)
- - `K₀`, `a₀`: initial guesses for ``K`` and ``a``, Arrays or nothings (default: `nothing`)
+ - `M`: number of coefficient to solve for, Integer (default: `12`)
  - `tol`: error tolerance passed to `QuadGK` and `NLSolve` functions, Number (default: `1e-6`)
+ - `K₀`, `a₀`: initial guesses for ``K`` and ``a``, Arrays or nothings (default: `nothing`)
 
 Note: Here R is the baroclinic Rossby radius, R = NH/f, and R' = R₀²/R where R₀ is
 the barotropic Rossby radius, R₀ = √(gH)/f. For infinite depth, R' = g/(fN).
@@ -71,6 +73,8 @@ Evaluates ``ψ`` at specified depths, ``z ∈ [-R, 0]``, for the SQG problem
 # Arguments:
  - `grid`: grid structure containing `x`, `y`, and `Krsq`
  - `ψ`: surface streamfunction, calculated using `Calc_ψb` or `CreateModonSQG`
+
+# Keyword arguments:
  - `z`: vector of depths (default: `[0]`)
  - `U`: vortex speed, Number (default: `1`)
  - `R`: vector of ``[R, R']``, Vector (default: `[Inf, Inf]`)
@@ -132,6 +136,8 @@ Evaluates ``q`` at specified depths, ``z ∈ [-R, 0]``, for the SQG problem
 # Arguments:
  - `grid`: grid structure containing `x`, `y`, and `Krsq`
  - `ψ`: surface streamfunction, calculated using `Calc_ψb` or `CreateModonSQG`
+
+# Keyword arguments:
  - `z`: vector of depths (default: `[0]`)
  - `U`: vortex speed, Number (default: `1`)
  - `R`: vector of ``[R, R']``, Vector (default: `[Inf, Inf]`)
@@ -165,6 +171,8 @@ Evaluates ``b`` at specified depths, ``z ∈ [-R, 0]``, for the SQG problem
 # Arguments:
  - `grid`: grid structure containing `x`, `y`, and `Krsq`
  - `ψ`: surface streamfunction, calculated using `Calc_ψb` or `CreateModonSQG`
+
+# Keyword arguments:
  - `z`: vector of depths (default: `[0]`)
  - `U`: vortex speed, Number (default: `1`)
  - `R`: vector of ``[R, R']``, Vector (default: `[Inf, Inf]`)
@@ -227,6 +235,8 @@ Evaluates N²w at specified depths, ``z ∈ [-R, 0]``, for the SQG problem using
 # Arguments:
  - `grid`: grid structure containing `x`, `y`, and `Krsq`
  - `ψ`: surface streamfunction, calculated using `Calc_ψb` or `CreateModonSQG`
+
+# Keyword arguments:
  - `z`: vector of depths (default: `[0]`)
  - `U`: vortex speed, Number (default: `1`)
  - `R`: vector of ``[R, R']``, Vector (default: `[Inf, Inf]`)

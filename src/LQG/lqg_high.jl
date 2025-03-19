@@ -17,6 +17,8 @@ High level wrapper function for calculating ``ψ`` and ``q`` for the Layered QG 
 
 # Arguments:
  - `grid`: grid structure containing `x`, `y`, and `Krsq`
+
+# Keyword arguments:
  - (`U`, `ℓ`): vortex speed and radius, Numbers (default: (`1`, `1`))
  - (`R`, `β`): Rossby radii and (y) PV gradients in each layer, Numbers or Vectors, (default: (`Inf`, `0`))
  - `ActiveLayers`: vector of 1s or 0s where 1 denotes an active layer, Number or Vector, (default: `[1,..,1]`)
@@ -80,6 +82,8 @@ High level wrapper function for calculating ``ψ`` and ``q`` for the Lamb-Chaply
 
 # Arguments:
  - `grid`: grid structure containing `x`, `y`, and `Krsq`
+
+# Keyword arguments:
  - (`U`, `ℓ`): vortex speed and radius, Numbers (default: (`1`, `1`))
  - `x₀`: position of vortex center, vector (default: `[0, 0]`)
  - `α`: initial angle of vortex, Number (default: `0`)
@@ -126,6 +130,8 @@ High level wrapper function for calculating ``ψ`` and ``q`` for the Larichev-Re
 
 # Arguments:
  - `grid`: grid structure containing `x`, `y`, and `Krsq`
+
+# Keyword arguments:
  - (`U`, `ℓ`): vortex speed and radius, Numbers (default: (`1`, `1`))
  - (`R`, `β`): Rossby radii and (y) PV gradient, Numbers, (default: (`Inf`, `0`))
  - `x₀`: position of vortex center, vector (default: `[0, 0]`)

@@ -13,6 +13,8 @@ Recipe for plotting field `F` on `grid`
 # Arguments:
  - `grid`: grid object
  - `F`: field, may have mltiple layers
+
+# Keyword arguments:
  - `layer`: layer to plot (default: `1`)
 """
 @recipe function f(grid, F::Array; layer = 1)
@@ -38,6 +40,8 @@ Recipe for plotting field `F` on `grid`
 # Arguments:
  - `grid`: grid object
  - `F`: field, may have mltiple layers
+
+# Keyword arguments:
  - `layer`: layer to plot (default: `1`)
 """
 @recipe function f(grid, F::CuArray; layer = 1)

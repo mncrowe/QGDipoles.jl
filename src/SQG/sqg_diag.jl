@@ -21,6 +21,8 @@ and the surface potential energy
  - `grid`: grid structure containing `Krsq`
  - `ψ`: surface streamfunction, Array or CuArray
  - `b`: surface buoyancy, , Array or CuArray
+
+# Keyword arguments:
  - `R′`: reduced barotropic Rossby radius, Number (default: `Inf`)
 
 Note: the surface potential energy is sometimes referred to as the generalised

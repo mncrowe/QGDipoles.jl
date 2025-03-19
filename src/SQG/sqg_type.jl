@@ -11,7 +11,7 @@ solution to be included in the same structure and allow parameters to be checked
 
 Stores the parameters for an SQG dipolar vortex solution
 
-# Arguments:
+# Fields:
  - `U`: Vortex speed
  - `ℓ`: Vortex radius
  - `R`: Rossby radius
@@ -48,7 +48,7 @@ end
 
 Stores fields and diagnostics for an SQG dipolar vortex solution
 
-# Arguments:
+# Fields:
  - `params`: Vortex params
  - `ψ`: surface streamfunction
  - `b`: surface buoyancy
@@ -78,7 +78,7 @@ end
 
 Defines an `SQGParams` structure using the given inputs
 
-# Arguments:
+# Keyword arguments:
  - `U`: Vortex speed
  - `ℓ`: Vortex radius
  - `R`: Rossby radius
@@ -134,6 +134,8 @@ Creates an `SQGParams` structure by replacing parameters in `params` with the gi
 
 # Arguments:
  - `params`: `SQGParams` parameter structure
+
+# Keyword arguments:
  - `kwargs...`: keyword arguments for `DefSQGParams`
 """
 function UpdateParams(
@@ -178,6 +180,8 @@ Defines an `SQGVortex` solution structure using the given inputs
 
 # Arguments:
  - `grid`: grid structure
+
+# Keyword arguments:
  - `U`: Vortex speed
  - `ℓ`: Vortex radius
  - `R`: Rossby radius
@@ -285,6 +289,8 @@ Creates an `SQGVortex` structure by replacing parameters in `vortex.params` with
 # Arguments:
  - `grid`: grid structure
  - `vortex`: `SQGVortex` structure
+
+# Keyword arguments:
  - `kwargs...`: keyword arguments for `DefSQGParams`
 """
 function UpdateVortex(grid, vortex::SQGVortex; kwargs...)
