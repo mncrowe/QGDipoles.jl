@@ -16,7 +16,7 @@ function TestSQG_K()
     M = 13
     tol = 1e-6
     K₀ = 4
-    method = 1
+    method = :eigensolve
 
     U, ℓ = 1, 1
     R = [Inf, Inf]
@@ -48,7 +48,7 @@ function TestSQG_v(grid)
     M = 13
     tol = 1e-6
     K₀ = 4
-    method = 1
+    method = :nlsolve
 
     U, ℓ = 1, 1
     R = [Inf, Inf]

@@ -17,7 +17,7 @@ function Test1QG_K(U::Number, ℓ::Number, R::Number, β::Number)
     M = 8
     tol = 1e-6
     K₀ = 4
-    method = 1
+    method = :eigensolve
 
     λ = ℓ / R
     μ = β * ℓ^2 / U
@@ -74,7 +74,7 @@ function Test1QG_ψ(grid)
     M = 8
     tol = 1e-6
     K₀ = 4
-    method = 1
+    method = :nlsolve
 
     λ, μ = 0, 0
 
@@ -104,7 +104,7 @@ function Test2QG_K()
     M = 8
     tol = 1e-6
     K₀ = [4, 4]
-    method = 1
+    method = :eigensolve # should be reset to :nlsolve
 
     U, ℓ = 1, 1
     R = [1, 1]
@@ -143,7 +143,7 @@ function Test2QG_PVinv(grid)
     M = 8
     tol = 1e-6
     K₀ = [4, 4]
-    method = 1
+    method = :nlsolve
 
     U, ℓ = 1, 1
     R = [Inf, 1]
