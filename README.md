@@ -98,3 +98,9 @@ Tests are stored in `test/` and can be run using either
 include("test/runtests.jl")
 ```
 or by activating the package manager by entering `]` at the Julia REPL then entering `test`.
+
+### Utilities
+
+Additional tools for development are stored in 'utils/'. Currently this directory contains:
+
+* `clear_deps.sh`: a shell script to clear unwanted dependencies from `Project.toml` and `docs/Project.toml`. This should be run from the root directory.

@@ -76,7 +76,7 @@ We can calculate additional quantities, such as the velocity and energy, by sett
 ```@example structures
 vortex = DefSQGVortex(grid; CalcVelocity = true, CalcEnergy = true)
 
-plot(heatmap(grid, vortex.u), heatmap(grid, vortex.v))
+plot(heatmap(grid, vortex.u, colorlimits=(-10, 10)), heatmap(grid, vortex.v))
 ```
 ```@example structures
 println(vortex.E)
