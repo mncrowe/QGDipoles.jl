@@ -101,6 +101,6 @@ or by activating the package manager by entering `]` at the Julia REPL then ente
 
 ### Utilities
 
-Additional tools for development are stored in 'utils/'. Currently this directory contains:
+Additional tools for development are stored in `utils/`. Currently this directory contains:
 
 * `clear_deps.sh`: a shell script to clear unwanted dependencies from `Project.toml` and `docs/Project.toml`. This should be run from the root directory.
