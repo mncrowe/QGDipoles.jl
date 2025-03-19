@@ -161,7 +161,15 @@ Low-level functions are also available to calculate vortex solutions.
 In general, these allow more customisation than the high-level wrapper and vortex structures however some understanding of the underlying method is required to work with them effectively.
 Information on the methodology is given on the [Methodology](@ref Methodology) page and in the associated references.
 
-Here we'll construct three different solutions using the low-level functions.
+Here we'll construct three different solutions using the low-level functions,
+namely a [1-Layer Dipole](@ref), a [3-Layer Vortex](@ref) and an [SQG Vortex](@ref).
+
+!!! tip "Tip: GPU support"
+	We support grid calculations on NVIDIA GPUs using the `CUDA` package.
+	To use this functionality, pass `cuda = true` to the grid constructor. For example,
+	```julia
+	grid = CreateGrid(Nx, Ny, Lx, Ly; cuda = true)
+	```
 
 ### 1-Layer Dipole
 
