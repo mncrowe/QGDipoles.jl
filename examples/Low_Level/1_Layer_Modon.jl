@@ -11,7 +11,7 @@ R = 1# Rossby radius in each layer
 M = 8# number of coefficients in Zernike expansion
 tol = 1e-8# maximum error in solution evaluation
 cuda = false# use CuArrays for grid
-method = 0# 0; eigensolve/nlsolve, 1; nlsolve
+method = :eigensolve# :eigensolve or :nlsolve
 
 # Set grid parameters
 

@@ -14,7 +14,7 @@ R = [Inf, Inf]# Baroclinic and Barotropic Rossby radii
 M = 20# number of coefficients in Zernike expansion
 tol = 1e-6# maximum error in solution evaluation
 cuda = false# use CuArrays for grid
-method = 0# 0; eigensolve/nlsolve, 1; nlsolve
+method = :eigensolve# :eigensolve or :nlsolve
 m = 1# exponent of K in linear system, 1 for SQG
 
 # Set grid parameters
