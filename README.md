@@ -12,12 +12,12 @@ It is designed to work with GeophysicalFlows.jl and FourierFlows.jl.
 `QGDipoles.jl` can be installed using the Julia package manager. It is recommended to [create a new environment](https://pkgdocs.julialang.org/v1/environments/) for each project and install any new packages to that environment. 
 
 Installation may be done using the package manager directly by typing `]` at the Julia REPL and entering the following:
-```julia-repl
+```julia
 add https://github.com/mncrowe/QGDipoles.jl.git
 instantiate
 ```
 Alternatively, you may import the package manager and install by entering the following directly into the Julia REPL:
-```julia-repl
+```julia
 import Pkg
 Pkg.add(url="https://github.com/mncrowe/QGDipoles.jl")
 Pkg.instantiate()
@@ -26,16 +26,7 @@ This package is not compatible with versions of Julia earlier than 1.10 due to t
 
 ## Examples and Documentation
 
-See `examples/` for example scripts and `docs/documentation.md` for information on how to use this package and how it works. Full documetation is available [here](https://mncrowe.github.io/QGDipoles.jl).
-
-## Files
-
-This package contains the following files in `src/`:
-
-* `create_modon.jl`: contains functions for calculating modon solutions on a grid using a given set of coefficients
-* `lin_sys.jl`: contains functions for building and solving an inhomogeneous eigenvalue problem for the coefficients
-* `JJ_int.jl`: contains numerical integration functions for calculating the terms in the inhomogeneous eigenvalue problem
-* `QGDipoles.jl`: module file which loads dependencies and exports all functions
+See `examples/` for example scripts. Full documetation is available [here](https://mncrowe.github.io/QGDipoles.jl).
 
 ## Dependencies
 
@@ -50,6 +41,18 @@ This package requires the following dependencies:
 * CUDA (v5.4.3)
 
 The specified versions are confirmed to work. Earlier versions may also work.
+
+## Files
+
+This directory contains the following:
+
+* `docs/`: contains documentation and build script for html generation.
+* `examples/`: example scripts, more examples are available in the documentation.
+* `src/`: source Julia files for QGDipoles.jl.
+* `test/`: tests for QGDipoles.jl package.
+* `utils/`: additional utilities for package management.
+* `Project.toml`: project file containing dependencies for QGDipoles.jl.
+* `README.md`: this readme file.
 
 ## Methodology
 
@@ -82,7 +85,8 @@ JuliaFormatter.format(".")
 
 The documentation is stored within `docs/` and can be built using `Documenter.jl` by running `docs/make.jl`. Full instructions for using `Documenter.jl` are available [here](https://documenter.juliadocs.org/stable/man/guide/). The documentation can be re-built by opening Julia using `julia --project=docs/` then entering the following into the REPL:
 ```julia
-Pkg.develop(".")  # this adds the local copy of `QGDipoles.jl` to the `docs` environment 
+import Pkg
+Pkg.develop(path=".")  # this adds the local copy of `QGDipoles.jl` to the `docs` environment 
 include("docs/make.jl")
 ```
 The newly built documentation will be available in `docs/build` and can be viewed by opening `docs/build/index.html` with a web browser.
@@ -94,3 +98,9 @@ Tests are stored in `test/` and can be run using either
 include("test/runtests.jl")
 ```
 or by activating the package manager by entering `]` at the Julia REPL then entering `test`.
+
+### Utilities
+
+Additional tools for development are stored in `utils/`. Currently this directory contains:
+
+* `clear_deps.sh`: a shell script to clear unwanted dependencies from `Project.toml` and `docs/Project.toml`. This should be run from the root directory.

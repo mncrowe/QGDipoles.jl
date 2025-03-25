@@ -2,17 +2,21 @@
 
 Installing QGDipoles.jl is fairly straightforward and can be done using the Julia package manager.
 Note that QGDipoles is not (currently) listed as a Julia package so **cannot** be installed using `] add QGDipoles`.
+It is recommended to [create a new environment](https://pkgdocs.julialang.org/v1/environments/) for each project and install any new packages to that environment. 
 
-## Installing
+## Installation
 
-To install use the Julia package manager:
-
+Installation may be done using the package manager directly by typing `]` at the Julia REPL and entering the following:
 ```julia
-julia> ]
-(v1.10) pgk> add https://github.com/mncrowe/QGDipoles.jl.git
-(v1.10) pgk> instantiate
+add https://github.com/mncrowe/QGDipoles.jl.git
+instantiate
 ```
-
+Alternatively, you may import the package manager and install by entering the following directly into the Julia REPL:
+```julia
+import Pkg
+Pkg.add(url="https://github.com/mncrowe/QGDipoles.jl")
+Pkg.instantiate()
+```
 This package is not compatible with versions of Julia earlier than 1.10 due to the `eachslice` function.
 
 ## Dependencies
@@ -26,6 +30,7 @@ This package requires the following dependencies:
 * QuadGK (v2.9.4)
 * SpecialFunctions (v2.4.0)
 * CUDA (v5.4.3)
+* RecipesBase (v1.3.4)
 
-The specified versions are confirmed to work and earlier versions may also work.
+The specified versions are confirmed to work and earlier/later versions may also work.
 These packages will be automatically installed with QGDipoles.jl and do not need to be added seperately.

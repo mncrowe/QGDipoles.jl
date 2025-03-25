@@ -14,7 +14,7 @@ x₀ = [0, 0]# position of vortex center
 M = 8# number of coefficients in Zernike expansion
 tol = 1e-8# maximum error in solution evaluation
 cuda = false# use CuArrays for grid
-K₀, a₀ = [4, 4], Nothing# guesses for K and a
+K₀, a₀ = [4, 4], nothing# guesses for K and a
 
 # Set grid parameters
 
@@ -27,21 +27,10 @@ grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
 
 # create modon solution
 
-ψ, q, K, a = CreateModonLQG(grid, M, U, ℓ, R, β, ActiveLayers, x₀; K₀, a₀, tol)
-# ψ, q = CreateModonLQG(grid, M, U, ℓ, R, β, ActiveLayers, x₀; K₀, a₀, tol) # fields only
+ψ, q, K, a = CreateModonLQG(grid; U, ℓ, R, β, ActiveLayers, x₀, M, tol, K₀, a₀)
+# ψ, q = CreateModonLQG(grid; U, ℓ, R, β, ActiveLayers, x₀, M, tol, K₀, a₀) # fields only
 
-# Plot streamfunction ψ in layer 1
+# Plot streamfunction ψ in layer 1, if we have `Plots.jl` added
 
-using Plots
-
-heatmap(
-    grid.x,
-    grid.y,
-    transpose(ψ[:, :, 1]);
-    colormap = :balance,
-    aspect_ratio = 1,
-    xlims = (-Lx / 2, Lx / 2),
-    ylims = (-Ly / 2, Ly / 2),
-    xlabel = "x",
-    ylabel = "y",
-)
+# using Plots
+# heatmap(grid, ψ, layer = 1)

@@ -11,7 +11,7 @@ R = 1# Rossby radius in each layer
 M = 8# number of coefficients in Zernike expansion
 tol = 1e-8# maximum error in solution evaluation
 cuda = false# use CuArrays for grid
-method = 0# 0; eigensolve/nlsolve, 1; nlsolve
+method = :eigensolve# :eigensolve or :nlsolve
 
 # Set grid parameters
 
@@ -23,27 +23,16 @@ Lx, Ly = 10, 10
 λ = ℓ / R
 μ = β * ℓ^2 / U
 
-A, B, c, d = BuildLinSys(M, λ, μ; tol)
+A, B, c, d = BuildLinSysLQG(M, λ, μ; tol)
 K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol, method)
 
 # Create grid and calculate streamfunctions and vorticities
 
 grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
-ψ, q = Calc_ψq(a, U, ℓ, R, β, grid)
-u, v = Calc_uv(ψ, grid)
+ψ, q = Calc_ψq(grid, a; U, ℓ, R, β)
+u, v = Calc_uv(grid, ψ)
 
-# Plot streamfunction ψ
+# We can plot streamfunction ψ, if we have `Plots.jl` added
 
-using Plots
-
-heatmap(
-    grid.x,
-    grid.y,
-    transpose(ψ[:, :, 1]);
-    colormap = :balance,
-    aspect_ratio = 1,
-    xlims = (-Lx / 2, Lx / 2),
-    ylims = (-Ly / 2, Ly / 2),
-    xlabel = "x",
-    ylabel = "y",
-)
+# using Plots
+# heatmap(grid, ψ)

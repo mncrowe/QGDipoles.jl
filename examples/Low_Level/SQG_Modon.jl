@@ -14,8 +14,8 @@ R = [Inf, Inf]# Baroclinic and Barotropic Rossby radii
 M = 20# number of coefficients in Zernike expansion
 tol = 1e-6# maximum error in solution evaluation
 cuda = false# use CuArrays for grid
-method = 0# 0; eigensolve/nlsolve, 1; nlsolve
-sqg = true# functions use SQG functionality
+method = :eigensolve# :eigensolve or :nlsolve
+m = 1# exponent of K in linear system, 1 for SQG
 
 # Set grid parameters
 
@@ -27,27 +27,16 @@ Lx, Ly = 10, 10
 λ = ℓ ./ R
 μ = β * ℓ^2 / U
 
-A, B, c, d = BuildLinSys(M, λ, μ; tol, sqg)
-K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol, method, sqg)
+A, B, c, d = BuildLinSysSQG(M, λ, μ; tol)
+K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol, method, m)
 
 # Create grid and calculate streamfunctions and vorticities
 
 grid = CreateGrid(Nx, Ny, Lx, Ly; cuda)
-ψ, b = Calc_ψb(a, U, ℓ, R, β, grid)
-u, v = Calc_uv(ψ, grid)
+ψ, b = Calc_ψb(grid, a; U, ℓ, R, β)
+u, v = Calc_uv(grid, ψ)
 
-# Plot surface bouyancy b
+# Plot surface bouyancy b, if we have `Plots.jl` added
 
-using Plots
-
-heatmap(
-    grid.x,
-    grid.y,
-    transpose(b);
-    colormap = :balance,
-    aspect_ratio = 1,
-    xlims = (-Lx / 2, Lx / 2),
-    ylims = (-Ly / 2, Ly / 2),
-    xlabel = "x",
-    ylabel = "y",
-)
+# using Plots
+# heatmap(grid, b)

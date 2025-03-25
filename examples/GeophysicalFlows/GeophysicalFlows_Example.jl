@@ -14,7 +14,7 @@ Lx, Ly = 20.48, 20.48
 T = 10
 Δt = 0.01
 Nt = Int(T / Δt)# number of timesteps
-dev = GPU()
+dev = CPU()
 stepper = "FilteredRK4"
 
 # Define problem using SingleLayerQG from GeophysicalFlows.jl
@@ -32,7 +32,7 @@ prob = SingleLayerQG.Problem(
 
 # Set initial condition
 
-_, q₀, K = CreateLCD(prob.grid, U, ℓ)
+_, q₀, K = CreateLCD(prob.grid; U, ℓ)
 q₀ = reshape(q₀, nx, ny)# convert from size (nx, ny, 1) to size (nx, ny)
 SingleLayerQG.set_q!(prob, q₀)
 
@@ -45,31 +45,7 @@ diags = Diagnostic(SingleLayerQG.energy, prob; nsteps = Nt, freq = Int(Nt / 100)
 stepforward!(prob, diags, Nt)
 SingleLayerQG.updatevars!(prob)
 
-# Plot initial and final fields
+# Plot initial and final fields if we have `Plots.jl` added
 
-using Plots
-
-plot(
-    heatmap(
-        prob.grid.x,
-        prob.grid.y,
-        device_array(CPU())(transpose(q₀));
-        colormap = :balance,
-        aspect_ratio = 1,
-        xlims = (-Lx / 2, Lx / 2),
-        ylims = (-Ly / 2, Ly / 2),
-        xlabel = "x",
-        ylabel = "y",
-    ),
-    heatmap(
-        prob.grid.x,
-        prob.grid.y,
-        device_array(CPU())(transpose(prob.vars.q));
-        colormap = :balance,
-        aspect_ratio = 1,
-        xlims = (-Lx / 2, Lx / 2),
-        ylims = (-Ly / 2, Ly / 2),
-        xlabel = "x",
-        ylabel = "y",
-    ),
-)
+# using Plots
+# plot(heatmap(prob.grid, q₀), heatmap(prob.grid, prob.vars.q))
