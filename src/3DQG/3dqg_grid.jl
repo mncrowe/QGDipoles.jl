@@ -145,6 +145,19 @@ function CreateGrid3D(
 end
 
 """
+    CreateGrid3D(; Nx=512, Ny=512, Nz = 32, Lx=[-5,5], Ly=[-5,5], Lz = [-1, 1], cuda=false)
+
+Define the numerical grid as a [`GridStruct3D`](@ref) using a keyword-based method
+
+# Keyword arguments:
+ - `Nx`, `Ny`: number of gridpoints in x and y directions, Integers
+ - `Lx`, `Ly`: x and y domains, either vectors of endpoints or lengths, Vectors or Numbers
+ - `cuda`: `true`; use `CUDA` CuArray for fields (default: `false`)
+"""
+CreateGrid3D(; Nx = 512, Ny = 512, Nz = 32, Lx = [-5, 5], Ly = [-5, 5], Lz = [-1, 0], cuda = false) =
+    CreateGrid3D(Nx, Ny, Nz, Lx, Ly, Lz; cuda)
+
+"""
 Base.summary function for custom type [`GridStruct3D`](@ref)
 """
 function Base.summary(g::GridStruct3D)
