@@ -1,5 +1,5 @@
 """
-This file cotains energy diagnostics for the SQG model.
+This file contains energy diagnostics for the SQG model.
 
 For SQG, the two quantities of interest are the total domain averaged energy
 
