@@ -2,90 +2,138 @@
 
 This page lists all Modules, Functions and Structures available in this package.
 
-## `QGDipoles.jl`
+## QGDipoles.jl Module
 
 ```@docs
 QGDipoles
 ```
 
-## `JJ_integ.jl`
+## Vortex Structures
+
+### LQG
 
 ```@docs
-A_func
-B_func
-JJ_int
+LQGParams
+LQGVortex
+DefLQGParams
+DefLQGVortex
 ```
 
-## `lin_sys.jl`
+### SQG
 
 ```@docs
-BuildLinSys
-ApplyPassiveLayers
-IncludePassiveLayers
-SolveInhomEVP
-InhomEVP_F!
-OrthogSpace
+SQGParams
+SQGVortex
+DefSQGParams
+DefSQGVortex
 ```
 
-## `create_modon.jl`
+### Shared
+```@docs
+UpdateParams
+UpdateVortex
+```
+
+## High-Level Functions
+
+### LQG
 
 ```@docs
-ZernikeR
-GridStruct
-CreateGrid
-Calc_ψq
-Calc_ψb
-Calc_uv
-ΔNCalc
 CreateModonLQG
-CreateModonSQG
 CreateLCD
 CreateLRD
+```
+
+### SQG
+
+```@docs
+CreateModonSQG
 Eval_ψ_SQG
 Eval_q_SQG
 Eval_b_SQG
 Eval_w_SQG
+```
+
+## Utilities
+
+```@docs
+CreateGrid
+Calc_uv
 Calc_∇
-CartesianGrid
-PolarGrid
 Calc_ζ
 ```
 
-## `energetics.jl`
+## Diagnostics
+
+### LQG
 
 ```@docs
 EnergyLQG
 EnstrophyLQG
-EnergySQG
-AreaInteg2
 ```
 
-## `vortex_types.jl`
+### SQG
 
 ```@docs
-LQGParams
-SQGParams
-LQGVortex
-SQGVortex
-DefLQGParams
-DefSQGParams
-DefLQGVortex
-DefSQGVortex
+EnergySQG
 ```
 
-## `monopoles.jl`
+## Low-Level Functions
+
+### LQG
+
+```@docs
+BuildLinSysLQG
+ApplyPassiveLayers
+IncludePassiveLayers
+Calc_ψq
+```
+
+### SQG
+
+```@docs
+BuildLinSysSQG
+Calc_ψb
+```
+
+### Shared
+
+```@docs
+SolveInhomEVP
+```
+
+## Extras
+
+### Monopoles
 
 ```@docs
 CreateRankine
 Create1LMonopole
-InvertVorticity1LQG
 CreateLQGMonopole
+InvertVorticity1LQG
 InvertVorticityLQG
 ```
 
-## `Base`
+## Internal
+
+```@docs
+QGDipoles.A_func
+QGDipoles.B_func
+QGDipoles.JJ_int
+QGDipoles.InhomEVP_F!
+QGDipoles.OrthogSpace
+QGDipoles.ZernikeR
+QGDipoles.GridStruct
+QGDipoles.ΔNCalc
+QGDipoles.CartesianGrid
+QGDipoles.PolarGrid
+QGDipoles.AreaInteg2
+```
+
+## Base & RecipesBase
 
 ```@docs
 Base.summary
 Base.show
+RecipesBase.apply_recipe
 ```

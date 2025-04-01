@@ -8,82 +8,114 @@ module QGDipoles
 
 # Load required packages
 
-using
-	Jacobi,
-	FFTW,
-	LinearAlgebra,
-	SpecialFunctions,
-	QuadGK,
-	NLsolve,
-	CUDA
+using Jacobi, FFTW, LinearAlgebra, SpecialFunctions, QuadGK, NLsolve, CUDA, RecipesBase
 
 # Export names for all functions and types
 
 export
-	# JJ_integ.jl
-	A_func,
-	B_func,
-	JJ_int,
 
-	# lin_sys.jl
-	BuildLinSys,
-	ApplyPassiveLayers,
-	IncludePassiveLayers,
-	SolveInhomEVP,
-	InhomEVP_F!,
-	OrthogSpace,
+    ## core
 
-	# create_modon.jl
-	ZernikeR,
-	GridStruct,
-	CreateGrid,
-	Calc_ψq,
-	Calc_ψb,
-	Calc_uv,
-	ΔNCalc,
-	CreateModonLQG,
-	CreateModonSQG,
-	CreateLCD,
-	CreateLRD,
-	Eval_ψ_SQG,
-	Eval_q_SQG,
-	Eval_b_SQG,
-	Eval_w_SQG,
-	Calc_∇,
-	CartesianGrid,
-	PolarGrid,
-	Calc_ζ,
+    SolveInhomEVP,
+    #InhomEVP_F!,
+    #OrthogSpace,
 
-	# energetics.jl
-	EnergyLQG,
-	EnstrophyLQG,
-	EnergySQG,
-	AreaInteg2,
+    #GridStruct,
+    CreateGrid,
+    #CartesianGrid,
+    #PolarGrid,
 
-	# vortex_types.jl
-	LQGParams,
-	SQGParams,
-	LQGVortex,
-	SQGVortex,
-	DefLQGParams,
-	DefSQGParams,
-	DefLQGVortex,
-	DefSQGVortex,	
+    #JJ_int,
+    #AreaInteg2,
 
-	# monopoles.jl
-	CreateRankine,
-	Create1LMonopole,
-	InvertVorticity1LQG,
-	CreateLQGMonopole,
-	InvertVorticityLQG
+    #ZernikeR,
+
+    ## extras
+
+    CreateRankine,
+    Create1LMonopole,
+    InvertVorticity1LQG,
+    CreateLQGMonopole,
+    InvertVorticityLQG,
+
+    ## QG shared
+
+    UpdateParams,
+    UpdateVortex,
+
+    ## LQG
+
+    #A_func,
+    #B_func,
+    BuildLinSysLQG,
+    ApplyPassiveLayers,
+    IncludePassiveLayers,
+    Calc_ψq,
+    #ΔNCalc,
+
+    CreateModonLQG,
+    CreateLCD,
+    CreateLRD,
+    EnergyLQG,
+    EnstrophyLQG,
+    LQGParams,
+    DefLQGParams,
+    LQGVortex,
+    DefLQGVortex,
+
+    ## SQG
+
+    BuildLinSysSQG,
+    Calc_ψb,
+    CreateModonSQG,
+    Eval_ψ_SQG,
+    Eval_q_SQG,
+    Eval_b_SQG,
+    Eval_w_SQG,
+    EnergySQG,
+    SQGParams,
+    DefSQGParams,
+    SQGVortex,
+    DefSQGVortex,
+
+    ## utils
+
+    Calc_uv,
+    Calc_∇,
+    Calc_ζ
 
 # Include all function and type definitions
 
-include("JJ_integ.jl")
-include("lin_sys.jl")
-include("create_modon.jl")
-include("energetics.jl")
-include("vortex_types.jl")
-include("monopoles.jl")
+## core
+
+include("core/evp_solve.jl")
+include("core/grid.jl")
+include("core/num_integ.jl")
+include("core/plotting.jl")
+include("core/zernike.jl")
+
+## extras
+
+include("extras/monopoles.jl")
+
+## LQG
+
+include("LQG/lqg_diag.jl")
+include("LQG/lqg_evp.jl")
+include("LQG/lqg_high.jl")
+include("LQG/lqg_low.jl")
+include("LQG/lqg_type.jl")
+
+## SQG
+
+include("SQG/sqg_diag.jl")
+include("SQG/sqg_evp.jl")
+include("SQG/sqg_high.jl")
+include("SQG/sqg_low.jl")
+include("SQG/sqg_type.jl")
+
+## utils
+
+include("utils/field_utils.jl")
 
 end
