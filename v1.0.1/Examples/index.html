@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Examples · QGDipoles.jl</title><meta name="title" content="Examples · QGDipoles.jl"/><meta property="og:title" content="Examples · QGDipoles.jl"/><meta property="twitter:title" content="Examples · QGDipoles.jl"/><meta name="description" content="Documentation for QGDipoles.jl."/><meta property="og:description" content="Documentation for QGDipoles.jl."/><meta property="twitter:description" content="Documentation for QGDipoles.jl."/><script data-outdated-warner src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../search_index.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script><link href="../assets/favicon.ico" rel="icon" type="image/x-icon"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img src="../assets/logo.png" alt="QGDipoles.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../">QGDipoles.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><a class="tocitem" href="../Installation/">Installation</a></li><li><a class="tocitem" href="../Methodology/">Methodology</a></li><li class="is-active"><a class="tocitem" href>Examples</a><ul class="internal"><li><a class="tocitem" href="#Getting-Started"><span>Getting Started</span></a></li><li><a class="tocitem" href="#Example:-Vortex-Structures"><span>Example: Vortex Structures</span></a></li><li><a class="tocitem" href="#Example:-High-Level-Functions"><span>Example: High-Level Functions</span></a></li><li><a class="tocitem" href="#Example:-Low-Level-Functions"><span>Example: Low-Level Functions</span></a></li><li><a class="tocitem" href="#Example:-GeophysicalFlows.jl"><span>Example: GeophysicalFlows.jl</span></a></li></ul></li><li><a class="tocitem" href="../Functions/">List of Functions</a></li><li><a class="tocitem" href="../FAQ/">FAQ</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Examples</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Examples</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/mncrowe/QGDipoles.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/mncrowe/QGDipoles.jl/blob/main/docs/src/Examples.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Examples"><a class="docs-heading-anchor" href="#Examples">Examples</a><a id="Examples-1"></a><a class="docs-heading-anchor-permalink" href="#Examples" title="Permalink"></a></h1><p>Here we present some examples which demonstrate how to use this package. Further examples are available in the <code>examples/</code> directory <a href="https://github.com/mncrowe/QGDipoles.jl/tree/main/examples">here</a>.</p><h2 id="Getting-Started"><a class="docs-heading-anchor" href="#Getting-Started">Getting Started</a><a id="Getting-Started-1"></a><a class="docs-heading-anchor-permalink" href="#Getting-Started" title="Permalink"></a></h2><p>The first step is to create a new project (also known as an environment) and install Julia. We can do this by opening Julia with the current directory enabled using</p><pre><code class="language-shell hljs">julia --project=.</code></pre><p>Further information on working with environments can be found <a href="https://pkgdocs.julialang.org/v1/environments/">here</a>.</p><p>We can now install <code>QGDipoles.jl</code> to this project using the instructions on the Installation page. It is strongly recommended to install <code>QGDipoles.jl</code> and all other packages required for a particular project to a new environment for that project.</p><p>To run the examples on this page we&#39;ll also need <code>Plots.jl</code> which can be installed using</p><pre><code class="language-julia hljs">import Pkg
+Pkg.add(&quot;Plots&quot;)
+Pkg.instantiate()</code></pre><p>One of the examples below also requires <code>GeophysicalFlows.jl</code> which can be installed in the same way.</p><p>We can now follow the examples below or copy the <code>examples/</code> directory to our current working directory using</p><pre><code class="language-julia hljs">using QGDipoles
+cp(joinpath(pkgdir(QGDipoles), &quot;examples&quot;), &quot;examples&quot;)</code></pre><h2 id="Example:-Vortex-Structures"><a class="docs-heading-anchor" href="#Example:-Vortex-Structures">Example: Vortex Structures</a><a id="Example:-Vortex-Structures-1"></a><a class="docs-heading-anchor-permalink" href="#Example:-Vortex-Structures" title="Permalink"></a></h2><p>The recommended way to use <code>QGDipoles.jl</code> for new users is to create vortex structures. Let&#39;s create a single-layer QG vortex with unit radius and velocity <span>$ℓ = U = 1$</span> and impose a background rotation gradient of <span>$β = 1$</span>. We&#39;ll start by creating a grid by specifying the number of gridpoints <code>(Nx, Ny)</code> and the domain size <code>(Lx, Ly)</code></p><pre><code class="language-julia hljs">using QGDipoles, Plots
+
+grid = CreateGrid(; Nx = 512, Ny = 512, Lx = 10, Ly = 10)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">GridStruct
+  ├────────────────────── device: CPU
+  ├─────────────── size (Lx, Ly): (10.0, 10.0)
+  ├───────── resolution (Nx, Ny): (512, 512)
+  ├─────── grid spacing (Δx, Δy): (0.01953125, 0.01953125)
+  └────────────────────── domain: x ∈ [-5.0, 4.98046875]
+                                  y ∈ [-5.0, 4.98046875]</code></pre><p>We can now use this grid to create our vortex</p><pre><code class="language-julia hljs">vortex = DefLQGVortex(grid; U = 1, ℓ = 1, β = 1)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">LQGVortex
+  ├─ params structure (LQGParams): varname.params
+  ├─────────────────────── device: CPU
+  ├──────── use analytic solution: false
+  ├────────── contains ψ, q and K: true
+  ├─────────────────── contains a: true
+  ├────────── contains velocities: false
+  ├─────────── contains vorticity: false
+  ├──────────── contains energies: false
+  └─────────── contains enstrophy: false</code></pre><p>This function call may take a few seconds as Julia functions are <a href="https://en.wikipedia.org/wiki/Just-in-time_compilation">compiled before they&#39;re used for the first time</a>. Subsequent calls of the same function will be much faster. Vortex parameters are passed as <a href="https://docs.julialang.org/en/v1/manual/functions/#Keyword-Arguments">keyword arguments</a>, the full list of keyword arguments available for each function can be found on the <a href="../Functions/#Functions">List of Functions</a> page. Strictly, we don&#39;t need to include <code>ℓ</code> and <code>U</code> here as <code>1</code> is the default for these keywords. Our vortex solution can be plotted as a <code>heatmap</code> using</p><pre><code class="language-julia hljs">heatmap(grid, vortex.ψ)</code></pre><img src="b382583e.svg" alt="Example block output"/><p>We can now modify our vortex by including a finite Rossby radius of deformation (corresponding to the equivalent barotropic model) given by <code>R = 1</code></p><pre><code class="language-julia hljs">vortex = UpdateVortex(grid, vortex; R = 1)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">LQGVortex
+  ├─ params structure (LQGParams): varname.params
+  ├─────────────────────── device: CPU
+  ├──────── use analytic solution: false
+  ├────────── contains ψ, q and K: true
+  ├─────────────────── contains a: true
+  ├────────── contains velocities: false
+  ├─────────── contains vorticity: false
+  ├──────────── contains energies: false
+  └─────────── contains enstrophy: false</code></pre><p>All other parameters remain unchanged and can be checked using</p><pre><code class="language-julia hljs">vortex.params</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">LQGParams
+  ├───────── number of layers (N): 1
+  ├───────────── vortex speed (U): 1
+  ├──────────── vortex radius (ℓ): 1
+  ├──────────── Rossby radius (R): 1
+  ├───────── PV gradient in y (β): 1
+  ├─ active layers (ActiveLayers): 1
+  ├───────────── layer depths (H): 1
+  ├───────── vortex position (x₀): [0, 0]
+  ├───────────── vortex angle (α): 0
+  ├─── number of coefficients (M): 8
+  ├──────── error tolerance (tol): 1.0e-6
+  ├──── guess for eigenvalue (K₀): nothing
+  ├── guess for coeffs (a₀) given: false
+  ├──────── use analytic solution: false
+  ├─────────── calculate velocity: false
+  ├────────── calculate vorticity: false
+  ├───────────── calculate energy: false
+  └────────── calculate enstrophy: false</code></pre><p>We can construct two-layer QG vortices and SQG vortices using the same approach</p><pre><code class="language-julia hljs">vortex_LQG = DefLQGVortex(grid; R = [1, 1], β = [1, 0])
+
+vortex_SQG = DefSQGVortex(grid)</code></pre><p>We can plot layers from multi-layer vortices using the <code>layer</code> keyword in <code>heatmap</code>.</p><p>By default, the streamfunction, <code>ψ</code>, and potential vorticity anomaly, <code>q</code>, are calculated for layered QG solutions while the surface streamfunction <code>ψ</code>, and surface buoyancy, <code>b</code>, are calculated for SQG solutions. We can calculate additional quantities, such as the velocity and energy, by setting the relevant keywords to <code>true</code>. Here we plot the velocity components for an SQG vortex and display the associated (domain-integrated) energy</p><pre><code class="language-julia hljs">vortex = DefSQGVortex(grid; CalcVelocity = true, CalcEnergy = true)
+
+plot(heatmap(grid, vortex.u, colorlimits=(-10, 10)), heatmap(grid, vortex.v))</code></pre><img src="54f74d64.svg" alt="Example block output"/><pre><code class="language-julia hljs">println(vortex.E)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">[9.740483372104853]</code></pre><h2 id="Example:-High-Level-Functions"><a class="docs-heading-anchor" href="#Example:-High-Level-Functions">Example: High-Level Functions</a><a id="Example:-High-Level-Functions-1"></a><a class="docs-heading-anchor-permalink" href="#Example:-High-Level-Functions" title="Permalink"></a></h2><p>Instead of working with structures, we can also calculate vortrex solutions directly as arrays using both high-level and low-level functions. The high-level functions are wrappers for the low-level functionality and allow us to easily calculate solutions without having to uderstand the underlying linear algebra method.</p><p>Let&#39;s start with the LQG case, define some parameters and create the grid</p><pre><code class="language-julia hljs">using QGDipoles
+
+# Set problem parameters
+
+R = [1, 1]     # Rossby radius in each layer
+β = [0, 1]     # background PV gradient in each layer
+
+# create grid
+
+Nx, Ny = 512, 512
+Lx, Ly = 10, 10
+
+grid = CreateGrid(Nx, Ny, Lx, Ly)</code></pre><p>Now we have our parameters and grid, we can get our vortex solution with a single function call</p><pre><code class="language-julia hljs"># create modon solution
+
+ψ, q, K, a = CreateModonLQG(grid; R, β)</code></pre><p>The SQG wrapper is similar. We start by defining some paramters</p><pre><code class="language-julia hljs"># Set problem parameters
+
+M = 20    # number of coefficients in Zernike expansion
+K₀ = 8    # guess for K
+
+# create grid
+
+Nx, Ny = 512, 512
+Lx, Ly = 10, 10
+
+grid = CreateGrid(Nx, Ny, Lx, Ly)</code></pre><p>Note that we&#39;ve set <span>$K_0 = 8$</span> this time. We&#39;ll see what happens when we create and plot our solution:</p><pre><code class="language-julia hljs"># create modon solution
+
+ψ, b, K, a = CreateModonSQG(grid; M, K₀)
+
+K</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">1×1 Matrix{Float64}:
+ 7.342054873133779</code></pre><pre><code class="language-julia hljs">using Plots
+
+heatmap(grid, ψ)</code></pre><img src="5fd628fc.svg" alt="Example block output"/><p>The parameter <span>$K$</span> is an eigenvalue in the underlying linear algebra problem. There are a (countably) infinite set of vortex solutions and the value of <span>$K$</span> can be thought of as a radial wavenumber, with larger values of <span>$K$</span> corresponding to solutions with more complex radial structure. The solutions we normally think of as dipolar vortices are the lowest order mode and higher modes are generally unstable<sup class="footnote-reference"><a id="citeref-1" href="#footnote-1">[1]</a></sup>. For both the LQG and SQG cases, the lowest order mode typically has a value of <span>$K \approx 4$</span> and by default the method looks for solutions with <span>$K \approx 4$</span>. Setting <code>K_0</code> allows us to specify the approximate value of <span>$K$</span> we want for our solution. If we look at <span>$K$</span>, we find that <span>$K = 7.34205...$</span> and if we look at our plot, we see that it&#39;s a solution with a mode 2 structure in the radial direction.</p><p>In addition to these wrapper functions, the functions <a href="../Functions/#QGDipoles.CreateLCD"><code>CreateLCD</code></a> and <a href="../Functions/#QGDipoles.CreateLRD"><code>CreateLRD</code></a> implement the Lamb-Chaplygin dipole<sup class="footnote-reference"><a id="citeref-2" href="#footnote-2">[2]</a></sup> and Larichev-Reznik dipole<sup class="footnote-reference"><a id="citeref-3" href="#footnote-3">[3]</a></sup> directly using the analytical solution for these cases.</p><h2 id="Example:-Low-Level-Functions"><a class="docs-heading-anchor" href="#Example:-Low-Level-Functions">Example: Low-Level Functions</a><a id="Example:-Low-Level-Functions-1"></a><a class="docs-heading-anchor-permalink" href="#Example:-Low-Level-Functions" title="Permalink"></a></h2><p>Low-level functions are also available to calculate vortex solutions. In general, these allow more customisation than the high-level wrapper and vortex structures however some understanding of the underlying method is required to work with them effectively. Information on the methodology is given on the <a href="../Methodology/#Methodology">Methodology</a> page and in the associated references.</p><p>Here we&#39;ll construct three different solutions using the low-level functions, namely a <a href="#1-Layer-Dipole">1-Layer Dipole</a>, a <a href="#3-Layer-Vortex">3-Layer Vortex</a> and an <a href="#SQG-Vortex">SQG Vortex</a>.</p><div class="admonition is-success"><header class="admonition-header">Tip: GPU support</header><div class="admonition-body"><p>We support grid calculations on NVIDIA GPUs using the <code>CUDA</code> package. To use this functionality, pass <code>cuda = true</code> to the grid constructor. For example,</p><pre><code class="language-julia hljs">grid = CreateGrid(Nx, Ny, Lx, Ly; cuda = true)</code></pre></div></div><h3 id="1-Layer-Dipole"><a class="docs-heading-anchor" href="#1-Layer-Dipole">1-Layer Dipole</a><a id="1-Layer-Dipole-1"></a><a class="docs-heading-anchor-permalink" href="#1-Layer-Dipole" title="Permalink"></a></h3><p>Let&#39;s calculate and plot the Larichev-Reznik dipole (LRD). This diople exists on the <span>$\beta$</span>-plane in the equivalent barotropic model so we take <span>$\beta = R = 1$</span> and consider a 1-layer solution (<span>$N = 1$</span>). We&#39;ll also assume unit radius and velocity, <span>$\ell = U = 1$</span>. Let&#39;s start by loading the package and defining some parameters</p><pre><code class="language-julia hljs">using QGDipoles, Plots
+
+# Set problem parameters
+
+U, ℓ = 1, 1	# vortex speed and radius
+R = 1		# Rossby radius in each layer
+β = 1		# background PV gradient in each layer
+
+M = 8		# number of coefficients in Zernike expansion
+tol = 1e-8	# maximum error in solution evaluation
+
+# Set grid parameters
+
+Nx, Ny = 512, 512
+Lx, Ly = 10, 10</code></pre><p>We&#39;ve taken <span>$M = 8$</span> as this is generally a sufficient number of terms to get a relative error <span>$&lt; 10^{-6}$</span> in the final result. The tolerance, <code>tol</code>, is used in calculating the terms in the linear system and a value of <code>tol=10^{-8}</code> corresponds to approximately the same error as our chosen <span>$M$</span> value. Here, we build a grid with <span>$512$</span> points in each direction and take the grid size to be <span>$10$</span> in each direction. We should always ensure that the grid size is sufficient to capture the far-field decay of the vortex in order to get accurate solutions. We can now build the linear system and solve for the coefficients as follows</p><pre><code class="language-julia hljs"># Build and solve linear system for coefficients
+
+λ = ℓ / R
+μ = β * ℓ^2/U
+
+A, B, c, d = BuildLinSysLQG(M, λ, μ; tol)
+K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol)</code></pre><p>The intermediate parameters, <span>$\lambda$</span> and <span>$\mu$</span>, describe the rescaled vortex radius and PV gradient. Finally, we can define a grid and evaluate our streamfunction, PV and velocities using</p><pre><code class="language-julia hljs"># Create grid and calculate streamfunction, vorticity and velocities
+
+grid = CreateGrid(Nx, Ny, Lx, Ly)
+ψ, q = Calc_ψq(grid, a; U, ℓ, R, β)
+u, v = Calc_uv(grid, ψ)</code></pre><p>Our solution can now be plotted</p><pre><code class="language-julia hljs">heatmap(grid, ψ)</code></pre><img src="40624994.svg" alt="Example block output"/><h3 id="3-Layer-Vortex"><a class="docs-heading-anchor" href="#3-Layer-Vortex">3-Layer Vortex</a><a id="3-Layer-Vortex-1"></a><a class="docs-heading-anchor-permalink" href="#3-Layer-Vortex" title="Permalink"></a></h3><p>This example considers a 3-layer solution and introduces the concept of active and passive layers. We define an active layer to be a layer with a closed streamline at <span>$x^2 + y^2 = \ell^2$</span> whereas a passive layer has no closed streamlines. Therefore, fluid within the vortex in an active layer remains trapped in the vortex. Conversely, fluid in the passive layer is not trapped in a vortex core but can still be affected through the change in layer thickness associated with the streamfunction in neighbouring layers. Passive layers have <span>$F_i(z) = (\beta_i/U) z$</span> everywhere and hence have no eigenvalue, <span>$K_i$</span>, to solve for. Further, the coefficients within a passive layer are zero though the solution may still be non-zero due to the coefficients in neighbouring layers. Therefore, the corresponding linear system can be simplified by removing rows and columns corresponding to passive layers and solving the reduced system for the active layers only.</p><p>We&#39;ll start by defining some parameters</p><pre><code class="language-julia hljs">using QGDipoles
+
+# Set problem parameters
+
+U, ℓ = 1, 1			# vortex speed and radius
+R = [1, 1, 1]			# Rossby radius in each layer
+β = [0, 0, 1]			# background PV gradient in each layer
+ActiveLayers = [0, 1, 0]	# 1 =&gt; layer contains vortex region
+x₀ = [5, 5]			# location of vortex center
+
+M = 8				# number of coefficients in Zernike expansion
+tol = 1e-8			# maximum error in solution evaluation
+
+# Set grid parameters
+
+Nx, Ny = 512, 512
+Lx, Ly = [0, 10], [0, 10]</code></pre><p>Here we&#39;ve assumed that only the middle layer is active. Therefore our solution will describe a mid-depth propagating structure. We&#39;ve also taken a background PV gradient in the lower layer only, to represent a PV gradient due to a topographic slope. Finally, we&#39;ve taken our vortex to be centred at <span>$[5, 5]$</span> and taken <span>$x$</span> and <span>$y$</span> to run from <span>$0$</span> to <span>$10$</span>.</p><p>We start by building the full linear system</p><pre><code class="language-julia hljs"># Build and solve linear system for coefficients
+
+λ = ℓ ./ R
+μ = β * ℓ^2/U
+
+A, B, c, d = BuildLinSysLQG(M, λ, μ; tol)</code></pre><p>Next we remove the passive layers</p><pre><code class="language-julia hljs">A, B, c, d = ApplyPassiveLayers(A, B, c, d, ActiveLayers)</code></pre><p>We can now solve the reduced system and put the passive layers, which have <span>$(K, \textbf{a}) = (0, \textbf{0})$</span>, back in to ensure the sizes of <span>$K$</span> and <span>$\textbf{a}$</span> match the number of layers</p><pre><code class="language-julia hljs">K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, tol)
+K, a = IncludePassiveLayers(K, a, ActiveLayers)</code></pre><p>Finally, we can calculate our solution</p><pre><code class="language-julia hljs"># Create grid and calculate streamfunctions and vorticities
+
+grid = CreateGrid(Nx, Ny, Lx, Ly)
+ψ, q = Calc_ψq(grid, a; U, ℓ, R, β, x₀)</code></pre><h3 id="SQG-Vortex"><a class="docs-heading-anchor" href="#SQG-Vortex">SQG Vortex</a><a id="SQG-Vortex-1"></a><a class="docs-heading-anchor-permalink" href="#SQG-Vortex" title="Permalink"></a></h3><p>This example covers the SQG vortex and a few low-level solver options. The SQG problem requires a few changes to solver options, which we discuss below.</p><p>Start by setting parameters for the SQG vortex and grid, similar to previous examples:</p><pre><code class="language-julia hljs">using QGDipoles
+
+# Set problem parameters
+
+U, ℓ = 1, 1     	# vortex speed and radius
+β = 0		    	# background PV gradient in the interior
+
+# Create grid
+
+Nx, Ny = 512, 512
+Lx, Ly = 10, 10
+
+grid = CreateGrid(Nx, Ny, Lx, Ly)</code></pre><p>Despite the SQG problem having only 1-layer, here we enter <code>R</code> as a 2 element vector since we need both  the (reduced) barotropic and baroclinic Rossby radii, <span>$R$</span> and <span>$R&#39;$</span>. We&#39;ll take these as <span>$∞$</span> and note that all functions accept infinite Rossby radii in both the SQG and LQG cases. However, <span>$R = 0$</span> is not valid since the QG assumptions break down in this limit.</p><pre><code class="language-julia hljs">R = [Inf, Inf]		# Baroclinic and Barotropic Rossby radii</code></pre><p>The SQG problem also requires more coefficients to converge to the same accuracy as the LQG problem. Therefore, we take <span>$M = 20$</span> here.</p><pre><code class="language-julia hljs">M = 20		    	# number of coefficients in Zernike expansion</code></pre><p>The need for more coefficients is compensated by the fact that the SQG system is faster to calculate than the LQG system.</p><p>We can use two different solution method for solving the SQG eigenvalue problem. These are:</p><ul><li>an eigenvalue method (<code>method = :eigensolve</code>),</li><li>or a root-finding method (<code>method = :nlsolve</code>).</li></ul><p>For the 1-layer LQG and SQG problems, the eigenvalue method will generally be faster (i.e. <code>method = :eigensolve</code>). For multi-layer problems, the root-finding method is always used (i.e. <code>method = :nlsolve</code>) as eigenvalue methods scale poorly with the number of layers. If you have a good initial guess for <span>$K$</span> and <span>$\textbf{a}$</span>, you may be able to use <code>method = :nlsolve</code> to speed up the calculation in 1-layer LQG and SQG problems. The <code>method</code> flag is passed to the linear system solver, <a href="../Functions/#QGDipoles.SolveInhomEVP"><code>SolveInhomEVP</code></a>.</p><p>We&#39;ll use the root-finding method here.</p><pre><code class="language-julia hljs">method = :nlsolve</code></pre><p>Next we can build the linear system</p><pre><code class="language-julia hljs"># Build and solve linear system for coefficients
+
+λ = ℓ ./ R
+μ = β * ℓ^2/U
+
+A, B, c, d = BuildLinSysSQG(M, λ, μ)
+K, a = SolveInhomEVP(A, B, c, d; K₀ = 4, method, m = 1)</code></pre><div class="admonition is-info"><header class="admonition-header">The exponent of K</header><div class="admonition-body"><p><code>m</code> is the exponent of <code>K</code> in the eigenvalue problem, <span>$K^m$</span>. The solver, <a href="../Functions/#QGDipoles.SolveInhomEVP"><code>SolveInhomEVP</code></a>, assumes LQG by default, i.e. <code>m=2</code>. However, for SQG, we should use <code>m=1</code>.</p></div></div><p>Finally we can create our solution</p><pre><code class="language-julia hljs">ψ, b = Calc_ψb(grid, a; U, ℓ, R, β)
+u, v = Calc_uv(grid, ψ)</code></pre><h2 id="Example:-GeophysicalFlows.jl"><a class="docs-heading-anchor" href="#Example:-GeophysicalFlows.jl">Example: GeophysicalFlows.jl</a><a id="Example:-GeophysicalFlows.jl-1"></a><a class="docs-heading-anchor-permalink" href="#Example:-GeophysicalFlows.jl" title="Permalink"></a></h2><p><code>QGDipoles.jl</code> is designed to be compatible with <code>GeophysicalFlows.jl</code><sup class="footnote-reference"><a id="citeref-4" href="#footnote-4">[4]</a></sup> and provide a means of generating dipolar vortex initial conditions for layered QG and surface QG simulations. Here, we&#39;ll discuss a simple example of how to setup a 1-layer simulation in <code>GeophyiscalFlows.jl</code> using the Lamb-Chaplygin dipole as the initial condition. We&#39;ll also see that, as expected, the dipole retains it&#39;s form during the evolution and hence is a steady solution in a co-moving frame. Let&#39;s begin by defining some parameters for our vortex initial condition and our numerical simulation</p><pre><code class="language-julia hljs">using GeophysicalFlows, QGDipoles, Plots
+
+# Define vortex parameters
+
+U, ℓ = 1, 1
+
+# Set numerical simulation parameters
+
+nx, ny = 1024, 1024
+Lx, Ly = 20.48, 20.48
+T = 10                  # simulation stop time
+Δt = 0.01               # timestep
+Nt = Int(T/Δt)          # number of timesteps
+dev = CPU()             # device, change to GPU() if you have an Nvidia GPU
+stepper = &quot;FilteredRK4&quot;</code></pre><p><code>GeophysicalFlows.jl</code> allows simulations to be run on a GPU so we can set <code>dev = GPU()</code> to use this functionality. In this case, <code>QGDipoles.jl</code> will construct vortex solutions as <code>CuArrays</code> using <code>CUDA</code> when given a grid that is stored on a GPU. We can now define our problem using the <code>SingleLayerQG</code> module from <code>GeophysicalFlows.jl</code>. This problem will contain a grid (<code>prob.grid</code>) that can be passed to functions from <code>QGDipoles.jl</code> in the same manner as grids contructed using <a href="../Functions/#QGDipoles.CreateGrid"><code>CreateGrid</code></a></p><pre><code class="language-julia hljs"># Define problem using SingleLayerQG from GeophysicalFlows.jl
+
+prob = SingleLayerQG.Problem(dev;
+		nx,
+		ny,
+		Lx,
+		Ly,
+		U = -U,			# background flow so vortex remains stationary
+		dt = Δt,
+		stepper)</code></pre><p>Here, we&#39;ve used a background flow which moves in the opposite direction to the vortex and with the same magnitude, <code>U</code>. Therefore, we&#39;re working in a frame co-moving with the vortex and we expect it to remain centred on the orogin throughout the evolution. Next, we&#39;ll use <a href="../Functions/#QGDipoles.CreateLCD"><code>CreateLCD</code></a> to create a Lamb-Chaplygin dipole and use this as our initial condition.</p><pre><code class="language-julia hljs"># Set initial condition
+
+_, q₀ = CreateLCD(prob.grid; U, ℓ)
+SingleLayerQG.set_q!(prob, q₀)
+
+# Define Energy as a diagnostic for the simulation
+
+diags = Diagnostic(SingleLayerQG.energy, prob; nsteps=Nt, freq=Int(Nt/100))</code></pre><p>We&#39;ve also defined a <code>Diagnostic</code> which will save the domain-averaged energy during the simulation. Finally, we can evolve the simulation in time:</p><pre><code class="language-julia hljs"># Evolve system forward in time
+
+stepforward!(prob, diags, Nt)
+SingleLayerQG.updatevars!(prob)</code></pre><p>This step may take a couple of minutes to run on a CPU but will be <em>much</em> faster on a GPU. We can plot our initial condition and solution at <span>$t = 10.0$</span> using:</p><pre><code class="language-julia hljs">plot(heatmap(prob.grid, q₀), heatmap(prob.grid, prob.vars.q))</code></pre><p>The two plots are shown below and are approximately identical. Therefore, we observe that the vortex remains centred at the origin. Over long times, numerical error will result in the vortex moving at a slightly different speed to <code>U</code> and hence moving away from the origin.</p><p><img src="../Ex_5.svg" alt="image"/></p><p>See the <code>GeophyiscalFlows.jl</code> documentation <a href="https://fourierflows.github.io/GeophysicalFlowsDocumentation/stable/">here</a> for more details on how to run QG simulations.</p><section class="footnotes is-size-7"><ul><li class="footnote" id="footnote-1"><a class="tag is-link" href="#citeref-1">1</a><a href="https://doi.org/10.1017/jfm.2023.87">Johnson, E. R., and M. N. Crowe, 2023, Oceanic dipoles in a surface quasigeostrophic model, J. Fluid Mech., 958, R2</a>.</li><li class="footnote" id="footnote-2"><a class="tag is-link" href="#citeref-2">2</a><a href="https://archive.org/details/hydrodynamics00lamb">Lamb, H., 1932, Hydrodynamics. Cambridge University Press</a>.</li><li class="footnote" id="footnote-3"><a class="tag is-link" href="#citeref-3">3</a><a href="https://www.researchgate.net/publication/248173065_Two-dimensional_solitary_Rossby_waves">Larichev, V.D. &amp; Reznik, G.M., 1976, Two-dimensional solitary Rossby waves, Dokl. Akad. Nauk SSSR, 12–13</a>.</li><li class="footnote" id="footnote-4"><a class="tag is-link" href="#citeref-4">4</a><a href="https://joss.theoj.org/papers/10.21105/joss.03053">Constantinou et al., 2021, GeophysicalFlows.jl: Solvers for geophysical fluid dynamics problems in periodic domains on CPUs &amp; GPUs, JOSS, 6(60), 3053</a>.</li></ul></section></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../Methodology/">« Methodology</a><a class="docs-footer-nextpage" href="../Functions/">List of Functions »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.10.1 on <span class="colophon-date" title="Wednesday 9 April 2025 14:05">Wednesday 9 April 2025</span>. Using Julia version 1.11.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
