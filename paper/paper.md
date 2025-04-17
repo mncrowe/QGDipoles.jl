@@ -70,13 +70,13 @@ Some packages which partially address this problem are:
 
 - `QGDipoles.m` [@QGDipolesMat] (MATLAB)
 
-  This MATLAB package was originally included as supplementary material in [@Crowe_Johnson_2024] and solves for QG dipoles in the LQG system only.
+  This MATLAB package was originally included as supplementary material in @Crowe_Johnson_2024 and solves for QG dipoles in the LQG system only.
   This code is a precursor to parts of `QGDipoles.jl` but has now been superseded, with `QGDipoles.jl` incorporating various improvements and optimisations that allow it to outperform the MATLAB version, particularly when using precompiled Julia functions.
   Additionally, these MATLAB scripts are not open source and have not been verified to work on open source alternatives (such as Octave).
 
 # Methodology
 
-This package uses a method originally presented in [@Johnson_Crowe_23] and later generalised for the SQG case in [@Crowe_Johnson_23] and the LQG case in [@Crowe_Johnson_2024].
+This package uses a method originally presented in @Johnson_Crowe_23 and later generalised for the SQG case in @Crowe_Johnson_23 and the LQG case in @Crowe_Johnson_2024.
 Using a Hankel transform, the steady PDE corresponding to a dipolar vortex in a QG system can be analytically transformed into a multi-parameter, inhomogeneous eigenvalue problem.
 This resulting linear algebra problem may be solved for a set of coefficients which correspond to an expansion of the solution in a basis of orthogonal polynomials.
 The error in this solution may be controlled by setting the number of coefficients to solve for and prescribing the maximum error in the numerical evaluation of the matrices and vectors in the problem.
