@@ -1,0 +1,28 @@
+cff-version: "1.2.0"
+authors:
+- family-names: Crowe
+  given-names: Matthew N.
+  orcid: "https://orcid.org/0000-0002-9916-2653"
+doi: 10.5281/zenodo.15183327
+message: If you use this software, please cite our article in the
+  Journal of Open Source Software.
+preferred-citation:
+  authors:
+  - family-names: Crowe
+    given-names: Matthew N.
+    orcid: "https://orcid.org/0000-0002-9916-2653"
+  date-published: 2025-04-22
+  doi: 10.21105/joss.07767
+  issn: 2475-9066
+  issue: 108
+  journal: Journal of Open Source Software
+  publisher:
+    name: Open Journals
+  start: 7767
+  title: "QGDipoles.jl: A Julia package for calculating dipolar vortex
+    solutions to the Quasi-Geostrophic equations"
+  type: article
+  url: "https://joss.theoj.org/papers/10.21105/joss.07767"
+  volume: 10
+title: "QGDipoles.jl: A Julia package for calculating dipolar vortex
+  solutions to the Quasi-Geostrophic equations"
