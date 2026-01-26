@@ -81,6 +81,7 @@ export
     ## 3DQG
 
     CreateGrid3D,
+    BuildLinSys3DQG,
 
     ## utils
 
