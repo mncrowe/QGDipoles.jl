@@ -66,8 +66,8 @@ function BuildLinSys3DQG(
 
         for k = 0:M-1
 
-            A[j*N.+(1:N), k*N.+(1:N)] .= JJ_int(x -> A_func(x, λ, μ), j, k, tol)[1]
-            B₀[j*N.+(1:N), k*N.+(1:N)] .= JJ_int(x -> B_func(x, λ, μ), j, k, tol)[1]
+            A[j*N.+(1:N), k*N.+(1:N)] .= JJ_int(x -> A_func(x, M₀, I₀, C), j, k, tol)[1]
+            B₀[j*N.+(1:N), k*N.+(1:N)] .= JJ_int(x -> B_func(x, M₀, I₀, C), j, k, tol)[1]
 
         end
 
@@ -92,6 +92,7 @@ end
 
 
 
+
 function A_func(ξ::Number, M₀::Matrix, I₀::Matrix, C::Matrix)
 
     M_ξ = ξ^2 * I₀ + M₀
@@ -111,7 +112,7 @@ function B_func(ξ::Number, M₀::Matrix, I₀::Matrix, C::Matrix)
 
     B = inv(M_ξ + C) / ξ
 
-    return A
+    return B
 
 end
 
