@@ -41,7 +41,7 @@ function BuildLinSys3DQG(
 
     # Create matrices for evalating A and B
 
-    μ_vec = [-γ; ones(N-2); 0]
+    μ_vec = [-γ; μ*ones(N-2); 0]
     Λ = diagm(λ.(ζ) .^ 2)
 
     M₀ = - D_ζ * Λ * D_ζ
