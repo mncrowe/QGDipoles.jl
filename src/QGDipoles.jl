@@ -78,6 +78,11 @@ export
     SQGVortex,
     DefSQGVortex,
 
+    ## 3DQG
+
+    CreateGrid3D,
+    BuildLinSys3DQG,
+
     ## utils
 
     Calc_uv,
@@ -113,6 +118,15 @@ include("SQG/sqg_evp.jl")
 include("SQG/sqg_high.jl")
 include("SQG/sqg_low.jl")
 include("SQG/sqg_type.jl")
+
+## 3DQG
+
+include("3DQG/3dqg_diag.jl")
+include("3DQG/3dqg_evp.jl")
+include("3DQG/3dqg_grid.jl")
+include("3DQG/3dqg_high.jl")
+include("3DQG/3dqg_low.jl")
+include("3DQG/3dqg_type.jl")
 
 ## utils
 
