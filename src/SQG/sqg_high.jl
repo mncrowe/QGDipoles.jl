@@ -157,7 +157,7 @@ function Eval_q_SQG(
 
     # Calculate q using the result q = (β / U) * ψ in the 3D domain
 
-    q₃ = β / U * Eval_ψ_SQG(grid, ψ, z, U, R, β)
+    q₃ = β / U * Eval_ψ_SQG(grid, ψ; z, U, R, β)
 
     return q₃
 
@@ -258,8 +258,8 @@ function Eval_w_SQG(
 )
     # Calculate ψ and b at given depth
 
-    ψ₃ = Eval_ψ_SQG(grid, ψ, z, U, R, β)
-    b₃ = Eval_b_SQG(grid, ψ, z, U, R, β)
+    ψ₃ = Eval_ψ_SQG(grid, ψ; z, U, R, β)
+    b₃ = Eval_b_SQG(grid, ψ; z, U, R, β)
 
     # Calculate velocities and buoyancy gradients
 
